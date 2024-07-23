@@ -27,7 +27,7 @@ module.exports = {
     'plugin:react/recommended',
   ],
 
-  plugins: ['tailwind', 'import', 'react'],
+  plugins: ['import'],
 
   ignorePatterns: ['**/coverage/*', `/node_modules/*`, `/dist/`],
 
