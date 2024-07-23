@@ -31,14 +31,10 @@
     "prepare": "husky",
     "test-once": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests --watchAll",
-    "test-ui": "ACTIVE_ENV=test playwright test --ui",
     "lint": "pnpm run lint-prettier && pnpm run lint-eslint",
     "lint-prettier": "prettier . --write",
     "lint-eslint": "eslint './**/*.{js,jsx,cjs}'",
-    "dev": "vite --config vite.config.demo.js",
-    "build": "vite build --config vite.config.demo.js",
-    "preview": "vite preview --config vite.config.demo.js",
-    "build-package": "vite build",
+    "build": "vite build",
     "release": "semantic-release --no-ci --dry-run --debug"
   },
   "keywords": [

@@ -29,7 +29,7 @@ module.exports = {
 
   plugins: ['tailwind', 'import', 'react'],
 
-  ignorePatterns: ['**/coverage/*', `/node_modules/*`, `/dist/`, `/demo/dist`],
+  ignorePatterns: ['**/coverage/*', `/node_modules/*`, `/dist/`],
 
   rules: {
     'react/prop-types': 0,
