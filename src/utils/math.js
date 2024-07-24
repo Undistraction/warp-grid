@@ -10,12 +10,13 @@ const roundToN = (n, value) => Number(value.toFixed(n))
 // Exports
 // -----------------------------------------------------------------------------
 
-export const roundTo2 = (value) => roundToN(2, value)
-
 export const roundTo10 = (value) => roundToN(10, value)
 
 export const binomial = (n, k) => {
-  if (n === 0) return 1
+  if (n === 0) {
+    return 1
+  }
+
   const lut = binomialCoefficients
 
   while (n >= lut.length) {

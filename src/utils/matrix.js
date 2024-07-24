@@ -13,12 +13,12 @@ import { binomial } from './math'
 // Exports
 // -----------------------------------------------------------------------------
 
-export const getRatioMatrix = (row) => {
-  const numberOfColumns = row.length
-  const data = times((i) => row.map((v) => v ** i), numberOfColumns)
-  const ratioMatrix = matrix(data)
-  const transposedRatioMatrix = matrix(ratioMatrix.trans())
-  return { ratioMatrix, transposedRatioMatrix }
+export const getRatioMatrix = (ratios) => {
+  const ratioLength = ratios.length
+  const data = times((i) => ratios.map((v) => v ** i), ratioLength)
+  const tMatrix = matrix(data)
+  const transposedTMatrix = matrix(tMatrix.trans())
+  return { tMatrix, transposedTMatrix }
 }
 
 export const getBasisMatrix = (numberOfPoints) => {
