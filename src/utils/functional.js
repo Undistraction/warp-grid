@@ -9,3 +9,13 @@ export const times = (callback, n) => {
   }
   return result
 }
+
+export const mapObj = (f, o) => {
+  return Object.keys(o).reduce((acc, key, idx) => {
+    const value = o[key]
+    return {
+      ...acc,
+      [key]: f(value, idx),
+    }
+  }, {})
+}

@@ -49,6 +49,7 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.2.2",
     "@eslint/js": "^9.6.0",
+    "@jest/globals": "^29.7.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^10.1.1",
@@ -72,6 +73,7 @@
     "vite": "^5.3.3"
   },
   "dependencies": {
+    "fast-memoize": "^2.5.2",
     "matrix-js": "^1.7.1"
   }
 }
