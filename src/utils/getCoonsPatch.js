@@ -1,7 +1,6 @@
 import { INTERPOLATION_STRATEGY_ID } from '../const'
 import { interpolatePointOnCurveEvenlySpaced } from './interpolate/even'
 import { interpolatePointOnCurveLinear } from './interpolate/linear'
-
 import {
   getCurvesOnXAxis,
   getCurvesOnYAxis,
@@ -111,6 +110,15 @@ const getCoonsPatch = (boundingCurves, grid) => {
     }
   }
 
+  const getAllGridCellBounds = () => {
+    return columns.reduce((acc, column, columnIdx) => {
+      const cellBounds = rows.map((row, rowIdx) => {
+        return getGridCellBounds(columnIdx, rowIdx)
+      })
+      return [...acc, ...cellBounds]
+    }, [])
+  }
+
   return {
     config: {
       boundingCurves,
@@ -122,6 +130,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
       getCurves,
       getIntersections,
       getGridCellBounds,
+      getAllGridCellBounds,
     },
   }
 }

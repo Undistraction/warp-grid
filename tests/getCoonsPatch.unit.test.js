@@ -207,8 +207,14 @@ describe(`getCoonsPatch`, () => {
         describe(`getCurves`, () => {
           it(`returns curves along x and y axes`, () => {
             const curves = api.getCurves()
-            console.log('@@', JSON.stringify(curves))
             expect(curves).toEqual(fixture.api.getCurves())
+          })
+        })
+
+        describe(`getAllGridCellBounds`, () => {
+          it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
+            const gridCellBounds = api.getAllGridCellBounds()
+            expect(gridCellBounds).toEqual(fixture.api.getAllGridCellBounds())
           })
         })
       })
