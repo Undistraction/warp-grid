@@ -19,8 +19,19 @@ export default {
         },
       },
     ],
+    [
+      '@semantic-release/changelog',
+      {
+        changelogFile: 'CHANGELOG.md',
+      },
+    ],
     '@semantic-release/npm',
-    '@semantic-release/git',
+    [
+      '@semantic-release/git',
+      {
+        assets: ['CHANGELOG.md'],
+      },
+    ],
     '@semantic-release/github',
   ],
 }
