@@ -1,5 +1,4 @@
-import { getDistanceBetweenPoints } from '../interpolate'
-import { roundTo10 } from '../math'
+import { getDistanceBetweenPoints, roundTo10 } from '../math'
 import { validateRatio } from '../validation'
 import { interpolatePointOnCurveLinear } from './linear'
 

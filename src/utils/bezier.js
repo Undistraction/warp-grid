@@ -33,14 +33,10 @@ const fitCurveToPoints = (points, ratios) => {
 // Exports
 // -----------------------------------------------------------------------------
 
-export const fitCubicBezierToPoints = (
-  points,
-  ratioMidpoint1,
-  ratioMidpoint2
-) => {
+export const fitCubicBezierToPoints = (points, ratios) => {
   const result = fitCurveToPoints(
     [points.startPoint, points.midPoint1, points.midPoint2, points.endPoint],
-    [0, ratioMidpoint1, ratioMidpoint2, 1]
+    ratios
   )
 
   return {

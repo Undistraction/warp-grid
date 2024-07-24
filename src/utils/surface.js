@@ -1,3 +1,6 @@
+import { COORDINATE } from '../const'
+import { fitCubicBezierToPoints } from './bezier'
+
 // -----------------------------------------------------------------------------
 // Const
 // -----------------------------------------------------------------------------
@@ -8,9 +11,6 @@ const RATIO_MIDPOINT_2 = 0.75
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
-
-import { COORDINATE } from '../const'
-import { fitCubicBezierToPoints } from './bezier'
 
 const getCoordinateOnSurface = (
   { top, bottom, left, right },
@@ -130,8 +130,7 @@ export const getCurvesOnXAxis = (
           midPoint2,
           endPoint,
         },
-        RATIO_MIDPOINT_1,
-        RATIO_MIDPOINT_2
+        [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
       )
 
       rowRatioTotal = rowRatioTotal + rowRatio
@@ -214,8 +213,7 @@ export const getCurvesOnYAxis = (
           midPoint2,
           endPoint,
         },
-        RATIO_MIDPOINT_1,
-        RATIO_MIDPOINT_2
+        [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
       )
 
       columnRatioTotal = columnRatioTotal + columnRatio
