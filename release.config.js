@@ -4,13 +4,13 @@ export default {
     [
       '@semantic-release/commit-analyzer',
       {
-        preset: 'angular',
+        preset: 'conventionalcommits',
       },
     ],
     [
       '@semantic-release/release-notes-generator',
       {
-        preset: 'angular',
+        preset: 'conventionalcommits',
         parserOpts: {
           noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
         },
