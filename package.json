@@ -76,7 +76,9 @@
     "fast-memoize": "^2.5.2",
     "matrix-js": "^1.7.1"
   },
-  "overrides": {
-    "conventional-changelog-conventionalcommits": ">= 8.0.0"
+  "pnpm": {
+    "overrides": {
+      "conventional-changelog-conventionalcommits": ">= 8.0.0"
+    }
   }
 }
