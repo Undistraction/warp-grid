@@ -138,7 +138,6 @@ export const getCurvesOnXAxis = (
 
       curveSections.push({
         ...curve,
-        original: { startPoint, midPoint1, midPoint2, endPoint },
       })
     }
     columnRatioTotal = columnRatioTotal + columnRatio
@@ -222,7 +221,6 @@ export const getCurvesOnYAxis = (
       columnRatioTotal = columnRatioTotal + columnRatio
       curveSections.push({
         ...curve,
-        original: { startPoint, midPoint1, midPoint2, endPoint },
       })
     }
 

@@ -191,7 +191,6 @@ describe(`getCoonsPatch`, () => {
         describe(`getIntersections`, () => {
           it(`returns all intersections between curves`, () => {
             const intersectons = api.getIntersections()
-
             expect(intersectons).toEqual(fixture.api.getIntersections())
           })
         })
@@ -208,6 +207,7 @@ describe(`getCoonsPatch`, () => {
         describe(`getCurves`, () => {
           it(`returns curves along x and y axes`, () => {
             const curves = api.getCurves()
+            console.log('@@', JSON.stringify(curves))
             expect(curves).toEqual(fixture.api.getCurves())
           })
         })

@@ -14,13 +14,13 @@ import { getBasisMatrix, getRatioMatrix } from './matrix'
 
 const fitCurveToPoints = (points, ratios) => {
   const numberOfPoints = points.length
-  const { ratioMatrix, transposedRatioMatrix } = getRatioMatrix(ratios)
+  const { tMatrix, tMatrixTransposed } = getRatioMatrix(ratios)
 
   const basisMatrix = getBasisMatrix(numberOfPoints)
   const basisMatrixInverted = matrix(basisMatrix.inv())
-  const ratioMultipliedMatrix = matrix(ratioMatrix.prod(transposedRatioMatrix))
+  const ratioMultipliedMatrix = matrix(tMatrix.prod(tMatrixTransposed))
   const invertedRatioMultipliedMatrix = matrix(ratioMultipliedMatrix.inv())
-  const step1 = matrix(invertedRatioMultipliedMatrix.prod(ratioMatrix))
+  const step1 = matrix(invertedRatioMultipliedMatrix.prod(tMatrix))
   const step2 = matrix(basisMatrixInverted.prod(step1))
   const X = matrix(points.map((v) => [v.x]))
   const x = step2.prod(X)

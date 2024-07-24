@@ -17,8 +17,8 @@ export const getRatioMatrix = (ratios) => {
   const ratioLength = ratios.length
   const data = times((i) => ratios.map((v) => v ** i), ratioLength)
   const tMatrix = matrix(data)
-  const transposedTMatrix = matrix(tMatrix.trans())
-  return { tMatrix, transposedTMatrix }
+  const tMatrixTransposed = matrix(tMatrix.trans())
+  return { tMatrix, tMatrixTransposed }
 }
 
 export const getBasisMatrix = (numberOfPoints) => {
