@@ -4,4 +4,4 @@
 pnpm exec lint-staged
 
 # Run tests before every commit
-# pnpm run test-once
+pnpm run test-once
