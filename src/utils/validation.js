@@ -1,3 +1,5 @@
+import { mapObj } from './functional'
+import { roundTo5 } from './math'
 import { isArray, isInt, isNil, isPlainObj } from './types'
 
 // -----------------------------------------------------------------------------
@@ -5,7 +7,14 @@ import { isArray, isInt, isNil, isPlainObj } from './types'
 // -----------------------------------------------------------------------------
 
 const getPointsAreSame = (point1, point2) => {
-  return point1.x === point2.x && point2.y === point2.y
+  // Round the points to 5 decimal places to avoid rounding issues where the
+  // values are fractionally different
+  const roundedPoint1 = mapObj(roundTo5, point1)
+  const roundedPoint2 = mapObj(roundTo5, point2)
+
+  return (
+    roundedPoint1.x === roundedPoint2.x && roundedPoint1.y === roundedPoint2.y
+  )
 }
 
 // -----------------------------------------------------------------------------

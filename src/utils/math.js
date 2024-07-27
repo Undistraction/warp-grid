@@ -11,6 +11,7 @@ const roundToN = (n, value) => Number(value.toFixed(n))
 // -----------------------------------------------------------------------------
 
 export const roundTo10 = (value) => roundToN(10, value)
+export const roundTo5 = (value) => roundToN(5, value)
 
 export const binomial = (n, k) => {
   if (n === 0) {
