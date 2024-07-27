@@ -53,8 +53,6 @@ const getCoonsPatch = (boundingCurves, grid) => {
   // with a uniform value for each item.
   const rows = isArray(grid.rows) ? grid.rows : buildStepSpacing(grid.rows)
 
-  console.log('@@@@', columns, rows)
-
   // Choose the function to use for interpolating the location of a point on a
   // curve.
   const interpolatePointOnCurve =
@@ -114,12 +112,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   })
 
   const getAllGridCellBounds = () => {
-    console.log('columns', columns.length)
-    console.log('rows', rows.length)
     return columns.reduce((acc, column, columnIdx) => {
-      console.log(acc)
       const cellBounds = rows.map((row, rowIdx) => {
-        console.log(`${columnIdx} / ${rowIdx}`)
         return getGridCellBounds(columnIdx, rowIdx)
       })
       return [...acc, ...cellBounds]
