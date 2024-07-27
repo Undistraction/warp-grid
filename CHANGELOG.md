@@ -1,3 +1,9 @@
+## [1.2.3](https://github.com/undistraction/coons-patch/compare/v1.2.2...v1.2.3) (2024-07-27)
+
+### Performance Improvements
+
+* Add memoization to api ([ce31489](https://github.com/undistraction/coons-patch/commit/ce314899a45193d0792ec2d54c2b8b73dcd4f29d))
+
 ## [1.2.2](https://github.com/undistraction/coons-patch/compare/v1.2.1...v1.2.2) (2024-07-27)
 
 ### Bug Fixes
