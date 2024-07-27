@@ -1,3 +1,4 @@
+import memoize from 'fast-memoize'
 import { INTERPOLATION_STRATEGY_ID } from '../const'
 import { interpolatePointOnCurveEvenlySpaced } from './interpolate/even'
 import { interpolatePointOnCurveLinear } from './interpolate/linear'
@@ -52,6 +53,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   // with a uniform value for each item.
   const rows = isArray(grid.rows) ? grid.rows : buildStepSpacing(grid.rows)
 
+  console.log('@@@@', columns, rows)
+
   // Choose the function to use for interpolating the location of a point on a
   // curve.
   const interpolatePointOnCurve =
@@ -60,16 +63,16 @@ const getCoonsPatch = (boundingCurves, grid) => {
       : // Default to even
         interpolatePointOnCurveEvenlySpaced
 
-  const getPoint = (ratioX, ratioY) => {
+  const getPoint = memoize((ratioX, ratioY) => {
     return getPointOnSurface(
       boundingCurves,
       ratioX,
       ratioY,
       interpolatePointOnCurve
     )
-  }
+  })
 
-  const getCurves = () => {
+  const getCurves = memoize(() => {
     return {
       xAxis: getCurvesOnXAxis(
         boundingCurves,
@@ -84,20 +87,20 @@ const getCoonsPatch = (boundingCurves, grid) => {
         interpolatePointOnCurve
       ),
     }
-  }
+  })
 
-  const getIntersections = () => {
+  const getIntersections = memoize(() => {
     return getGridIntersections(
       boundingCurves,
       columns,
       rows,
       interpolatePointOnCurve
     )
-  }
+  })
 
   // Get four curves that describe the bounds of the grid-square with the
   // supplied grid coordinates
-  const getGridCellBounds = (x, y) => {
+  const getGridCellBounds = memoize((x, y) => {
     validateGetSquareArguments(x, y, columns, rows)
 
     const { xAxis, yAxis } = getCurves()
@@ -108,11 +111,15 @@ const getCoonsPatch = (boundingCurves, grid) => {
       left: xAxis[x][y],
       right: xAxis[x + 1][y],
     }
-  }
+  })
 
   const getAllGridCellBounds = () => {
+    console.log('columns', columns.length)
+    console.log('rows', rows.length)
     return columns.reduce((acc, column, columnIdx) => {
+      console.log(acc)
       const cellBounds = rows.map((row, rowIdx) => {
+        console.log(`${columnIdx} / ${rowIdx}`)
         return getGridCellBounds(columnIdx, rowIdx)
       })
       return [...acc, ...cellBounds]
