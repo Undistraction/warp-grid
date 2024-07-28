@@ -57,6 +57,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   // with a uniform value for each item.
   const rows = isArray(grid.rows) ? grid.rows : buildStepSpacing(grid.rows)
 
+  const gutter = grid.gutter
+
   // Choose the function to use for interpolating the location of a point on a
   // curve.
   const interpolatePointOnCurve =
@@ -67,12 +69,12 @@ const getCoonsPatch = (boundingCurves, grid) => {
 
   const getLineOnXAxis =
     grid.lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? getCurveOnXAxis
-      : getStraightLineOnXAxis
-  const getLineOnYAxis =
-    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
       ? getCurveOnYAxis
       : getStraightLineOnYAxis
+  const getLineOnYAxis =
+    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
+      ? getCurveOnXAxis
+      : getStraightLineOnXAxis
 
   const getPoint = memoize((ratioX, ratioY) => {
     return getPointOnSurface(
@@ -89,6 +91,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
         boundingCurves,
         columns,
         rows,
+        gutter,
         getLineOnXAxis,
         interpolatePointOnCurve
       ),
@@ -96,6 +99,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
         boundingCurves,
         columns,
         rows,
+        gutter,
         getLineOnYAxis,
         interpolatePointOnCurve
       ),

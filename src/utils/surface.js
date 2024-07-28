@@ -65,22 +65,22 @@ export const getPointOnSurface = (
 
 export const getStraightLineOnXAxis = (
   boundingCurves,
-  rowRatioTotal,
+  rowStartRatio,
   rowRatio,
   rowEndRatio,
-  columnRatioTotal,
+  columnStartRatio,
   interpolatePointOnCurve
 ) => {
   const startPoint = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal,
-    rowRatioTotal,
+    columnStartRatio,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
   const endPoint = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal,
+    columnStartRatio,
     rowEndRatio,
     interpolatePointOnCurve
   )
@@ -95,23 +95,23 @@ export const getStraightLineOnXAxis = (
 
 export const getStraightLineOnYAxis = (
   boundingCurves,
-  columnRatioTotal,
-  columnRatio,
+  columnStartRatio,
+  columnWidthRatio,
   columnEndRatio,
-  rowRatioTotal,
+  rowStartRatio,
   interpolatePointOnCurve
 ) => {
   const startPoint = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal,
-    rowRatioTotal,
+    columnStartRatio,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
   const endPoint = getPointOnSurface(
     boundingCurves,
     columnEndRatio,
-    rowRatioTotal,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
@@ -125,32 +125,32 @@ export const getStraightLineOnYAxis = (
 
 export const getCurveOnXAxis = (
   boundingCurves,
-  rowRatioTotal,
+  rowStartRatio,
   rowRatio,
   rowEndRatio,
-  columnRatioTotal,
+  columnStartRatio,
   interpolatePointOnCurve
 ) => {
   const { startPoint, endPoint } = getStraightLineOnXAxis(
     boundingCurves,
-    rowRatioTotal,
+    rowStartRatio,
     rowRatio,
     rowEndRatio,
-    columnRatioTotal,
+    columnStartRatio,
     interpolatePointOnCurve
   )
 
   const midPoint1 = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal,
-    rowRatioTotal + rowRatio * RATIO_MIDPOINT_1,
+    columnStartRatio,
+    rowStartRatio + rowRatio * RATIO_MIDPOINT_1,
     interpolatePointOnCurve
   )
 
   const midPoint2 = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal,
-    rowRatioTotal + rowRatio * RATIO_MIDPOINT_2,
+    columnStartRatio,
+    rowStartRatio + rowRatio * RATIO_MIDPOINT_2,
     interpolatePointOnCurve
   )
 
@@ -164,32 +164,32 @@ export const getCurveOnXAxis = (
 
 export const getCurveOnYAxis = (
   boundingCurves,
-  columnRatioTotal,
-  columnRatio,
+  columnStartRatio,
+  columnWidthRatio,
   columnEndRatio,
-  rowRatioTotal,
+  rowStartRatio,
   interpolatePointOnCurve
 ) => {
   const { startPoint, endPoint } = getStraightLineOnYAxis(
     boundingCurves,
-    columnRatioTotal,
-    columnRatio,
+    columnStartRatio,
+    columnWidthRatio,
     columnEndRatio,
-    rowRatioTotal,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
   const midPoint1 = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal + columnRatio * RATIO_MIDPOINT_1,
-    rowRatioTotal,
+    columnStartRatio + columnWidthRatio * RATIO_MIDPOINT_1,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
   const midPoint2 = getPointOnSurface(
     boundingCurves,
-    columnRatioTotal + columnRatio * RATIO_MIDPOINT_2,
-    rowRatioTotal,
+    columnStartRatio + columnWidthRatio * RATIO_MIDPOINT_2,
+    rowStartRatio,
     interpolatePointOnCurve
   )
 
@@ -200,10 +200,11 @@ export const getCurveOnYAxis = (
   return curve
 }
 
-export const getLinesOnYAxis = (
+export const getLinesOnXAxis = (
   boundingCurves,
   columns,
   rows,
+  gutter,
   getLineOnYAxis,
   interpolatePointOnCurve
 ) => {
@@ -214,7 +215,7 @@ export const getLinesOnYAxis = (
   const rowsTotalValue = addAll(rows)
 
   const curves = []
-  let columnRatioTotal = 0
+  let columnStartRatio = 0
 
   // Short circuit if we are only 1x1 and just return the bounds
   if (columns.length === 1 && rows.length === 1) {
@@ -224,41 +225,42 @@ export const getLinesOnYAxis = (
   for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
     const lineSections = []
     const columnValue = columns[columnIdx]
-    const columnRatio = columnValue / columnsTotalValue
+    const columnWidthRatio = columnValue / columnsTotalValue
 
-    let rowRatioTotal = 0
+    let rowStartRatio = 0
 
     for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
       const rowValue = rows[rowIdx]
       const rowRatio = rowValue / rowsTotalValue
-      const rowEndRatio = rowRatioTotal + rowRatio
+      const rowEndRatio = rowStartRatio + rowRatio
 
       const curve = getLineOnYAxis(
         boundingCurves,
-        rowRatioTotal,
+        rowStartRatio,
         rowRatio,
         rowEndRatio,
-        columnRatioTotal,
+        columnStartRatio,
         interpolatePointOnCurve
       )
 
-      rowRatioTotal = rowRatioTotal + rowRatio
+      rowStartRatio = rowStartRatio + rowRatio
 
       lineSections.push({
         ...curve,
       })
     }
-    columnRatioTotal = columnRatioTotal + columnRatio
+    columnStartRatio = columnStartRatio + columnWidthRatio
     curves.push(lineSections)
   }
 
   return curves
 }
 
-export const getLinesOnXAxis = (
+export const getLinesOnYAxis = (
   boundingCurves,
   columns,
   rows,
+  gutter,
   getLineOnXAxis,
   interpolatePointOnCurve
 ) => {
@@ -269,7 +271,7 @@ export const getLinesOnXAxis = (
   const rowsTotalValue = addAll(rows)
 
   const curves = []
-  let rowRatioTotal = 0
+  let rowStartRatio = 0
 
   // Short circuit if we are only 1x1
   if (columns.length === 1 && rows.length === 1) {
@@ -281,29 +283,29 @@ export const getLinesOnXAxis = (
     const rowValue = rows[rowIdx]
     const rowRatio = rowValue / rowsTotalValue
 
-    let columnRatioTotal = 0
+    let columnStartRatio = 0
 
     for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
       const columnValue = columns[columnIdx]
-      const columnRatio = columnValue / columnsTotalValue
-      const columnEndRatio = columnRatioTotal + columnRatio
+      const columnWidthRatio = columnValue / columnsTotalValue
+      const columnEndRatio = columnStartRatio + columnWidthRatio
 
       const curve = getLineOnXAxis(
         boundingCurves,
-        columnRatioTotal,
-        columnRatio,
+        columnStartRatio,
+        columnWidthRatio,
         columnEndRatio,
-        rowRatioTotal,
+        rowStartRatio,
         interpolatePointOnCurve
       )
 
-      columnRatioTotal = columnRatioTotal + columnRatio
+      columnStartRatio = columnStartRatio + columnWidthRatio
       lineSections.push({
         ...curve,
       })
     }
 
-    rowRatioTotal = rowRatioTotal + rowRatio
+    rowStartRatio = rowStartRatio + rowRatio
     curves.push(lineSections)
   }
 
@@ -322,29 +324,29 @@ export const getGridIntersections = (
   const rowsTotal = rows.length
   const rowsTotalValue = addAll(rows)
 
-  let rowRatioTotal = 0
+  let rowStartRatio = 0
 
   for (let rowIdx = 0; rowIdx <= rowsTotal; rowIdx++) {
     const rowValue = rows[rowIdx]
     const rowRatio = rowValue / rowsTotalValue
 
-    let columnRatioTotal = 0
+    let columnStartRatio = 0
 
     for (let columnIdx = 0; columnIdx <= columnsTotal; columnIdx++) {
       const columnValue = columns[columnIdx]
-      const columnRatio = columnValue / columnsTotalValue
+      const columnWidthRatio = columnValue / columnsTotalValue
 
       const point = getPointOnSurface(
         boundingCurves,
-        columnRatioTotal,
-        rowRatioTotal,
+        columnStartRatio,
+        rowStartRatio,
         interpolatePointOnCurve
       )
 
       intersections.push(point)
-      columnRatioTotal = columnRatioTotal + columnRatio
+      columnStartRatio = columnStartRatio + columnWidthRatio
     }
-    rowRatioTotal = rowRatioTotal + rowRatio
+    rowStartRatio = rowStartRatio + rowRatio
   }
 
   return intersections
