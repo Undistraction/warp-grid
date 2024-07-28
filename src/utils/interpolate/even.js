@@ -1,6 +1,6 @@
 import { times, timesReduce } from '../functional'
 import { getDistanceBetweenPoints, roundTo10 } from '../math'
-import { validateRatio } from '../validation'
+import { validateT } from '../validation'
 import { interpolatePointOnCurveLinear } from './linear'
 
 // -----------------------------------------------------------------------------
@@ -20,41 +20,32 @@ const getApproximatePointsOnCurve = (curve, precision) => {
   }, precision + 1)
 }
 
-const getLut = (pointsApproximate) => {
-  const result = timesReduce(
+// Generate a LUT (Look Up Table) of the cumulative arc length
+const getLut = (pointsApproximate) =>
+  timesReduce(
     (acc, idx) => {
       // Find distance between current and previous approximate points
-      const lastApproximatePoint = pointsApproximate[idx]
-      const thisApproximatePoint = pointsApproximate[idx + 1]
-      const distance = getDistanceBetweenPoints(
-        lastApproximatePoint,
-        thisApproximatePoint
-      )
-
-      // Add the next cummulative length
-      const lastCummulativeLength = acc[idx]
-      const nextCummulativeLength = lastCummulativeLength + distance
-      return [...acc, nextCummulativeLength]
+      const point = pointsApproximate[idx]
+      const nextPoint = pointsApproximate[idx + 1]
+      const distanceBetweenPoints = getDistanceBetweenPoints(point, nextPoint)
+      const lastValue = acc[idx]
+      const nextValue = lastValue + distanceBetweenPoints
+      return [...acc, nextValue]
     },
     [0],
     pointsApproximate.length - 1
   )
-  console.log('@@@', result)
-  return result
-}
 
 const findClosestPointOnCurve = (lut, curve, targetLength, precision) => {
-  let point = null
   for (let i = 1; i < lut.length; i++) {
-    if (lut[i] >= targetLength) {
+    const point = lut[i]
+    if (point >= targetLength) {
+      const lastPoint = lut[i - 1]
       const ratio =
-        (i - 1 + (targetLength - lut[i - 1]) / (lut[i] - lut[i - 1])) /
-        precision
-      point = interpolatePointOnCurveLinear(ratio, curve)
-      break
+        (i - 1 + (targetLength - lastPoint) / (point - lastPoint)) / precision
+      return interpolatePointOnCurveLinear(ratio, curve)
     }
   }
-  return point
 }
 
 // -----------------------------------------------------------------------------
@@ -72,13 +63,13 @@ export const interpolatePointOnCurveEvenlySpaced =
     // number is fractionally over 1 or below 0
     const ratioRounded = roundTo10(ratio)
 
-    validateRatio(ratioRounded)
+    validateT(ratioRounded)
 
     // Approximate the curve with a high number of points
-    const pointsApproximate = getApproximatePointsOnCurve(curve, precision)
+    const points = getApproximatePointsOnCurve(curve, precision)
 
     // Calculate the cumulative arc length
-    const lut = getLut(pointsApproximate)
+    const lut = getLut(points)
 
     const totalLength = lut[lut.length - 1]
     const targetLength = ratioRounded * totalLength

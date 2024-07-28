@@ -21,7 +21,7 @@ const getPointsAreSame = (point1, point2) => {
 // Exports
 // -----------------------------------------------------------------------------
 
-export const validateRatio = (ratio) => {
+export const validateT = (ratio) => {
   if (ratio < 0 || ratio > 1) {
     throw new Error(`Ratio must be between 0 and 1, but was '${ratio}'`)
   }

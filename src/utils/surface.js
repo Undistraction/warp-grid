@@ -78,7 +78,7 @@ export const getCurvesOnXAxis = (
   const curves = []
   let columnRatioTotal = 0
 
-  // Short circuit if we are only 1x1
+  // Short circuit if we are only 1x1 and just return the bounds
   if (columns.length === 1 && rows.length === 1) {
     return [[boundingCurves.left], [boundingCurves.right]]
   }
@@ -124,12 +124,7 @@ export const getCurvesOnXAxis = (
       )
 
       const curve = fitCubicBezierToPoints(
-        {
-          startPoint,
-          midPoint1,
-          midPoint2,
-          endPoint,
-        },
+        [startPoint, midPoint1, midPoint2, endPoint],
         [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
       )
 
@@ -207,12 +202,7 @@ export const getCurvesOnYAxis = (
       )
 
       const curve = fitCubicBezierToPoints(
-        {
-          startPoint,
-          midPoint1,
-          midPoint2,
-          endPoint,
-        },
+        [startPoint, midPoint1, midPoint2, endPoint],
         [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
       )
 

@@ -1,5 +1,5 @@
 import { roundTo10 } from '../math'
-import { validateRatio } from '../validation'
+import { validateT } from '../validation'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -13,7 +13,7 @@ const lerpPoint = (point1, point2, t) => {
   return { x: lerp(point1.x, point2.x, t), y: lerp(point1.y, point2.y, t) }
 }
 
-const interpolateCoordinate = (
+const interpolate = (
   t,
   { controlPoint1, controlPoint2, startPoint, endPoint }
 ) => {
@@ -41,10 +41,10 @@ export const interpolatePointOnCurveLinear = (t, curve) => {
   // Round the ratio to 10 decimal places to avoid rounding issues where the
   // number is fractionally over 1 or below 0
   const tRounded = roundTo10(t)
-  validateRatio(tRounded)
+  validateT(tRounded)
 
   return {
-    ...interpolateCoordinate(t, curve),
+    ...interpolate(t, curve),
     t,
   }
 }
