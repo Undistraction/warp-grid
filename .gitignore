@@ -18,3 +18,7 @@ node_modules/
 # Vite
 
 **/dist/
+
+# Local files
+
+TODO.md
