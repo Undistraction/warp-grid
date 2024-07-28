@@ -1,3 +1,4 @@
+import memoize from 'fast-memoize'
 import { times, timesReduce } from '../functional'
 import { getDistanceBetweenPoints, roundTo10 } from '../math'
 import { validateT } from '../validation'
@@ -48,6 +49,13 @@ const findClosestPointOnCurve = (lut, curve, targetLength, precision) => {
   }
 }
 
+// We only want to do this once per curve as it is very expensive
+const getLutForCurve = memoize((curve, precision) => {
+  console.log(curve)
+  const pointsApproximate = getApproximatePointsOnCurve(curve, precision)
+  return getLut(pointsApproximate)
+})
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -65,11 +73,7 @@ export const interpolatePointOnCurveEvenlySpaced =
 
     validateT(ratioRounded)
 
-    // Approximate the curve with a high number of points
-    const points = getApproximatePointsOnCurve(curve, precision)
-
-    // Calculate the cumulative arc length
-    const lut = getLut(points)
+    const lut = getLutForCurve(curve, precision)
 
     const totalLength = lut[lut.length - 1]
     const targetLength = ratioRounded * totalLength
