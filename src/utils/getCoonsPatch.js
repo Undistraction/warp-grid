@@ -59,7 +59,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
     grid.interpolationStrategy === INTERPOLATION_STRATEGY_ID.LINEAR
       ? interpolatePointOnCurveLinear
       : // Default to even
-        interpolatePointOnCurveEvenlySpaced
+        interpolatePointOnCurveEvenlySpaced({ precision: grid.precision })
 
   const getPoint = memoize((ratioX, ratioY) => {
     return getPointOnSurface(

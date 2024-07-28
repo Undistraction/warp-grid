@@ -1,3 +1,4 @@
+import { times, timesReduce } from '../functional'
 import { getDistanceBetweenPoints, roundTo10 } from '../math'
 import { validateRatio } from '../validation'
 import { interpolatePointOnCurveLinear } from './linear'
@@ -6,56 +7,48 @@ import { interpolatePointOnCurveLinear } from './linear'
 // Const
 // -----------------------------------------------------------------------------
 
-const DEFAULT_PRECISION = 6
+const DEFAULT_PRECISION = 20
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
 const getApproximatePointsOnCurve = (curve, precision) => {
-  const points = []
-
-  for (let i = 0; i <= precision; i++) {
-    const ratio = i / precision
-    points.push(interpolatePointOnCurveLinear(ratio, curve))
-  }
-
-  return points
+  return times((idx) => {
+    const ratio = idx / precision
+    return interpolatePointOnCurveLinear(ratio, curve)
+  }, precision + 1)
 }
 
-const getCumulativeLengths = (pointsApproximate) => {
-  const cumulativeLengths = [0]
-  for (let i = 1; i < pointsApproximate.length; i++) {
-    // Find distance between current and previous approximate points
-    const lastApproximatePoint = pointsApproximate[i - 1]
-    const thisApproximatePoint = pointsApproximate[i]
-    const distance = getDistanceBetweenPoints(
-      lastApproximatePoint,
-      thisApproximatePoint
-    )
+const getLut = (pointsApproximate) => {
+  const result = timesReduce(
+    (acc, idx) => {
+      // Find distance between current and previous approximate points
+      const lastApproximatePoint = pointsApproximate[idx]
+      const thisApproximatePoint = pointsApproximate[idx + 1]
+      const distance = getDistanceBetweenPoints(
+        lastApproximatePoint,
+        thisApproximatePoint
+      )
 
-    // Add the next cummulative length
-    const lastCummulativeLength = cumulativeLengths[i - 1]
-    cumulativeLengths.push(lastCummulativeLength + distance)
-  }
-
-  return cumulativeLengths
+      // Add the next cummulative length
+      const lastCummulativeLength = acc[idx]
+      const nextCummulativeLength = lastCummulativeLength + distance
+      return [...acc, nextCummulativeLength]
+    },
+    [0],
+    pointsApproximate.length - 1
+  )
+  console.log('@@@', result)
+  return result
 }
 
-const findClosestPointOnCurve = (
-  cumulativeLengths,
-  curve,
-  targetLength,
-  precision
-) => {
+const findClosestPointOnCurve = (lut, curve, targetLength, precision) => {
   let point = null
-  for (let i = 1; i < cumulativeLengths.length; i++) {
-    if (cumulativeLengths[i] >= targetLength) {
+  for (let i = 1; i < lut.length; i++) {
+    if (lut[i] >= targetLength) {
       const ratio =
-        (i -
-          1 +
-          (targetLength - cumulativeLengths[i - 1]) /
-            (cumulativeLengths[i] - cumulativeLengths[i - 1])) /
+        (i - 1 + (targetLength - lut[i - 1]) / (lut[i] - lut[i - 1])) /
         precision
       point = interpolatePointOnCurveLinear(ratio, curve)
       break
@@ -68,33 +61,28 @@ const findClosestPointOnCurve = (
 // Exports
 // -----------------------------------------------------------------------------
 
-export const interpolatePointOnCurveEvenlySpaced = (
-  ratio,
-  curve,
-  // Get an approximation using an arbitrary number of points. Increase for more
-  // accuracy at cost of performance
-  { precision = DEFAULT_PRECISION } = {}
-) => {
-  // Round the ratio to 10 decimal places to avoid rounding issues where the
-  // number is fractionally over 1 or below 0
-  const ratioRounded = roundTo10(ratio)
+export const interpolatePointOnCurveEvenlySpaced =
+  (
+    // Get an approximation using an arbitrary number of points. Increase for
+    // more accuracy at cost of performance
+    { precision = DEFAULT_PRECISION } = {}
+  ) =>
+  (ratio, curve) => {
+    // Round the ratio to 10 decimal places to avoid rounding issues where the
+    // number is fractionally over 1 or below 0
+    const ratioRounded = roundTo10(ratio)
 
-  validateRatio(ratioRounded)
+    validateRatio(ratioRounded)
 
-  // Approximate the curve with a high number of points
-  const pointsApproximate = getApproximatePointsOnCurve(curve, precision)
+    // Approximate the curve with a high number of points
+    const pointsApproximate = getApproximatePointsOnCurve(curve, precision)
 
-  // Calculate the cumulative arc length
-  const cumulativeLengths = getCumulativeLengths(pointsApproximate)
+    // Calculate the cumulative arc length
+    const lut = getLut(pointsApproximate)
 
-  const totalLength = cumulativeLengths[cumulativeLengths.length - 1]
-  const targetLength = ratioRounded * totalLength
+    const totalLength = lut[lut.length - 1]
+    const targetLength = ratioRounded * totalLength
 
-  // Interpolate new point based on the cumulative arc length
-  return findClosestPointOnCurve(
-    cumulativeLengths,
-    curve,
-    targetLength,
-    precision
-  )
-}
+    // Interpolate new point based on the cumulative arc length
+    return findClosestPointOnCurve(lut, curve, targetLength, precision)
+  }

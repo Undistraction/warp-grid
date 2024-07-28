@@ -29,13 +29,15 @@
   "type": "module",
   "scripts": {
     "prepare": "husky",
-    "test-once": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests --watchAll",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests",
+    "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests --watchAll",
     "lint": "pnpm run lint-prettier && pnpm run lint-eslint",
     "lint-prettier": "prettier . --write",
     "lint-eslint": "eslint './**/*.{js,jsx,cjs}'",
     "build": "vite build",
-    "release": "semantic-release --no-ci --dry-run --debug"
+    "build-watch": "vite build --watch",
+    "release": "semantic-release --no-ci --dry-run --debug",
+    "link": "pnpm link --global"
   },
   "keywords": [
     "coons patch",
