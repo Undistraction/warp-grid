@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/undistraction/coons-patch/compare/v1.2.3...v1.3.0) (2024-07-28)
+
+### Features
+
+* Add support for straight-line strategy ([00de81f](https://github.com/undistraction/coons-patch/commit/00de81f0edc183c51840bc57934f259e00e4dbdf))
+* Expose precsion as config ([d19291d](https://github.com/undistraction/coons-patch/commit/d19291d5cc2f1455cb7f5c5a0af1d6d734f38934))
+
 ## [1.2.3](https://github.com/undistraction/coons-patch/compare/v1.2.2...v1.2.3) (2024-07-27)
 
 ### Performance Improvements
