@@ -125,7 +125,7 @@ const fixtureVariantColumnsAndRows = {
         )
       }
     },
-    getCurves: () => {
+    getyLines: () => {
       return {
         xAxis: [
           [

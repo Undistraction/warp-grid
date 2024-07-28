@@ -61,7 +61,7 @@ const fixture3X3Grid = {
         )
       }
     },
-    getCurves: () => {
+    getyLines: () => {
       return {
         xAxis: [
           [

@@ -35,7 +35,7 @@ const coonsPatch = getCoonsPatch(
 const point = coonsPatch.api.getPoint(0.5, 0.75)
 
 // Get an object wity `xAxis` and `yAxis` keys. Each key contains an Array containing data representing all the sub-curves that make up each curve along that axis.
-const curves = coonsPatch.api.getCurves()
+const curves = coonsPatch.api.getyLines()
 
 // Get an array of points representing every grid intersection
 const intersections = coonsPatch.api.getIntersections()
@@ -126,7 +126,7 @@ The `coonsPatch` object comprises of two fields, `config` and `api`.
 
 TBD
 
-#### getCurves
+#### getyLines
 
 TBD
 

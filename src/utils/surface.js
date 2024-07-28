@@ -63,10 +63,148 @@ export const getPointOnSurface = (
   }
 }
 
-export const getCurvesOnXAxis = (
+export const getStraightLineOnXAxis = (
+  boundingCurves,
+  rowRatioTotal,
+  rowRatio,
+  rowEndRatio,
+  columnRatioTotal,
+  interpolatePointOnCurve
+) => {
+  const startPoint = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const endPoint = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal,
+    rowEndRatio,
+    interpolatePointOnCurve
+  )
+
+  return {
+    startPoint,
+    endPoint,
+    controlPoint1: startPoint,
+    controlPoint2: endPoint,
+  }
+}
+
+export const getStraightLineOnYAxis = (
+  boundingCurves,
+  columnRatioTotal,
+  columnRatio,
+  columnEndRatio,
+  rowRatioTotal,
+  interpolatePointOnCurve
+) => {
+  const startPoint = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const endPoint = getPointOnSurface(
+    boundingCurves,
+    columnEndRatio,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  return {
+    startPoint,
+    endPoint,
+    controlPoint1: startPoint,
+    controlPoint2: endPoint,
+  }
+}
+
+export const getCurveOnXAxis = (
+  boundingCurves,
+  rowRatioTotal,
+  rowRatio,
+  rowEndRatio,
+  columnRatioTotal,
+  interpolatePointOnCurve
+) => {
+  const { startPoint, endPoint } = getStraightLineOnXAxis(
+    boundingCurves,
+    rowRatioTotal,
+    rowRatio,
+    rowEndRatio,
+    columnRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const midPoint1 = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal,
+    rowRatioTotal + rowRatio * RATIO_MIDPOINT_1,
+    interpolatePointOnCurve
+  )
+
+  const midPoint2 = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal,
+    rowRatioTotal + rowRatio * RATIO_MIDPOINT_2,
+    interpolatePointOnCurve
+  )
+
+  const curve = fitCubicBezierToPoints(
+    [startPoint, midPoint1, midPoint2, endPoint],
+    [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
+  )
+
+  return curve
+}
+
+export const getCurveOnYAxis = (
+  boundingCurves,
+  columnRatioTotal,
+  columnRatio,
+  columnEndRatio,
+  rowRatioTotal,
+  interpolatePointOnCurve
+) => {
+  const { startPoint, endPoint } = getStraightLineOnYAxis(
+    boundingCurves,
+    columnRatioTotal,
+    columnRatio,
+    columnEndRatio,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const midPoint1 = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal + columnRatio * RATIO_MIDPOINT_1,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const midPoint2 = getPointOnSurface(
+    boundingCurves,
+    columnRatioTotal + columnRatio * RATIO_MIDPOINT_2,
+    rowRatioTotal,
+    interpolatePointOnCurve
+  )
+
+  const curve = fitCubicBezierToPoints(
+    [startPoint, midPoint1, midPoint2, endPoint],
+    [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
+  )
+  return curve
+}
+
+export const getLinesOnYAxis = (
   boundingCurves,
   columns,
   rows,
+  getLineOnYAxis,
   interpolatePointOnCurve
 ) => {
   const columnsTotalCount = columns.length
@@ -84,7 +222,7 @@ export const getCurvesOnXAxis = (
   }
 
   for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-    const curveSections = []
+    const lineSections = []
     const columnValue = columns[columnIdx]
     const columnRatio = columnValue / columnsTotalValue
 
@@ -95,56 +233,33 @@ export const getCurvesOnXAxis = (
       const rowRatio = rowValue / rowsTotalValue
       const rowEndRatio = rowRatioTotal + rowRatio
 
-      const startPoint = getPointOnSurface(
+      const curve = getLineOnYAxis(
         boundingCurves,
-        columnRatioTotal,
         rowRatioTotal,
-        interpolatePointOnCurve,
-        true
-      )
-
-      const endPoint = getPointOnSurface(
-        boundingCurves,
-        columnRatioTotal,
+        rowRatio,
         rowEndRatio,
-        interpolatePointOnCurve
-      )
-      const midPoint1 = getPointOnSurface(
-        boundingCurves,
         columnRatioTotal,
-        rowRatioTotal + rowRatio * RATIO_MIDPOINT_1,
         interpolatePointOnCurve
-      )
-
-      const midPoint2 = getPointOnSurface(
-        boundingCurves,
-        columnRatioTotal,
-        rowRatioTotal + rowRatio * RATIO_MIDPOINT_2,
-        interpolatePointOnCurve
-      )
-
-      const curve = fitCubicBezierToPoints(
-        [startPoint, midPoint1, midPoint2, endPoint],
-        [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
       )
 
       rowRatioTotal = rowRatioTotal + rowRatio
 
-      curveSections.push({
+      lineSections.push({
         ...curve,
       })
     }
     columnRatioTotal = columnRatioTotal + columnRatio
-    curves.push(curveSections)
+    curves.push(lineSections)
   }
 
   return curves
 }
 
-export const getCurvesOnYAxis = (
+export const getLinesOnXAxis = (
   boundingCurves,
   columns,
   rows,
+  getLineOnXAxis,
   interpolatePointOnCurve
 ) => {
   const columnsTotalCount = columns.length
@@ -162,7 +277,7 @@ export const getCurvesOnYAxis = (
   }
 
   for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
-    const curveSections = []
+    const lineSections = []
     const rowValue = rows[rowIdx]
     const rowRatio = rowValue / rowsTotalValue
 
@@ -173,47 +288,23 @@ export const getCurvesOnYAxis = (
       const columnRatio = columnValue / columnsTotalValue
       const columnEndRatio = columnRatioTotal + columnRatio
 
-      const startPoint = getPointOnSurface(
+      const curve = getLineOnXAxis(
         boundingCurves,
         columnRatioTotal,
-        rowRatioTotal,
-        interpolatePointOnCurve
-      )
-
-      const endPoint = getPointOnSurface(
-        boundingCurves,
+        columnRatio,
         columnEndRatio,
         rowRatioTotal,
         interpolatePointOnCurve
       )
 
-      const midPoint1 = getPointOnSurface(
-        boundingCurves,
-        columnRatioTotal + columnRatio * RATIO_MIDPOINT_1,
-        rowRatioTotal,
-        interpolatePointOnCurve
-      )
-
-      const midPoint2 = getPointOnSurface(
-        boundingCurves,
-        columnRatioTotal + columnRatio * RATIO_MIDPOINT_2,
-        rowRatioTotal,
-        interpolatePointOnCurve
-      )
-
-      const curve = fitCubicBezierToPoints(
-        [startPoint, midPoint1, midPoint2, endPoint],
-        [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
-      )
-
       columnRatioTotal = columnRatioTotal + columnRatio
-      curveSections.push({
+      lineSections.push({
         ...curve,
       })
     }
 
     rowRatioTotal = rowRatioTotal + rowRatio
-    curves.push(curveSections)
+    curves.push(lineSections)
   }
 
   return curves

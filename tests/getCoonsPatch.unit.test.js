@@ -204,10 +204,10 @@ describe(`getCoonsPatch`, () => {
           })
         })
 
-        describe(`getCurves`, () => {
+        describe(`getyLines`, () => {
           it(`returns curves along x and y axes`, () => {
-            const curves = api.getCurves()
-            expect(curves).toEqual(fixture.api.getCurves())
+            const curves = api.getyLines()
+            expect(curves).toEqual(fixture.api.getyLines())
           })
         })
 

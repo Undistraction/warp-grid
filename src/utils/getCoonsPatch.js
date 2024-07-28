@@ -1,12 +1,16 @@
 import memoize from 'fast-memoize'
-import { INTERPOLATION_STRATEGY_ID } from '../const'
+import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from '../const'
 import { interpolatePointOnCurveEvenlySpaced } from './interpolate/even'
 import { interpolatePointOnCurveLinear } from './interpolate/linear'
 import {
-  getCurvesOnXAxis,
-  getCurvesOnYAxis,
+  getCurveOnXAxis,
+  getCurveOnYAxis,
   getGridIntersections,
+  getLinesOnXAxis,
+  getLinesOnYAxis,
   getPointOnSurface,
+  getStraightLineOnXAxis,
+  getStraightLineOnYAxis,
 } from './surface'
 import { isArray } from './types'
 import {
@@ -61,6 +65,15 @@ const getCoonsPatch = (boundingCurves, grid) => {
       : // Default to even
         interpolatePointOnCurveEvenlySpaced({ precision: grid.precision })
 
+  const getLineOnXAxis =
+    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
+      ? getCurveOnXAxis
+      : getStraightLineOnXAxis
+  const getLineOnYAxis =
+    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
+      ? getCurveOnYAxis
+      : getStraightLineOnYAxis
+
   const getPoint = memoize((ratioX, ratioY) => {
     return getPointOnSurface(
       boundingCurves,
@@ -70,18 +83,20 @@ const getCoonsPatch = (boundingCurves, grid) => {
     )
   })
 
-  const getCurves = memoize(() => {
+  const getLines = memoize(() => {
     return {
-      xAxis: getCurvesOnXAxis(
+      xAxis: getLinesOnXAxis(
         boundingCurves,
         columns,
         rows,
+        getLineOnXAxis,
         interpolatePointOnCurve
       ),
-      yAxis: getCurvesOnYAxis(
+      yAxis: getLinesOnYAxis(
         boundingCurves,
         columns,
         rows,
+        getLineOnYAxis,
         interpolatePointOnCurve
       ),
     }
@@ -101,7 +116,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
   const getGridCellBounds = memoize((x, y) => {
     validateGetSquareArguments(x, y, columns, rows)
 
-    const { xAxis, yAxis } = getCurves()
+    const { xAxis, yAxis } = getLines()
 
     return {
       top: yAxis[y][x],
@@ -128,7 +143,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
     },
     api: {
       getPoint,
-      getCurves,
+      getLines,
       getIntersections,
       getGridCellBounds,
       getAllGridCellBounds,
