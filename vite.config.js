@@ -10,6 +10,7 @@ import { defineConfig } from 'vite'
 export default defineConfig(() => {
   return {
     build: {
+      minify: false,
       sourcemap: true,
       lib: {
         entry: resolve(__dirname, 'src/index.js'),

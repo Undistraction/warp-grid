@@ -31,7 +31,7 @@ const getCoordinateOnSurface = (
   )
 }
 
-const addAll = (list) => list.reduce((total, value) => total + value, 0)
+const addAll = (list) => list.reduce((total, { value }) => total + value, 0)
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -224,13 +224,13 @@ export const getLinesOnXAxis = (
 
   for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
     const lineSections = []
-    const columnValue = columns[columnIdx]
+    const columnValue = columns[columnIdx]?.value
     const columnWidthRatio = columnValue / columnsTotalValue
 
     let rowStartRatio = 0
 
     for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
-      const rowValue = rows[rowIdx]
+      const rowValue = rows[rowIdx]?.value
       const rowRatio = rowValue / rowsTotalValue
       const rowEndRatio = rowStartRatio + rowRatio
 
@@ -280,13 +280,13 @@ export const getLinesOnYAxis = (
 
   for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
     const lineSections = []
-    const rowValue = rows[rowIdx]
+    const rowValue = rows[rowIdx]?.value
     const rowRatio = rowValue / rowsTotalValue
 
     let columnStartRatio = 0
 
     for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
-      const columnValue = columns[columnIdx]
+      const columnValue = columns[columnIdx]?.value
       const columnWidthRatio = columnValue / columnsTotalValue
       const columnEndRatio = columnStartRatio + columnWidthRatio
 
@@ -327,13 +327,13 @@ export const getGridIntersections = (
   let rowStartRatio = 0
 
   for (let rowIdx = 0; rowIdx <= rowsTotal; rowIdx++) {
-    const rowValue = rows[rowIdx]
+    const rowValue = rows[rowIdx]?.value
     const rowRatio = rowValue / rowsTotalValue
 
     let columnStartRatio = 0
 
     for (let columnIdx = 0; columnIdx <= columnsTotal; columnIdx++) {
-      const columnValue = columns[columnIdx]
+      const columnValue = columns[columnIdx]?.value
       const columnWidthRatio = columnValue / columnsTotalValue
 
       const point = getPointOnSurface(

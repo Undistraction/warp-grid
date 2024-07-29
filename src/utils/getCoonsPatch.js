@@ -12,7 +12,7 @@ import {
   getStraightLineOnXAxis,
   getStraightLineOnYAxis,
 } from './surface'
-import { isArray } from './types'
+import { isInt, isPlainObj } from './types'
 import {
   validateBoundingCurves,
   validateGetSquareArguments,
@@ -26,10 +26,21 @@ import {
 const buildStepSpacing = (v) => {
   const spacing = []
   for (let idx = 0; idx < v; idx++) {
-    spacing.push(1)
+    spacing.push({ value: 1 })
   }
   return spacing
 }
+
+const processSteps = (steps) =>
+  steps.map((step) => {
+    if (isPlainObj(step)) {
+      return step
+    } else {
+      return {
+        value: step,
+      }
+    }
+  })
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -39,23 +50,16 @@ const getCoonsPatch = (boundingCurves, grid) => {
   validateBoundingCurves(boundingCurves)
   validateGrid(grid)
 
-  // Columns can be either an int, or an array containing ints, each
-  // representing the width of that column. If the total widths are different to
-  // the width of the shape described by the bounding curves, they will be
-  // mapped to the the width of the shape, acting as ratios instead of absolute
-  // widths. If the supplied value is an int, we create an array with a length
-  // of the int, with a uniform value for each item.
-  const columns = isArray(grid.columns)
-    ? grid.columns
-    : buildStepSpacing(grid.columns)
+  const columns = isInt(grid.columns)
+    ? buildStepSpacing(grid.columns)
+    : processSteps(grid.columns)
 
-  // Rows can be either an int, or an array containing ints, each representing
-  // the height of that column. If the total heights are different to the height
-  // of the shape described by the bounding curves, they will be mapped to the
-  // the height of the shape, acting as ratios instead of absolute heights. If
-  // the supplied value is an int, we create an array with a length of the int,
-  // with a uniform value for each item.
-  const rows = isArray(grid.rows) ? grid.rows : buildStepSpacing(grid.rows)
+  const rows = isInt(grid.rows)
+    ? buildStepSpacing(grid.rows)
+    : processSteps(grid.rows)
+
+  console.log('@columns', columns)
+  console.log('@rows', rows)
 
   const gutter = grid.gutter
 

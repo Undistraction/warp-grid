@@ -102,14 +102,18 @@ export const validateGrid = (grid) => {
   }
 
   if (!isArray(grid.rows) && !isInt(grid.rows)) {
-    throw new Error('grid.rows must be an Array of Ints or Int')
+    throw new Error(
+      'grid.rows must be an Int, an Array of Ints, or an Array of objects'
+    )
   }
 }
 
 export const validateGetSquareArguments = (x, y, columns, rows) => {
-  if (x >= columns || y >= rows) {
+  const columnCount = columns.length
+  const rowCount = rows.length
+  if (x >= columnCount || y >= rowCount) {
     throw new Error(
-      `Grid is '${columns}' x '${rows}' but you passed x:'${x}' and y:'${y}'`
+      `Grid is '${columnCount}' x '${rowCount}' but you passed x:'${x}' and y:'${y}'`
     )
   }
 }

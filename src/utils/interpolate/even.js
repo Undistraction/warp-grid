@@ -51,7 +51,6 @@ const findClosestPointOnCurve = (lut, curve, targetLength, precision) => {
 
 // We only want to do this once per curve as it is very expensive
 const getLutForCurve = memoize((curve, precision) => {
-  console.log(curve)
   const pointsApproximate = getApproximatePointsOnCurve(curve, precision)
   return getLut(pointsApproximate)
 })

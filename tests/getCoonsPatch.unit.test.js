@@ -1,67 +1,16 @@
+import { beforeAll } from '@jest/globals'
+import path from 'path'
 import getCoonsPatch from '../src/'
-import fixture3X3Grid from './fixtures/patch3x3Grid'
-import fixtureVariantColumnsAndRows from './fixtures/patchVariantColumnsAndRows'
-// -----------------------------------------------------------------------------
-// Const
-// -----------------------------------------------------------------------------
-
-const boundsValid = {
-  top: {
-    startPoint: { x: 0, y: 0 },
-    endPoint: { x: 100, y: 0 },
-    controlPoint1: { x: 10, y: -10 },
-    controlPoint2: { x: 90, y: -10 },
-  },
-  bottom: {
-    startPoint: { x: 0, y: 100 },
-    endPoint: { x: 100, y: 100 },
-    controlPoint1: { x: -10, y: 110 },
-    controlPoint2: { x: 110, y: 110 },
-  },
-  left: {
-    startPoint: { x: 0, y: 0 },
-    endPoint: { x: 0, y: 100 },
-    controlPoint1: { x: -10, y: -10 },
-    controlPoint2: { x: -10, y: 110 },
-  },
-  right: {
-    startPoint: { x: 100, y: 0 },
-    endPoint: { x: 100, y: 100 },
-    controlPoint1: { x: 110, y: -10 },
-    controlPoint2: { x: 110, y: 110 },
-  },
-}
-
-const gridWithNumericColumns = {
-  columns: 3,
-  rows: 3,
-}
-
-const variants = [
-  {
-    name: '3x3 grid',
-    input: {
-      grid: gridWithNumericColumns,
-    },
-    fixture: fixture3X3Grid,
-  },
-  {
-    name: 'Variant columns and rows',
-    input: {
-      grid: {
-        columns: [5, 1, 5, 4, 5, 1, 5, 1, 5],
-        rows: [5, 1, 5, 3, 5, 1, 10],
-      },
-    },
-    fixture: fixtureVariantColumnsAndRows,
-  },
-]
+import fixtures, { boundsValid } from './fixtures.js'
+import { __dirname, readFileAsync } from './helpers.js'
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
+
+const fixturesFiltered = fixtures.filter(({ skipTest }) => skipTest !== true)
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -151,16 +100,25 @@ describe(`getCoonsPatch`, () => {
       it(`throws if rows are not Array or Int`, () => {
         expect(() => {
           getCoonsPatch(boundsValid, { columns: [], rows: {} })
-        }).toThrow('grid.rows must be an Array of Ints or Int')
+        }).toThrow(
+          'grid.rows must be an Int, an Array of Ints, or an Array of objects'
+        )
       })
     })
   })
 
   // Loop through different types of grid
-  describe.each(variants)(
-    `For a $name returns correct patch`,
-    ({ fixture, input }) => {
-      const patch = getCoonsPatch(boundsValid, input.grid)
+  describe.each(fixturesFiltered)(
+    `For '$name' returns correct patch`,
+    ({ name, input }) => {
+      const patch = getCoonsPatch(input.bounds, input.grid)
+      let output
+
+      beforeAll(async () => {
+        const filePath = path.join(__dirname, `./fixtures/${name}.json`)
+        const fixureJSON = await readFileAsync(filePath)
+        output = JSON.parse(fixureJSON)
+      })
 
       describe('config', () => {
         const { config } = patch
@@ -170,8 +128,8 @@ describe(`getCoonsPatch`, () => {
         })
 
         it(`with arrays of column and row values`, () => {
-          expect(config.columns).toEqual(fixture.config.columns)
-          expect(config.rows).toEqual(fixture.config.rows)
+          expect(config.columns).toEqual(output.config.columns)
+          expect(config.rows).toEqual(output.config.rows)
         })
       })
 
@@ -182,16 +140,16 @@ describe(`getCoonsPatch`, () => {
           it(`provides bounds for the grid square at the supplied coordinates`, () => {
             const args = [2, 2]
             const gridSquareBounds = api.getGridCellBounds(...args)
-            expect(gridSquareBounds).toEqual(
-              fixture.api.getGridCellBounds(...args)
-            )
+            console.log('@@', output)
+            console.log('@@', output.config)
+            expect(gridSquareBounds).toEqual(output.api.getGridCellBounds)
           })
         })
 
         describe(`getIntersections`, () => {
           it(`returns all intersections between curves`, () => {
             const intersectons = api.getIntersections()
-            expect(intersectons).toEqual(fixture.api.getIntersections())
+            expect(intersectons).toEqual(output.api.getIntersections)
           })
         })
 
@@ -200,21 +158,21 @@ describe(`getCoonsPatch`, () => {
             const args = [0.5, 0.25]
             const point = api.getPoint(...args)
 
-            expect(point).toEqual(fixture.api.getPoint(...args))
+            expect(point).toEqual(output.api.getPoint)
           })
         })
 
-        describe(`getyLines`, () => {
+        describe(`getLines`, () => {
           it(`returns curves along x and y axes`, () => {
-            const curves = api.getyLines()
-            expect(curves).toEqual(fixture.api.getyLines())
+            const curves = api.getLines()
+            expect(curves).toEqual(output.api.getLines)
           })
         })
 
         describe(`getAllGridCellBounds`, () => {
           it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
             const gridCellBounds = api.getAllGridCellBounds()
-            expect(gridCellBounds).toEqual(fixture.api.getAllGridCellBounds())
+            expect(gridCellBounds).toEqual(output.api.getAllGridCellBounds)
           })
         })
       })
