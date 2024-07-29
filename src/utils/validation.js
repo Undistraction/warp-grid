@@ -22,9 +22,9 @@ const getPointsAreSame = (point1, point2) => {
 // Exports
 // -----------------------------------------------------------------------------
 
-export const validateT = (ratio) => {
-  if (ratio < 0 || ratio > 1) {
-    throw new Error(`Ratio must be between 0 and 1, but was '${ratio}'`)
+export const validateT = (t) => {
+  if (t < 0 || t > 1) {
+    throw new Error(`t value must be between 0 and 1, but was '${t}'`)
   }
 }
 
@@ -135,11 +135,11 @@ export const validateGrid = (grid) => {
 
 export const validateGetPointArguments = (u, v) => {
   if (u < 0 || u > 1) {
-    throw new Error(`u value must be between 0 and 1, but you supplied '${u}'`)
+    throw new Error(`u value must be between 0 and 1, but was '${u}'`)
   }
 
   if (v < 0 || v > 1) {
-    throw new Error(`v value must be between 0 and 1, but you supplied '${v}'`)
+    throw new Error(`v value must be between 0 and 1, but was '${v}'`)
   }
 }
 

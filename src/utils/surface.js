@@ -5,8 +5,8 @@ import { getPointOnSurface } from './coons'
 // Const
 // -----------------------------------------------------------------------------
 
-const RATIO_MIDPOINT_1 = 0.25
-const RATIO_MIDPOINT_2 = 0.75
+const T_MIDPOINT_1 = 0.25
+const T_MIDPOINT_2 = 0.75
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -40,6 +40,7 @@ export const getStraightLineOnXAxis = (
     interpolatePointOnCurve
   )
 
+  // Set the control points to the start and end points so the line is straight
   return {
     startPoint,
     endPoint,
@@ -70,6 +71,7 @@ export const getStraightLineOnYAxis = (
     interpolatePointOnCurve
   )
 
+  // Set the control points to the start and end points so the line is straight
   return {
     startPoint,
     endPoint,
@@ -98,20 +100,20 @@ export const getCurveOnXAxis = (
   const midPoint1 = getPointOnSurface(
     boundingCurves,
     columnStartRatio,
-    rowStartRatio + rowRatio * RATIO_MIDPOINT_1,
+    rowStartRatio + rowRatio * T_MIDPOINT_1,
     interpolatePointOnCurve
   )
 
   const midPoint2 = getPointOnSurface(
     boundingCurves,
     columnStartRatio,
-    rowStartRatio + rowRatio * RATIO_MIDPOINT_2,
+    rowStartRatio + rowRatio * T_MIDPOINT_2,
     interpolatePointOnCurve
   )
 
   const curve = fitCubicBezierToPoints(
     [startPoint, midPoint1, midPoint2, endPoint],
-    [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
+    [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
   )
 
   return curve
@@ -136,21 +138,21 @@ export const getCurveOnYAxis = (
 
   const midPoint1 = getPointOnSurface(
     boundingCurves,
-    columnStartRatio + columnWidthRatio * RATIO_MIDPOINT_1,
+    columnStartRatio + columnWidthRatio * T_MIDPOINT_1,
     rowStartRatio,
     interpolatePointOnCurve
   )
 
   const midPoint2 = getPointOnSurface(
     boundingCurves,
-    columnStartRatio + columnWidthRatio * RATIO_MIDPOINT_2,
+    columnStartRatio + columnWidthRatio * T_MIDPOINT_2,
     rowStartRatio,
     interpolatePointOnCurve
   )
 
   const curve = fitCubicBezierToPoints(
     [startPoint, midPoint1, midPoint2, endPoint],
-    [0, RATIO_MIDPOINT_1, RATIO_MIDPOINT_2, 1]
+    [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
   )
   return curve
 }
@@ -172,15 +174,16 @@ export const getLinesOnXAxis = (
   let rowStartRatio = 0
 
   // Short circuit if we are only 1x1
-  if (columns.length === 1 && rows.length === 1) {
+  if (columnsTotalCount === 1 && rowsTotalCount === 1) {
     return [[boundingCurves.top], [boundingCurves.bottom]]
   }
 
   for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
-    const lineSections = []
     const row = rows[rowIdx]
     const rowValue = row?.value
     const rowRatio = rowValue / rowsTotalValue
+
+    const lineSections = []
 
     let columnStartRatio = 0
 
@@ -201,9 +204,7 @@ export const getLinesOnXAxis = (
           interpolatePointOnCurve
         )
 
-        lineSections.push({
-          ...curve,
-        })
+        lineSections.push(curve)
       }
 
       columnStartRatio = columnStartRatio + columnWidthRatio
@@ -233,15 +234,16 @@ export const getLinesOnYAxis = (
   let columnStartRatio = 0
 
   // Short circuit if we are only 1x1 and just return the bounds
-  if (columns.length === 1 && rows.length === 1) {
+  if (columnsTotalCount === 1 && rowsTotalCount === 1) {
     return [[boundingCurves.left], [boundingCurves.right]]
   }
 
   for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-    const lineSections = []
     const column = columns[columnIdx]
     const columnValue = column?.value
     const columnWidthRatio = columnValue / columnsTotalValue
+
+    const lineSections = []
 
     let rowStartRatio = 0
 
@@ -262,9 +264,7 @@ export const getLinesOnYAxis = (
           interpolatePointOnCurve
         )
 
-        lineSections.push({
-          ...curve,
-        })
+        lineSections.push(curve)
       }
 
       rowStartRatio = rowStartRatio + rowRatio
@@ -282,21 +282,23 @@ export const getGridIntersections = (
   rows,
   interpolatePointOnCurve
 ) => {
-  const intersections = []
-  const columnsTotal = columns.length
+  const columnsTotalCount = columns.length
+  const rowsTotalCount = rows.length
+
   const columnsTotalValue = addAll(columns)
-  const rowsTotal = rows.length
   const rowsTotalValue = addAll(rows)
+
+  const intersections = []
 
   let rowStartRatio = 0
 
-  for (let rowIdx = 0; rowIdx <= rowsTotal; rowIdx++) {
+  for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
     const rowValue = rows[rowIdx]?.value
     const rowRatio = rowValue / rowsTotalValue
 
     let columnStartRatio = 0
 
-    for (let columnIdx = 0; columnIdx <= columnsTotal; columnIdx++) {
+    for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
       const columnValue = columns[columnIdx]?.value
       const columnWidthRatio = columnValue / columnsTotalValue
 

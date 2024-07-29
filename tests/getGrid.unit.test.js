@@ -162,7 +162,7 @@ describe(`getGrid`, () => {
             })
             expect(() => {
               patch.api.getPoint(-1, 0)
-            }).toThrow(`u value must be between 0 and 1, but you supplied '-1'`)
+            }).toThrow(`u value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if u value is greater than 1`, () => {
             const patch = getGrid(boundsValid, {
@@ -171,7 +171,7 @@ describe(`getGrid`, () => {
             })
             expect(() => {
               patch.api.getPoint(2, 0)
-            }).toThrow(`u value must be between 0 and 1, but you supplied '2'`)
+            }).toThrow(`u value must be between 0 and 1, but was '2'`)
           })
           it(`throws if v value is less than 0`, () => {
             const patch = getGrid(boundsValid, {
@@ -180,7 +180,7 @@ describe(`getGrid`, () => {
             })
             expect(() => {
               patch.api.getPoint(0, -1)
-            }).toThrow(`v value must be between 0 and 1, but you supplied '-1'`)
+            }).toThrow(`v value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if v value is greater than 1`, () => {
             const patch = getGrid(boundsValid, {
@@ -189,7 +189,7 @@ describe(`getGrid`, () => {
             })
             expect(() => {
               patch.api.getPoint(0, 2)
-            }).toThrow(`v value must be between 0 and 1, but you supplied '2'`)
+            }).toThrow(`v value must be between 0 and 1, but was '2'`)
           })
         })
         describe(`getGridCellBounds`, () => {
