@@ -73,12 +73,6 @@ describe(`getGrid`, () => {
     })
 
     describe(`grid`, () => {
-      it(`throws if no grid is supplied`, () => {
-        expect(() => {
-          getGrid(boundsValid)
-        }).toThrow('You must supply a grid(Object)')
-      })
-
       describe(`columns and rows`, () => {
         it(`throws if no columns are supplied`, () => {
           expect(() => {

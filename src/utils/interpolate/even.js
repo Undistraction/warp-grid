@@ -5,12 +5,6 @@ import { validateT } from '../validation'
 import { interpolatePointOnCurveLinear } from './linear'
 
 // -----------------------------------------------------------------------------
-// Const
-// -----------------------------------------------------------------------------
-
-const DEFAULT_PRECISION = 20
-
-// -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
@@ -64,7 +58,7 @@ export const interpolatePointOnCurveEvenlySpaced =
   (
     // Get an approximation using an arbitrary number of points. Increase for
     // more accuracy at cost of performance
-    { precision = DEFAULT_PRECISION } = {}
+    { precision } = {}
   ) =>
   (t, curve) => {
     // Round the ratio to 10 decimal places to avoid rounding issues where the

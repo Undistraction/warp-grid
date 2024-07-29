@@ -86,10 +86,6 @@ export const validateBoundingCurves = (boundingCurves) => {
 }
 
 export const validateGrid = (grid) => {
-  if (isNil(grid)) {
-    throw new Error('You must supply a grid(Object)')
-  }
-
   const { rows, columns, interpolationStrategy, lineStrategy, precision } = grid
 
   if (isNil(columns)) {

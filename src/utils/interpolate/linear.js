@@ -13,12 +13,12 @@ const lerpPoint = (point1, point2, t) => {
   return { x: lerp(point1.x, point2.x, t), y: lerp(point1.y, point2.y, t) }
 }
 
-// Alternativly: Bernstein polynomials
+// Alternativly we could use Bernstein polynomials for interpolation
 // return (
-//   startPoint[coordinate] * (-tCubed + 3 * tSquared - 3 * t + 1) +
-//   controlPoint1[coordinate] * (3 * tCubed - 6 * tSquared + 3 * t) +
-//   controlPoint2[coordinate] * (-3 * tCubed + 3 * tSquared) +
-//   endPoint[coordinate] * tCubed
+//   startPoint[coordinateName] * (-tCubed + 3 * tSquared - 3 * t + 1) +
+//   controlPoint1[coordinateName] * (3 * tCubed - 6 * tSquared + 3 * t) +
+//   controlPoint2[coordinateName] * (-3 * tCubed + 3 * tSquared) +
+//   endPoint[coordinateName] * tCubed
 // )
 const interpolate = (
   t,

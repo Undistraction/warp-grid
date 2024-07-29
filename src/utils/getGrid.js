@@ -43,7 +43,7 @@ const processSteps = (steps) =>
     }
   })
 
-const insertGutters = (steps, gutter = 0) => {
+const insertGutters = (steps, gutter) => {
   const lastStepIndex = steps.length - 1
   const hasGutter = gutter > 0
   return steps.reduce((acc, step, idx) => {
@@ -95,18 +95,33 @@ const stepIsNotGutter = (step) => !step.isGutter
 // -----------------------------------------------------------------------------
 
 const getGrid = (boundingCurves, grid) => {
+  // Don't destructure arg so we can pass it around as is
+  const gridWithDefaults = {
+    ...{
+      gutter: 0,
+      interpolationStrategy: INTERPOLATION_STRATEGY_ID.EVEN,
+      precision: 20,
+      lineStrategy: LINE_STRATEGY_ID.STRAIGHT_LINES,
+    },
+    ...grid,
+  }
+  console.log('BOUNDS', boundingCurves)
+  console.log('GRID', gridWithDefaults)
+
   validateBoundingCurves(boundingCurves)
-  validateGrid(grid)
+  validateGrid(gridWithDefaults)
 
-  const { gutter } = grid
+  const { gutter } = gridWithDefaults
 
-  const [columns, rows] = [grid.columns, grid.rows].map(prepareSteps(gutter))
+  const [columns, rows] = [gridWithDefaults.columns, gridWithDefaults.rows].map(
+    prepareSteps(gutter)
+  )
 
   // Choose the function to use for interpolating the location of a point on a
   // curve.
-  const interpolatePointOnCurve = getInterpolationStrategy(grid)
+  const interpolatePointOnCurve = getInterpolationStrategy(gridWithDefaults)
 
-  const [getLineOnXAxis, getLineOnYAxis] = getLineStrategy(grid)
+  const [getLineOnXAxis, getLineOnYAxis] = getLineStrategy(gridWithDefaults)
 
   const getPoint = memoize((ratioX, ratioY) => {
     validateGetPointArguments(ratioX, ratioY)
@@ -153,13 +168,14 @@ const getGrid = (boundingCurves, grid) => {
 
     const { xAxis, yAxis } = getLines()
 
-    const g = grid.gutter > 0 ? 2 : 1
+    // If there is a gutter, we need to skip over the gutter space
+    const gutterMultiplier = gutter > 0 ? 2 : 1
 
     return {
-      top: xAxis[y * g][x],
-      bottom: xAxis[y * g + 1][x],
-      left: yAxis[x * g][y],
-      right: yAxis[x * g + 1][y],
+      top: xAxis[y * gutterMultiplier][x],
+      bottom: xAxis[y * gutterMultiplier + 1][x],
+      left: yAxis[x * gutterMultiplier][y],
+      right: yAxis[x * gutterMultiplier + 1][y],
     }
   })
 
