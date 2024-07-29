@@ -33,6 +33,8 @@ const getCoordinateOnSurface = ({
   )
 }
 
+const clampT = (t) => Math.min(Math.max(t, 0), 1)
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -43,11 +45,16 @@ export const getPointOnSurface = (
   v,
   interpolatePointOnCurve
 ) => {
+  // Due to potential minute rounding errors we clamp these values to avoid
+  // issues with the interpolators which expect a range of 0–1.
+  const uResolved = clampT(u)
+  const vResolved = clampT(v)
+
   const boundaryPoints = {
-    pointOnTopBoundary: interpolatePointOnCurve(u, top),
-    pointOnBottomBoundary: interpolatePointOnCurve(u, bottom),
-    pointOnLeftBoundary: interpolatePointOnCurve(v, left),
-    pointOnRightBoundary: interpolatePointOnCurve(v, right),
+    pointOnTopBoundary: interpolatePointOnCurve(uResolved, top),
+    pointOnBottomBoundary: interpolatePointOnCurve(uResolved, bottom),
+    pointOnLeftBoundary: interpolatePointOnCurve(vResolved, left),
+    pointOnRightBoundary: interpolatePointOnCurve(vResolved, right),
   }
 
   const cornerPoints = {
