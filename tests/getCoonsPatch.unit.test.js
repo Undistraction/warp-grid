@@ -140,8 +140,6 @@ describe(`getCoonsPatch`, () => {
           it(`provides bounds for the grid square at the supplied coordinates`, () => {
             const args = [2, 2]
             const gridSquareBounds = api.getGridCellBounds(...args)
-            console.log('@@', output)
-            console.log('@@', output.config)
             expect(gridSquareBounds).toEqual(output.api.getGridCellBounds)
           })
         })

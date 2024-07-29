@@ -42,6 +42,16 @@ const processSteps = (steps) =>
     }
   })
 
+const attachGutter = (steps, gutter = 0) => {
+  const lastStepIndex = steps.length - 1
+  return steps.reduce((acc, step, idx) => {
+    const isLastStep = idx === lastStepIndex
+    return isLastStep || gutter === 0
+      ? [...acc, step]
+      : [...acc, step, { value: gutter, isGutter: true }]
+  }, [])
+}
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -58,10 +68,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
     ? buildStepSpacing(grid.rows)
     : processSteps(grid.rows)
 
-  console.log('@columns', columns)
-  console.log('@rows', rows)
-
-  const gutter = grid.gutter
+  const columnsWithGutter = attachGutter(columns, grid.gutter)
+  const rowsWithGutter = attachGutter(rows, grid.gutter)
 
   // Choose the function to use for interpolating the location of a point on a
   // curve.
@@ -93,17 +101,15 @@ const getCoonsPatch = (boundingCurves, grid) => {
     return {
       xAxis: getLinesOnXAxis(
         boundingCurves,
-        columns,
-        rows,
-        gutter,
+        columnsWithGutter,
+        rowsWithGutter,
         getLineOnXAxis,
         interpolatePointOnCurve
       ),
       yAxis: getLinesOnYAxis(
         boundingCurves,
-        columns,
-        rows,
-        gutter,
+        columnsWithGutter,
+        rowsWithGutter,
         getLineOnYAxis,
         interpolatePointOnCurve
       ),
@@ -113,8 +119,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   const getIntersections = memoize(() => {
     return getGridIntersections(
       boundingCurves,
-      columns,
-      rows,
+      columnsWithGutter,
+      rowsWithGutter,
       interpolatePointOnCurve
     )
   })
@@ -122,15 +128,17 @@ const getCoonsPatch = (boundingCurves, grid) => {
   // Get four curves that describe the bounds of the grid-square with the
   // supplied grid coordinates
   const getGridCellBounds = memoize((x, y) => {
-    validateGetSquareArguments(x, y, columns, rows)
+    validateGetSquareArguments(x, y, columnsWithGutter, rows)
 
     const { xAxis, yAxis } = getLines()
 
+    const g = grid.gutter > 0 ? 2 : 1
+
     return {
-      top: yAxis[y][x],
-      bottom: yAxis[y + 1][x],
-      left: xAxis[x][y],
-      right: xAxis[x + 1][y],
+      top: xAxis[y * g][x],
+      bottom: xAxis[y * g + 1][x],
+      left: yAxis[x * g][y],
+      right: yAxis[x * g + 1][y],
     }
   })
 
@@ -146,8 +154,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   return {
     config: {
       boundingCurves,
-      columns,
-      rows,
+      columns: columnsWithGutter,
+      rows: rowsWithGutter,
     },
     api: {
       getPoint,

@@ -204,63 +204,6 @@ export const getLinesOnXAxis = (
   boundingCurves,
   columns,
   rows,
-  gutter,
-  getLineOnYAxis,
-  interpolatePointOnCurve
-) => {
-  const columnsTotalCount = columns.length
-  const rowsTotalCount = rows.length
-
-  const columnsTotalValue = addAll(columns)
-  const rowsTotalValue = addAll(rows)
-
-  const curves = []
-  let columnStartRatio = 0
-
-  // Short circuit if we are only 1x1 and just return the bounds
-  if (columns.length === 1 && rows.length === 1) {
-    return [[boundingCurves.left], [boundingCurves.right]]
-  }
-
-  for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-    const lineSections = []
-    const columnValue = columns[columnIdx]?.value
-    const columnWidthRatio = columnValue / columnsTotalValue
-
-    let rowStartRatio = 0
-
-    for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
-      const rowValue = rows[rowIdx]?.value
-      const rowRatio = rowValue / rowsTotalValue
-      const rowEndRatio = rowStartRatio + rowRatio
-
-      const curve = getLineOnYAxis(
-        boundingCurves,
-        rowStartRatio,
-        rowRatio,
-        rowEndRatio,
-        columnStartRatio,
-        interpolatePointOnCurve
-      )
-
-      rowStartRatio = rowStartRatio + rowRatio
-
-      lineSections.push({
-        ...curve,
-      })
-    }
-    columnStartRatio = columnStartRatio + columnWidthRatio
-    curves.push(lineSections)
-  }
-
-  return curves
-}
-
-export const getLinesOnYAxis = (
-  boundingCurves,
-  columns,
-  rows,
-  gutter,
   getLineOnXAxis,
   interpolatePointOnCurve
 ) => {
@@ -280,32 +223,98 @@ export const getLinesOnYAxis = (
 
   for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
     const lineSections = []
-    const rowValue = rows[rowIdx]?.value
+    const row = rows[rowIdx]
+    const rowValue = row?.value
     const rowRatio = rowValue / rowsTotalValue
 
     let columnStartRatio = 0
 
     for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
-      const columnValue = columns[columnIdx]?.value
+      const column = columns[columnIdx]
+      const columnValue = column?.value
+      const { isGutter = false } = column
       const columnWidthRatio = columnValue / columnsTotalValue
       const columnEndRatio = columnStartRatio + columnWidthRatio
 
-      const curve = getLineOnXAxis(
-        boundingCurves,
-        columnStartRatio,
-        columnWidthRatio,
-        columnEndRatio,
-        rowStartRatio,
-        interpolatePointOnCurve
-      )
+      if (!isGutter) {
+        const curve = getLineOnXAxis(
+          boundingCurves,
+          columnStartRatio,
+          columnWidthRatio,
+          columnEndRatio,
+          rowStartRatio,
+          interpolatePointOnCurve
+        )
+
+        lineSections.push({
+          ...curve,
+        })
+      }
 
       columnStartRatio = columnStartRatio + columnWidthRatio
-      lineSections.push({
-        ...curve,
-      })
     }
 
     rowStartRatio = rowStartRatio + rowRatio
+    curves.push(lineSections)
+  }
+
+  return curves
+}
+
+export const getLinesOnYAxis = (
+  boundingCurves,
+  columns,
+  rows,
+  getLineOnYAxis,
+  interpolatePointOnCurve
+) => {
+  const columnsTotalCount = columns.length
+  const rowsTotalCount = rows.length
+
+  const columnsTotalValue = addAll(columns)
+  const rowsTotalValue = addAll(rows)
+
+  const curves = []
+  let columnStartRatio = 0
+
+  // Short circuit if we are only 1x1 and just return the bounds
+  if (columns.length === 1 && rows.length === 1) {
+    return [[boundingCurves.left], [boundingCurves.right]]
+  }
+
+  for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
+    const lineSections = []
+    const column = columns[columnIdx]
+    const columnValue = column?.value
+    const columnWidthRatio = columnValue / columnsTotalValue
+
+    let rowStartRatio = 0
+
+    for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
+      const row = rows[rowIdx]
+      const rowValue = row?.value
+      const rowRatio = rowValue / rowsTotalValue
+      const rowEndRatio = rowStartRatio + rowRatio
+      const { isGutter = false } = row
+
+      if (!isGutter) {
+        const curve = getLineOnYAxis(
+          boundingCurves,
+          rowStartRatio,
+          rowRatio,
+          rowEndRatio,
+          columnStartRatio,
+          interpolatePointOnCurve
+        )
+
+        lineSections.push({
+          ...curve,
+        })
+      }
+
+      rowStartRatio = rowStartRatio + rowRatio
+    }
+    columnStartRatio = columnStartRatio + columnWidthRatio
     curves.push(lineSections)
   }
 
