@@ -23,9 +23,9 @@ pnpm add coons-patch
 The basic workflow is that you pass bounds representing the edges of a square, and a grid object describing the grid you'd like to map onto the square, and in return you receive an object with information about the coons patch, and a small API to allow you to get metrics describing the patch.
 
 ```javaScript
-import getCoonsPatch from 'coons-patch'
+import getGrid from 'coons-patch'
 
-const coonsPatch = getCoonsPatch(
+const coonsPatch = getGrid(
   // See below
   boundingCurves,
   // See below
@@ -46,7 +46,7 @@ const bounds = coonsPatch.api.getGridCellBounds(3, 8)
 
 ## API
 
-### getCoonsPatch(boundingCurves, grid)
+### getGrid(boundingCurves, grid)
 
 #### Argument 1: boundingCurves.
 

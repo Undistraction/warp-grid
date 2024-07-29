@@ -1,7 +1,7 @@
-import getCoonsPatch from './utils/getCoonsPatch'
+import getGrid from './utils/getGrid'
 
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
-export default getCoonsPatch
+export default getGrid

@@ -1,5 +1,5 @@
-import { COORDINATE } from '../const'
 import { fitCubicBezierToPoints } from './bezier'
+import { getPointOnSurface } from './coons'
 
 // -----------------------------------------------------------------------------
 // Const
@@ -12,56 +12,11 @@ const RATIO_MIDPOINT_2 = 0.75
 // Utils
 // -----------------------------------------------------------------------------
 
-const getCoordinateOnSurface = (
-  axis,
-  { pointOnTopCurve, pointOnBottomCurve, pointOnLeftCurve, pointOnRightCurve },
-  { cornerTopLeft, cornerTopRight, cornerBottomLeft, cornerBottomRight },
-  u,
-  v
-) => {
-  return (
-    (1 - v) * pointOnTopCurve[axis] +
-    v * pointOnBottomCurve[axis] +
-    (1 - u) * pointOnLeftCurve[axis] +
-    u * pointOnRightCurve[axis] -
-    (1 - u) * (1 - v) * cornerTopLeft[axis] -
-    u * (1 - v) * cornerTopRight[axis] -
-    (1 - u) * v * cornerBottomLeft[axis] -
-    u * v * cornerBottomRight[axis]
-  )
-}
-
 const addAll = (list) => list.reduce((total, { value }) => total + value, 0)
 
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
-
-export const getPointOnSurface = (
-  { top, bottom, left, right },
-  u,
-  v,
-  interpolatePointOnCurve
-) => {
-  const points = {
-    pointOnTopCurve: interpolatePointOnCurve(u, top),
-    pointOnBottomCurve: interpolatePointOnCurve(u, bottom),
-    pointOnLeftCurve: interpolatePointOnCurve(v, left),
-    pointOnRightCurve: interpolatePointOnCurve(v, right),
-  }
-
-  const corners = {
-    cornerBottomLeft: bottom.startPoint,
-    cornerBottomRight: bottom.endPoint,
-    cornerTopLeft: top.startPoint,
-    cornerTopRight: top.endPoint,
-  }
-
-  return {
-    x: getCoordinateOnSurface(COORDINATE.X, points, corners, u, v),
-    y: getCoordinateOnSurface(COORDINATE.Y, points, corners, u, v),
-  }
-}
 
 export const getStraightLineOnXAxis = (
   boundingCurves,

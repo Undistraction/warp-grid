@@ -1,5 +1,6 @@
 import memoize from 'fast-memoize'
 import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from '../const'
+import { getPointOnSurface } from './coons'
 import { interpolatePointOnCurveEvenlySpaced } from './interpolate/even'
 import { interpolatePointOnCurveLinear } from './interpolate/linear'
 import {
@@ -8,13 +9,13 @@ import {
   getGridIntersections,
   getLinesOnXAxis,
   getLinesOnYAxis,
-  getPointOnSurface,
   getStraightLineOnXAxis,
   getStraightLineOnYAxis,
 } from './surface'
 import { isInt, isPlainObj } from './types'
 import {
   validateBoundingCurves,
+  validateGetPointArguments,
   validateGetSquareArguments,
   validateGrid,
 } from './validation'
@@ -23,9 +24,9 @@ import {
 // Utils
 // -----------------------------------------------------------------------------
 
-const buildStepSpacing = (v) => {
+const expandToSteps = (stepCount) => {
   const spacing = []
-  for (let idx = 0; idx < v; idx++) {
+  for (let idx = 0; idx < stepCount; idx++) {
     spacing.push({ value: 1 })
   }
   return spacing
@@ -42,53 +43,75 @@ const processSteps = (steps) =>
     }
   })
 
-const attachGutter = (steps, gutter = 0) => {
+const insertGutters = (steps, gutter = 0) => {
   const lastStepIndex = steps.length - 1
+  const hasGutter = gutter > 0
   return steps.reduce((acc, step, idx) => {
     const isLastStep = idx === lastStepIndex
-    return isLastStep || gutter === 0
+    // Insert a gutter step if we have gutters and are not the last step
+    return isLastStep || !hasGutter
       ? [...acc, step]
       : [...acc, step, { value: gutter, isGutter: true }]
   }, [])
 }
 
+const getInterpolationStrategy = ({
+  interpolationStrategy = INTERPOLATION_STRATEGY_ID.EVEN,
+  precision,
+}) => {
+  if (interpolationStrategy === INTERPOLATION_STRATEGY_ID.EVEN) {
+    return interpolatePointOnCurveEvenlySpaced({ precision })
+  }
+
+  if (interpolationStrategy === INTERPOLATION_STRATEGY_ID.LINEAR) {
+    return interpolatePointOnCurveLinear
+  }
+
+  return null
+}
+
+const getLineStrategy = ({ lineStrategy }) => {
+  const getLineOnXAxis =
+    lineStrategy === LINE_STRATEGY_ID.CURVES
+      ? getCurveOnYAxis
+      : getStraightLineOnYAxis
+  const getLineOnYAxis =
+    lineStrategy === LINE_STRATEGY_ID.CURVES
+      ? getCurveOnXAxis
+      : getStraightLineOnXAxis
+
+  return [getLineOnXAxis, getLineOnYAxis]
+}
+
+const prepareSteps = (gutter) => (steps) => {
+  const stepsProcessed = isInt(steps)
+    ? expandToSteps(steps)
+    : processSteps(steps)
+  return insertGutters(stepsProcessed, gutter)
+}
+
+const stepIsNotGutter = (step) => !step.isGutter
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
-const getCoonsPatch = (boundingCurves, grid) => {
+const getGrid = (boundingCurves, grid) => {
   validateBoundingCurves(boundingCurves)
   validateGrid(grid)
 
-  const columns = isInt(grid.columns)
-    ? buildStepSpacing(grid.columns)
-    : processSteps(grid.columns)
+  const { gutter } = grid
 
-  const rows = isInt(grid.rows)
-    ? buildStepSpacing(grid.rows)
-    : processSteps(grid.rows)
-
-  const columnsWithGutter = attachGutter(columns, grid.gutter)
-  const rowsWithGutter = attachGutter(rows, grid.gutter)
+  const [columns, rows] = [grid.columns, grid.rows].map(prepareSteps(gutter))
 
   // Choose the function to use for interpolating the location of a point on a
   // curve.
-  const interpolatePointOnCurve =
-    grid.interpolationStrategy === INTERPOLATION_STRATEGY_ID.LINEAR
-      ? interpolatePointOnCurveLinear
-      : // Default to even
-        interpolatePointOnCurveEvenlySpaced({ precision: grid.precision })
+  const interpolatePointOnCurve = getInterpolationStrategy(grid)
 
-  const getLineOnXAxis =
-    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? getCurveOnYAxis
-      : getStraightLineOnYAxis
-  const getLineOnYAxis =
-    grid.lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? getCurveOnXAxis
-      : getStraightLineOnXAxis
+  const [getLineOnXAxis, getLineOnYAxis] = getLineStrategy(grid)
 
   const getPoint = memoize((ratioX, ratioY) => {
+    validateGetPointArguments(ratioX, ratioY)
     return getPointOnSurface(
       boundingCurves,
       ratioX,
@@ -101,15 +124,15 @@ const getCoonsPatch = (boundingCurves, grid) => {
     return {
       xAxis: getLinesOnXAxis(
         boundingCurves,
-        columnsWithGutter,
-        rowsWithGutter,
+        columns,
+        rows,
         getLineOnXAxis,
         interpolatePointOnCurve
       ),
       yAxis: getLinesOnYAxis(
         boundingCurves,
-        columnsWithGutter,
-        rowsWithGutter,
+        columns,
+        rows,
         getLineOnYAxis,
         interpolatePointOnCurve
       ),
@@ -119,8 +142,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   const getIntersections = memoize(() => {
     return getGridIntersections(
       boundingCurves,
-      columnsWithGutter,
-      rowsWithGutter,
+      columns,
+      rows,
       interpolatePointOnCurve
     )
   })
@@ -128,7 +151,7 @@ const getCoonsPatch = (boundingCurves, grid) => {
   // Get four curves that describe the bounds of the grid-square with the
   // supplied grid coordinates
   const getGridCellBounds = memoize((x, y) => {
-    validateGetSquareArguments(x, y, columnsWithGutter, rows)
+    validateGetSquareArguments(x, y, columns, rows)
 
     const { xAxis, yAxis } = getLines()
 
@@ -143,8 +166,10 @@ const getCoonsPatch = (boundingCurves, grid) => {
   })
 
   const getAllGridCellBounds = () => {
-    return columns.reduce((acc, column, columnIdx) => {
-      const cellBounds = rows.map((row, rowIdx) => {
+    // We only want to run through steps that are not gutters so we filter both
+    // rows and columns first
+    return columns.filter(stepIsNotGutter).reduce((acc, column, columnIdx) => {
+      const cellBounds = rows.filter(stepIsNotGutter).map((row, rowIdx) => {
         return getGridCellBounds(columnIdx, rowIdx)
       })
       return [...acc, ...cellBounds]
@@ -154,8 +179,8 @@ const getCoonsPatch = (boundingCurves, grid) => {
   return {
     config: {
       boundingCurves,
-      columns: columnsWithGutter,
-      rows: rowsWithGutter,
+      columns: columns,
+      rows: rows,
     },
     api: {
       getPoint,
@@ -167,4 +192,4 @@ const getCoonsPatch = (boundingCurves, grid) => {
   }
 }
 
-export default getCoonsPatch
+export default getGrid

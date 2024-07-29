@@ -1,10 +1,10 @@
 import { writeFile } from 'fs'
 import path from 'path'
-import getCoonsPatch from '../dist/coons-patch.js'
+import getGrid from '../dist/coons-patch.js'
 import fixtures from './fixtures.js'
 import { __dirname } from './helpers.js'
 
-console.log('Generating data for fixtures', getCoonsPatch)
+console.log('Generating data for fixtures', getGrid)
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -23,7 +23,7 @@ fixtures.forEach(({ name, input, skip = false }) => {
   console.log(`Data for '${name}'`)
   console.log('-----------------------------')
   console.log('-----------------------------')
-  const patch = getCoonsPatch(input.bounds, input.grid)
+  const patch = getGrid(input.bounds, input.grid)
 
   console.log('-----------------------------')
   console.log('api.getGridCellBounds')

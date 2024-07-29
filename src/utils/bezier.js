@@ -9,10 +9,10 @@ import matrix from 'matrix-js'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
 
 // -----------------------------------------------------------------------------
-// Utils
+// Exports
 // -----------------------------------------------------------------------------
 
-const fitCurveToPoints = (points, ratios) => {
+export const fitCubicBezierToPoints = (points, ratios) => {
   const numberOfPoints = points.length
   const { tMatrix, tMatrixTransposed } = getRatioMatrix(ratios)
 
@@ -26,15 +26,7 @@ const fitCurveToPoints = (points, ratios) => {
   const x = step2.prod(X)
   const Y = matrix(points.map((v) => [v.y]))
   const y = step2.prod(Y)
-  return x.map((r, i) => ({ x: r[0], y: y[i][0] }))
-}
-
-// -----------------------------------------------------------------------------
-// Exports
-// -----------------------------------------------------------------------------
-
-export const fitCubicBezierToPoints = (points, ratios) => {
-  const result = fitCurveToPoints(points, ratios)
+  const result = x.map((r, i) => ({ x: r[0], y: y[i][0] }))
 
   return {
     startPoint: result[0],
