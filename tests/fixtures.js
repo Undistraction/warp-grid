@@ -63,6 +63,19 @@ const fixtures = [
     },
   },
   {
+    name: '3x3 grid with linear interpolationStrategy',
+    // skipSnapshot: false,
+    // skipTest: false,
+    input: {
+      bounds: boundsValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        interpolationStrategy: 'even',
+      },
+    },
+  },
+  {
     name: 'Variant columns and rows',
     skipSnapshot: true,
     input: {
