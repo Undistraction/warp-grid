@@ -51,7 +51,7 @@ const fixtures = [
   },
   {
     name: '3x3 grid with gutters',
-    skipSnapshot: false,
+    skipSnapshot: true,
     skipTest: false,
     input: {
       bounds: boundsValid,
@@ -64,20 +64,34 @@ const fixtures = [
   },
   {
     name: '3x3 grid with linear interpolationStrategy',
-    // skipSnapshot: false,
-    // skipTest: false,
+    skipSnapshot: true,
+    skipTest: false,
     input: {
       bounds: boundsValid,
       grid: {
         columns: 3,
         rows: 3,
-        interpolationStrategy: 'even',
+        interpolationStrategy: 'linear',
+      },
+    },
+  },
+  {
+    name: '3x3 grid with curves lineStrategy',
+    skipSnapshot: true,
+    skipTest: false,
+    input: {
+      bounds: boundsValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        lineStrategy: 'curves',
       },
     },
   },
   {
     name: 'Variant columns and rows',
     skipSnapshot: true,
+    skipTest: false,
     input: {
       bounds: boundsValid,
       grid: {

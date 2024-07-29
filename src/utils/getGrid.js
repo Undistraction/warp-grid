@@ -66,8 +66,6 @@ const getInterpolationStrategy = ({
   if (interpolationStrategy === INTERPOLATION_STRATEGY_ID.LINEAR) {
     return interpolatePointOnCurveLinear
   }
-
-  return null
 }
 
 const getLineStrategy = ({ lineStrategy }) => {

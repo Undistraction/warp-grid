@@ -1,8 +1,7 @@
-import { writeFile } from 'fs'
 import path from 'path'
 import getGrid from '../dist/coons-patch.js'
 import fixtures from './fixtures.js'
-import { __dirname } from './helpers.js'
+import { __dirname, writeFileAsync } from './helpers.js'
 
 console.log('Generating data for fixtures', getGrid)
 
@@ -12,8 +11,8 @@ console.log('Generating data for fixtures', getGrid)
 
 const print = (o) => console.log(JSON.stringify(o))
 
-fixtures.forEach(({ name, input, skip = false }) => {
-  if (skip) {
+fixtures.forEach(async ({ name, input, skipSnapshot }) => {
+  if (skipSnapshot) {
     console.log(`Skipping snapsot for '${name}'`)
     return
   }
@@ -72,11 +71,10 @@ fixtures.forEach(({ name, input, skip = false }) => {
 
   const filepath = path.join(__dirname, `./fixtures/${name}.json`)
 
-  writeFile(filepath, snapshot, (err) => {
-    if (err) {
-      console.error(`Error writing snapshot`, err)
-    } else {
-      console.log(`Wrote snapshot to '${filepath}'`)
-    }
-  })
+  try {
+    await writeFileAsync(filepath, snapshot)
+    console.log(`Wrote snapshot to '${filepath}'`)
+  } catch (error) {
+    console.error(`Error writing snapshot`, error)
+  }
 })
