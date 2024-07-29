@@ -1,3 +1,18 @@
+## [1.4.0](https://github.com/undistraction/coons-patch/compare/v1.3.0...v1.4.0) (2024-07-29)
+
+### Features
+
+* Accept gutters ([c3bfb45](https://github.com/undistraction/coons-patch/commit/c3bfb45e5655d81d56c32b68c5ca2e278b21e7ef))
+* Use objects as grid values ([8405183](https://github.com/undistraction/coons-patch/commit/8405183ab8b0c4cd0751dddfbc0748ec27c5e459))
+
+### Bug Fixes
+
+* Clamp t-value for fractional rounding edgecase ([8208dc5](https://github.com/undistraction/coons-patch/commit/8208dc5fda4d49f64a07a72154ef09e7b8db9c07))
+
+### Performance Improvements
+
+* Fix unecessary lut generation with memoization ([b39110b](https://github.com/undistraction/coons-patch/commit/b39110be3c5896d211208324fa48697b92e3410a))
+
 ## [1.3.0](https://github.com/undistraction/coons-patch/compare/v1.2.3...v1.3.0) (2024-07-28)
 
 ### Features
