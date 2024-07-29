@@ -85,19 +85,33 @@ Here is an example:
 
 #### Argument 2: grid
 
+##### Columns / rows / gutter
+
 The grid object describes the grid that will be interpolated onto the patch. It has two main fields, `colums` and `rows` both of which can be either an integer, or an Array of numbers. If an integer, the integer will be used as the value for the number of rows or columns, for example, if columns is `5` and rows is `9`, the grid will have five columns and nine rows, and therefore 45 cells. In this instance, all columns will be of uniform width based on the width of the bounds, divided by the number of columns, similarly, all rows will be of uniform height based on the height of the bounds divided by the number of rows.
 
 Passing an array of numbers as the value of `columns` or `rows`, allows a great deal more control over the widths of the columns or rows, by allowing each value in the array to describe the width of the column (or height of the row) it represents. This is calculated by dividing the value by the total value of all the items in the array, and setting the resolved value to be a ratio of the total width or height. This allows the creation of a grid that supports variable column and row dimensions.
 
-Additionally, the `grid` supports a setting called `interpolationStrategy`. This can be either `even` (the default) or `linear`. This changes the algorythm used to interplate the position of a point along a curve. If `linear` interplation is used, the effect is to exagerate the effect of curvature on the distance between rows and columns. `even` uses a more complex approach and usually results in more pleasing results. However it is significantly more memory intensive.
+The grid also supports a `gutter` value which controls the gutters between the columns and rows. This is also treated as a ratio.
 
-Here is an example:
+##### Other config
+
+The grid also allows configuration params that change how it calculates the grid-elements.
+
+- `interpolationStrategy` can be either `even` (the default) or `linear`. This changes the algorythm used to interplate the position of a point along a curve. If `linear` interplation is used, the effect is to exagerate the effect of curvature on the distance between rows and columns. `even` uses a more complex approach and usually results in more pleasing results. However it is significantly more memory intensive.
+
+- `lineStrategy` can be either `straightLines` or `curves`. The lines returned from `getCurves` and the bounds returned from `getGridCellBounds` and `getAllGridCellBounds` are always cubic Bezier curves, however if the `lineStrategy` is `straightLines`, the calculations are significantly simplified and all lines will be straight. For more accurate calcualtions choose `curves` which will draw curved cubic Bezier curves. The default is `straightLines`.
+
+- `precision` If you choose to use `even`, this parameter control how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`.
+
+Here is an example of a grid:
 
 ```javaScript
 {
   columns: 8,
   rows: [10, 5, 20, 5, 10]
   interpolationStategy: `even`,
+  lineStrategy: 'curves',
+  precision: 30,
 }
 
 ```
@@ -112,9 +126,9 @@ The `coonsPatch` object comprises of two fields, `config` and `api`.
 
 ### coonsPatch.config
 
-`config` provides access to the resolved configuration data that was used to generate the patch
+`config` provides access to the resolved configuration data that was used to generate the patch. The configuration data is not the same as the data you passed in, but is instead the internal representation of that data.
 
-- `columns` contains an array of column values
+- `columns` contains an array of column values.
 - `rows` contains an array of row values
 - `boundingCurves` contains the bounding curves object that was passed in.
 
@@ -140,15 +154,13 @@ TBD
 
 #### Validations
 
-- The points where two of the `boundingCurves` sides meet must have the same coordinates or a validation error will be raised.
-- If any of the sides are missing from the `boundingCurves` object, a validation error will be raised
-- If either `columns` or `rows` are missing, or are not either of type `Array` or `Integer`, a validation error will be raised.
+There are comprehensive run-time validations for all parameters which will throw helpful errors if any arguments are invalid.
 
-# Repo
+# Project
 
 ## Install
 
-```
+```bash
 
 pnpm install
 
@@ -156,15 +168,16 @@ pnpm install
 
 ## Build
 
-```
+```bash
 
-pnpm run build
+pnpm run build # Build once
+pnpm run build-watch # Build and watch for changes
 
 ```
 
 ## Preview build
 
-```
+```bash
 
 pnpm run preview
 
@@ -172,17 +185,26 @@ pnpm run preview
 
 ## Run tests
 
-Tests are written using Jest
+Tests are written using Jest.
+
+```bash
+
+pnpm run test # Run tests once
+pnpm run test-watch # Run tests and watch for changes
 
 ```
 
-pnpm run test
+Due to the volume and complexity of the data returned from the API, the tests use snapshots of the data as test fixtures. These snapshots ar generated using:
 
+```bash
+pnpm run test-snapshot
 ```
+
+This will generate data for all of the fixure definitions in `./tests/fixtures.js`. This command should only be run when absolutely necessary as the current snapshots capture the verified working state of the data. To add new fixtures add new definitions to `./tests/fixtures.js`.
 
 ## Lint
 
-```
+```bash
 pnpm run lint-prettier
 pnpm run lint-eslint
 ```
