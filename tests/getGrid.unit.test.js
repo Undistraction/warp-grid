@@ -161,7 +161,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getPoint(-1, 0)
+              patch.getPoint(-1, 0)
             }).toThrow(`u value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if u value is greater than 1`, () => {
@@ -170,7 +170,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getPoint(2, 0)
+              patch.getPoint(2, 0)
             }).toThrow(`u value must be between 0 and 1, but was '2'`)
           })
           it(`throws if v value is less than 0`, () => {
@@ -179,7 +179,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getPoint(0, -1)
+              patch.getPoint(0, -1)
             }).toThrow(`v value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if v value is greater than 1`, () => {
@@ -188,7 +188,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getPoint(0, 2)
+              patch.getPoint(0, 2)
             }).toThrow(`v value must be between 0 and 1, but was '2'`)
           })
         })
@@ -199,7 +199,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getGridCellBounds(4, 2)
+              patch.getGridCellBounds(4, 2)
             }).toThrow(
               `Grid is '4' columns wide but coordinates are zero-based, and you passed x:'4'`
             )
@@ -211,7 +211,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getGridCellBounds(3, 3)
+              patch.getGridCellBounds(3, 3)
             }).toThrow(
               `Grid is '3' rows high but coordinates are zero-based, and you passed y:'3'`
             )
@@ -223,12 +223,12 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              patch.api.getGridCellBounds(-1, 1)
+              patch.getGridCellBounds(-1, 1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'-1' x y:'1'`
             )
             expect(() => {
-              patch.api.getGridCellBounds(1, -1)
+              patch.getGridCellBounds(1, -1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'1' x y:'-1'`
             )
@@ -251,57 +251,55 @@ describe(`getGrid`, () => {
         output = JSON.parse(fixureJSON)
       })
 
-      describe('config', () => {
-        const { config } = patch
+      describe('model', () => {
+        const { model } = patch
 
         it(`with original boundingCurves`, () => {
-          expect(config.boundingCurves).toEqual(boundsValid)
+          expect(model.boundingCurves).toEqual(boundsValid)
         })
 
         it(`with arrays of column and row values`, () => {
-          expect(config.columns).toEqual(output.config.columns)
-          expect(config.rows).toEqual(output.config.rows)
+          expect(model.columns).toEqual(output.model.columns)
+          expect(model.rows).toEqual(output.model.rows)
         })
       })
 
       describe(`with an API`, () => {
-        const { api } = patch
-
         describe(`getGridCellBounds`, () => {
           it(`provides bounds for the grid square at the supplied coordinates`, () => {
             const args = [2, 2]
-            const gridSquareBounds = api.getGridCellBounds(...args)
-            expect(gridSquareBounds).toEqual(output.api.getGridCellBounds)
+            const gridSquareBounds = patch.getGridCellBounds(...args)
+            expect(gridSquareBounds).toEqual(output.getGridCellBounds)
           })
         })
 
         describe(`getIntersections`, () => {
           it(`returns all intersections between curves`, () => {
-            const intersectons = api.getIntersections()
-            expect(intersectons).toEqual(output.api.getIntersections)
+            const intersectons = patch.getIntersections()
+            expect(intersectons).toEqual(output.getIntersections)
           })
         })
 
         describe(`getPoint`, () => {
           it(`returns point at supplied coordinates`, () => {
             const args = [0.5, 0.25]
-            const point = api.getPoint(...args)
+            const point = patch.getPoint(...args)
 
-            expect(point).toEqual(output.api.getPoint)
+            expect(point).toEqual(output.getPoint)
           })
         })
 
         describe(`getLines`, () => {
           it(`returns curves along x and y axes`, () => {
-            const curves = api.getLines()
-            expect(curves).toEqual(output.api.getLines)
+            const curves = patch.getLines()
+            expect(curves).toEqual(output.getLines)
           })
         })
 
         describe(`getAllGridCellBounds`, () => {
           it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
-            const gridCellBounds = api.getAllGridCellBounds()
-            expect(gridCellBounds).toEqual(output.api.getAllGridCellBounds)
+            const gridCellBounds = patch.getAllGridCellBounds()
+            expect(gridCellBounds).toEqual(output.getAllGridCellBounds)
           })
         })
       })

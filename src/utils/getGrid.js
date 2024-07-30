@@ -1,24 +1,17 @@
-import memoize from 'fast-memoize'
 import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from '../const'
-import { getPointOnSurface } from './coons'
-import { interpolatePointOnCurveEvenlySpaced } from './interpolate/even'
-import { interpolatePointOnCurveLinear } from './interpolate/linear'
+import getApi from './getApi'
 import {
-  getCurveOnXAxis,
-  getCurveOnYAxis,
-  getGridIntersections,
-  getLinesOnXAxis,
-  getLinesOnYAxis,
-  getStraightLineOnXAxis,
-  getStraightLineOnYAxis,
-} from './surface'
+  interpolateCurveOnXAxis,
+  interpolateCurveOnYAxis,
+} from './interpolate/curves/curved'
+import {
+  interpolateStraightLineOnXAxis,
+  interpolateStraightLineOnYAxis,
+} from './interpolate/curves/straight'
+import { interpolatePointOnCurveEvenlySpaced } from './interpolate/pointOnCurve/even'
+import { interpolatePointOnCurveLinear } from './interpolate/pointOnCurve/linear'
 import { isInt, isPlainObj } from './types'
-import {
-  validateBoundingCurves,
-  validateGetPointArguments,
-  validateGetSquareArguments,
-  validateGrid,
-} from './validation'
+import { validateBoundingCurves, validateGrid } from './validation'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -69,16 +62,16 @@ const getInterpolationStrategy = ({
 }
 
 const getLineStrategy = ({ lineStrategy }) => {
-  const getLineOnXAxis =
+  const interpolateLineOnXAxis =
     lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? getCurveOnYAxis
-      : getStraightLineOnYAxis
-  const getLineOnYAxis =
+      ? interpolateCurveOnYAxis
+      : interpolateStraightLineOnYAxis
+  const interpolateLineOnYAxis =
     lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? getCurveOnXAxis
-      : getStraightLineOnXAxis
+      ? interpolateCurveOnXAxis
+      : interpolateStraightLineOnXAxis
 
-  return [getLineOnXAxis, getLineOnYAxis]
+  return [interpolateLineOnXAxis, interpolateLineOnYAxis]
 }
 
 const prepareSteps = (gutter) => (steps) => {
@@ -87,8 +80,6 @@ const prepareSteps = (gutter) => (steps) => {
     : processSteps(steps)
   return insertGutters(stepsProcessed, gutter)
 }
-
-const stepIsNotGutter = (step) => !step.isGutter
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -105,8 +96,6 @@ const getGrid = (boundingCurves, grid) => {
     },
     ...grid,
   }
-  console.log('BOUNDS', boundingCurves)
-  console.log('GRID', gridWithDefaults)
 
   validateBoundingCurves(boundingCurves)
   validateGrid(gridWithDefaults)
@@ -117,92 +106,24 @@ const getGrid = (boundingCurves, grid) => {
     prepareSteps(gutter)
   )
 
-  // Choose the function to use for interpolating the location of a point on a
-  // curve.
+  // Get functions for interpolation based on grid config
   const interpolatePointOnCurve = getInterpolationStrategy(gridWithDefaults)
+  const [interpolateLineOnXAxis, interpolateLineOnYAxis] =
+    getLineStrategy(gridWithDefaults)
 
-  const [getLineOnXAxis, getLineOnYAxis] = getLineStrategy(gridWithDefaults)
-
-  const getPoint = memoize((ratioX, ratioY) => {
-    validateGetPointArguments(ratioX, ratioY)
-    return getPointOnSurface(
-      boundingCurves,
-      ratioX,
-      ratioY,
-      interpolatePointOnCurve
-    )
+  const api = getApi(boundingCurves, columns, rows, gutter, {
+    interpolatePointOnCurve,
+    interpolateLineOnXAxis,
+    interpolateLineOnYAxis,
   })
-
-  const getLines = memoize(() => {
-    return {
-      xAxis: getLinesOnXAxis(
-        boundingCurves,
-        columns,
-        rows,
-        getLineOnXAxis,
-        interpolatePointOnCurve
-      ),
-      yAxis: getLinesOnYAxis(
-        boundingCurves,
-        columns,
-        rows,
-        getLineOnYAxis,
-        interpolatePointOnCurve
-      ),
-    }
-  })
-
-  const getIntersections = memoize(() => {
-    return getGridIntersections(
-      boundingCurves,
-      columns,
-      rows,
-      interpolatePointOnCurve
-    )
-  })
-
-  // Get four curves that describe the bounds of the grid-square with the
-  // supplied grid coordinates
-  const getGridCellBounds = memoize((x, y) => {
-    validateGetSquareArguments(x, y, columns, rows)
-
-    const { xAxis, yAxis } = getLines()
-
-    // If there is a gutter, we need to skip over the gutter space
-    const gutterMultiplier = gutter > 0 ? 2 : 1
-
-    return {
-      top: xAxis[y * gutterMultiplier][x],
-      bottom: xAxis[y * gutterMultiplier + 1][x],
-      left: yAxis[x * gutterMultiplier][y],
-      right: yAxis[x * gutterMultiplier + 1][y],
-    }
-  })
-
-  const getAllGridCellBounds = () => {
-    // We only want to run through steps that are not gutters so we filter both
-    // rows and columns first
-    return columns.filter(stepIsNotGutter).reduce((acc, column, columnIdx) => {
-      const cellBounds = rows.filter(stepIsNotGutter).map((row, rowIdx) => {
-        return getGridCellBounds(columnIdx, rowIdx)
-      })
-      return [...acc, ...cellBounds]
-    }, [])
-  }
 
   return {
-    config: {
+    model: {
       boundingCurves,
       columns: columns,
       rows: rows,
     },
-    api: {
-      getPoint,
-      getLines,
-      getIntersections,
-      getGridCellBounds,
-      getAllGridCellBounds,
-    },
+    ...api,
   }
 }
 

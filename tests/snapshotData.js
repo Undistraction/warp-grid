@@ -27,36 +27,36 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   console.log('-----------------------------')
   console.log('api.getGridCellBounds')
   console.log('-----------------------------')
-  const getGridCellBounds = patch.api.getGridCellBounds(2, 2)
+  const getGridCellBounds = patch.getGridCellBounds(2, 2)
   print(getGridCellBounds)
 
   console.log('-----------------------------')
   console.log('api.getIntersections')
   console.log('-----------------------------')
-  const getIntersections = patch.api.getIntersections()
+  const getIntersections = patch.getIntersections()
   print(getIntersections)
 
   console.log('-----------------------------')
   console.log('api.getPoint')
   console.log('-----------------------------')
-  const getPoint = patch.api.getPoint(0.5, 0.25)
+  const getPoint = patch.getPoint(0.5, 0.25)
   print(getPoint)
 
   console.log('-----------------------------')
   console.log('api.getLines')
   console.log('-----------------------------')
-  const getLines = patch.api.getLines()
+  const getLines = patch.getLines()
   print(getLines)
 
   console.log('-----------------------------')
   console.log('api.getAllGridCellBounds')
   console.log('-----------------------------')
-  const getAllGridCellBounds = patch.api.getAllGridCellBounds()
+  const getAllGridCellBounds = patch.getAllGridCellBounds()
   print(getAllGridCellBounds)
 
   const snapshot = JSON.stringify(
     {
-      config: patch.config,
+      model: patch.model,
       api: {
         getGridCellBounds,
         getIntersections,

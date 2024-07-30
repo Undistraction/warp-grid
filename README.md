@@ -32,16 +32,16 @@ const coonsPatch = getGrid(
   grid)
 
 // Get a point on the patch at the provided horizontal and vertical ratios (0–1)
-const point = coonsPatch.api.getPoint(0.5, 0.75)
+const point = coonsPatch.getPoint(0.5, 0.75)
 
 // Get an object wity `xAxis` and `yAxis` keys. Each key contains an Array containing data representing all the sub-curves that make up each curve along that axis.
-const curves = coonsPatch.api.getLines()
+const curves = coonsPatch.getLines()
 
 // Get an array of points representing every grid intersection
-const intersections = coonsPatch.api.getIntersections()
+const intersections = coonsPatch.getIntersections()
 
 // Get the bounds for the grid-square at the supplied coordinates
-const bounds = coonsPatch.api.getGridCellBounds(3, 8)
+const bounds = coonsPatch.getGridCellBounds(3, 8)
 ```
 
 ## API
@@ -132,7 +132,7 @@ The `coonsPatch` object comprises of two fields, `config` and `api`.
 - `rows` contains an array of row values
 - `boundingCurves` contains the bounding curves object that was passed in.
 
-### coonsPatch.api
+### coonsPatch
 
 `api` provides a small API to access metrics describing the API.
 

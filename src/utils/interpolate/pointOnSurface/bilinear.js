@@ -1,4 +1,4 @@
-import { COORDINATE } from '../const'
+import { COORDINATE } from '../../../const'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -39,7 +39,7 @@ const clampT = (t) => Math.min(Math.max(t, 0), 1)
 // Exports
 // -----------------------------------------------------------------------------
 
-export const getPointOnSurface = (
+export const interpolatePointOnSurface = (
   { top, bottom, left, right },
   u,
   v,
