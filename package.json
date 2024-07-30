@@ -31,7 +31,7 @@
     "prepare": "husky",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests",
     "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests --watchAll",
-    "test-snapshot": "node ./tests/snapshotData",
+    "test-snapshot": " node ./tests/snapshotData",
     "lint": "pnpm run lint-prettier && pnpm run lint-eslint",
     "lint-prettier": "prettier . --write",
     "lint-eslint": "eslint './**/*.{js,jsx,cjs}'",
