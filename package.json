@@ -38,7 +38,8 @@
     "build": "vite build",
     "build-watch": "vite build --watch",
     "release": "semantic-release --no-ci --dry-run --debug",
-    "link": "pnpm link --global"
+    "link": "pnpm link --global",
+    "unlink": "pnpm unlink --global"
   },
   "keywords": [
     "coons patch",
