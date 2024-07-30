@@ -1,5 +1,5 @@
 import path from 'path'
-import getGrid from '../dist/coons-patch.js'
+import getGrid from '../dist/warp-grid.js'
 import fixtures from './fixtures.js'
 import { __dirname, writeFileAsync } from './helpers.js'
 

@@ -2,7 +2,7 @@
 
 This package allows you to generate a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) for a four sided shape whose bounds are defined by four cubic Bezier curves. The grid it calculates is very configurable, allowing you to modify a number of its features in some useful and interesting ways. It provides a simple API to allow you to retrieve metrics about the patch and grid to use however you need.
 
-There is an [interactive demo](https://coons-patch.undistraction.com) which allows you to generate and manipulate a patch.
+There is an [interactive demo](https://warp-grid.undistraction.com) which allows you to generate and manipulate a patch.
 
 This package only models the coons patch and calculates the position of the curves that make up the grid, their intersections and the bounds of the grid squares. It doesn't handle the rendering of that data data to the screen, however it gives you all the underlying metrics you need to render a patch using SVG or HTML canvas. Both approaches are used in the demo, the code for which can be found in `/demo/`.
 
@@ -13,9 +13,9 @@ It has two dependencies: [matrix.js](https://www.npmjs.com/package/matrix-js) fo
 ## Install package
 
 ```bash
-npm add coons-patch
-yarn add coons-patch
-pnpm add coons-patch
+npm add warp-grid
+yarn add warp-grid
+pnpm add warp-grid
 ```
 
 ## Quick-start
@@ -23,7 +23,7 @@ pnpm add coons-patch
 The basic workflow is that you pass bounds representing the edges of a square, and a grid object describing the grid you'd like to map onto the square, and in return you receive an object with information about the coons patch, and a small API to allow you to get metrics describing the patch.
 
 ```javaScript
-import getGrid from 'coons-patch'
+import getGrid from 'warp-grid'
 
 const coonsPatch = getGrid(
   // See below

@@ -1,7 +1,7 @@
-import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from '../const'
-import { mapObj } from './functional'
-import { roundTo5 } from './math'
-import { isArray, isInt, isNil, isPlainObj, isUndefined } from './types'
+import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from './const'
+import { mapObj } from './utils/functional'
+import { roundTo5 } from './utils/math'
+import { isArray, isInt, isNil, isPlainObj, isUndefined } from './utils/types'
 
 // -----------------------------------------------------------------------------
 // Utils

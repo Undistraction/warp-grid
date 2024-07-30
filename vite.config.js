@@ -14,9 +14,9 @@ export default defineConfig(() => {
       sourcemap: true,
       lib: {
         entry: resolve(__dirname, 'src/index.js'),
-        name: 'coons-patch',
+        name: 'warp-grid',
         // the phtmlroper extensions will be added
-        fileName: 'coons-patch',
+        fileName: 'warp-grid',
         formats: ['es', 'cjs', 'umd'],
       },
     },

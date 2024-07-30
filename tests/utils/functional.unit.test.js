@@ -1,87 +1,8 @@
-import { jest } from '@jest/globals'
-import { mapObj, times, timesReduce } from '../../src/utils/functional'
+import { mapObj } from '../../src/utils/functional'
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
-
-describe('times', () => {
-  it('should call the callback n times', () => {
-    const callback = jest.fn()
-    const n = 5
-    times(callback, n)
-    expect(callback).toHaveBeenCalledTimes(n)
-  })
-
-  it('should pass the correct index to the callback', () => {
-    const callback = jest.fn()
-    const n = 5
-    times(callback, n)
-    expect(callback.mock.calls).toEqual([[0], [1], [2], [3], [4]])
-  })
-
-  it('should return an array of results from the callback', () => {
-    const callback = jest.fn((i) => i * 2)
-    const n = 5
-    const result = times(callback, n)
-    expect(result).toEqual([0, 2, 4, 6, 8])
-  })
-
-  it('should return an empty array if n is 0', () => {
-    const callback = jest.fn()
-    const n = 0
-    const result = times(callback, n)
-    expect(result).toEqual([])
-    expect(callback).not.toHaveBeenCalled()
-  })
-
-  it('should return an empty array if n is negative', () => {
-    const callback = jest.fn()
-    const n = -5
-    const result = times(callback, n)
-    expect(result).toEqual([])
-    expect(callback).not.toHaveBeenCalled()
-  })
-})
-
-describe('timesReduce', () => {
-  it('should call the callback n times and accumulate the result', () => {
-    const callback = jest.fn((acc, i) => acc + i)
-    const n = 5
-    const initialValue = 0
-    const result = timesReduce(callback, initialValue, n)
-    expect(result).toBe(10)
-    expect(callback).toHaveBeenCalledTimes(n)
-  })
-
-  it('should pass the correct arguments to the callback', () => {
-    const callback = jest.fn((acc, i) => acc + i)
-    const n = 3
-    const initialValue = 0
-    timesReduce(callback, initialValue, n)
-    expect(callback).toHaveBeenNthCalledWith(1, 0, 0)
-    expect(callback).toHaveBeenNthCalledWith(2, 0, 1)
-    expect(callback).toHaveBeenNthCalledWith(3, 1, 2)
-  })
-
-  it('should return the initial value if n is 0', () => {
-    const callback = jest.fn((acc, i) => acc + i)
-    const n = 0
-    const initialValue = 10
-    const result = timesReduce(callback, initialValue, n)
-    expect(result).toBe(initialValue)
-    expect(callback).not.toHaveBeenCalled()
-  })
-
-  it('should handle negative n gracefully', () => {
-    const callback = jest.fn((acc, i) => acc + i)
-    const n = -5
-    const initialValue = 10
-    const result = timesReduce(callback, initialValue, n)
-    expect(result).toBe(initialValue)
-    expect(callback).not.toHaveBeenCalled()
-  })
-})
 
 describe('mapObj', () => {
   it('return a new object with its values the result of applying the callback', () => {

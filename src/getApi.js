@@ -1,15 +1,11 @@
+import {
+  getSurfaceCurves,
+  getSurfaceIntersectionPoints,
+  getSurfacePoint,
+} from 'coons-patch'
 import memoize from 'fast-memoize'
-import {
-  getCurveIntersections,
-  getCurvesOnXAxis,
-  getCurvesOnYAxis,
-} from './coonsPatch'
-import { mapObj } from './functional'
-import { interpolatePointOnSurface } from './interpolate/pointOnSurface/bilinear'
-import {
-  validateGetPointArguments,
-  validateGetSquareArguments,
-} from './validation'
+import { mapObj } from './utils/functional'
+import { validateGetSquareArguments } from './validation'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -28,37 +24,23 @@ const getApi = (
   gutter,
   { interpolatePointOnCurve, interpolateLineOnXAxis, interpolateLineOnYAxis }
 ) => {
-  const getPoint = (ratioX, ratioY) => {
-    validateGetPointArguments(ratioX, ratioY)
-    return interpolatePointOnSurface(
-      boundingCurves,
-      ratioX,
-      ratioY,
-      interpolatePointOnCurve
-    )
+  const getPoint = (u, v) => {
+    return getSurfacePoint(boundingCurves, u, v, interpolatePointOnCurve)
   }
 
   const getLines = () => {
-    return {
-      xAxis: getCurvesOnXAxis(
-        boundingCurves,
-        columns,
-        rows,
-        interpolateLineOnXAxis,
-        interpolatePointOnCurve
-      ),
-      yAxis: getCurvesOnYAxis(
-        boundingCurves,
-        columns,
-        rows,
-        interpolateLineOnYAxis,
-        interpolatePointOnCurve
-      ),
-    }
+    return getSurfaceCurves(
+      boundingCurves,
+      columns,
+      rows,
+      interpolatePointOnCurve,
+      interpolateLineOnXAxis,
+      interpolateLineOnYAxis
+    )
   }
 
   const getIntersections = () => {
-    return getCurveIntersections(
+    return getSurfaceIntersectionPoints(
       boundingCurves,
       columns,
       rows,
