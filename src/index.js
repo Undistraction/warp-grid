@@ -1,10 +1,10 @@
 import {
-  interpolateCurveOnXAxis,
-  interpolateCurveOnYAxis,
+  interpolateCurveU,
+  interpolateCurveV,
   interpolatePointOnCurveEvenlySpaced,
   interpolatePointOnCurveLinear,
-  interpolateStraightLineOnXAxis,
-  interpolateStraightLineOnYAxis,
+  interpolateStraightLineU,
+  interpolateStraightLineV,
 } from 'coons-patch'
 import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from './const'
 import getApi from './getApi'
@@ -29,16 +29,16 @@ const getInterpolationStrategy = ({
 }
 
 const getLineStrategy = ({ lineStrategy }) => {
-  const interpolateLineOnXAxis =
+  const interpolateLineU =
     lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? interpolateCurveOnYAxis
-      : interpolateStraightLineOnYAxis
-  const interpolateLineOnYAxis =
+      ? interpolateCurveV
+      : interpolateStraightLineV
+  const interpolateLineV =
     lineStrategy === LINE_STRATEGY_ID.CURVES
-      ? interpolateCurveOnXAxis
-      : interpolateStraightLineOnXAxis
+      ? interpolateCurveU
+      : interpolateStraightLineU
 
-  return [interpolateLineOnXAxis, interpolateLineOnYAxis]
+  return [interpolateLineU, interpolateLineV]
 }
 
 // -----------------------------------------------------------------------------
@@ -71,14 +71,14 @@ const getWarpGrid = (boundingCurves, definition) => {
   const interpolatePointOnCurve = getInterpolationStrategy(
     definitionWithDefaults
   )
-  const [interpolateLineOnXAxis, interpolateLineOnYAxis] = getLineStrategy(
+  const [interpolateLineU, interpolateLineV] = getLineStrategy(
     definitionWithDefaults
   )
 
   const api = getApi(boundingCurves, columns, rows, gutter, {
     interpolatePointOnCurve,
-    interpolateLineOnXAxis,
-    interpolateLineOnYAxis,
+    interpolateLineU,
+    interpolateLineV,
   })
 
   return {

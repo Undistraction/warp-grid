@@ -34,7 +34,7 @@ const coonsPatch = getGrid(
 // Get a point on the patch at the provided horizontal and vertical ratios (0–1)
 const point = coonsPatch.getPoint(0.5, 0.75)
 
-// Get an object wity `xAxis` and `yAxis` keys. Each key contains an Array containing data representing all the sub-curves that make up each curve along that axis.
+// Get an object with `u` and `v` keys. Each key contains an Array containing data representing all the sub-curves that make up each curve along that axis.
 const curves = coonsPatch.getLines()
 
 // Get an array of points representing every grid intersection

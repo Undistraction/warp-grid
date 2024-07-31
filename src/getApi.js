@@ -22,18 +22,22 @@ const getApi = (
   columns,
   rows,
   gutter,
-  { interpolatePointOnCurve, interpolateLineOnXAxis, interpolateLineOnYAxis }
+  { interpolatePointOnCurve, interpolateLineU, interpolateLineV }
 ) => {
   const getPoint = (u, v) => {
     return getSurfacePoint(boundingCurves, u, v, { interpolatePointOnCurve })
   }
 
   const getLines = () => {
-    return getSurfaceCurves(boundingCurves, columns, rows, {
+    const { u, v } = getSurfaceCurves(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
-      interpolateLineOnXAxis,
-      interpolateLineOnYAxis,
+      interpolateLineU,
+      interpolateLineV,
     })
+    return {
+      xAxis: u,
+      yAxis: v,
+    }
   }
 
   const getIntersections = () => {
@@ -47,16 +51,16 @@ const getApi = (
   const getGridCellBounds = (x, y) => {
     validateGetSquareArguments(x, y, columns, rows)
 
-    const { xAxis, yAxis } = getLines()
+    const { u, v } = getLines()
 
     // If there is a gutter, we need to skip over the gutter space
     const gutterMultiplier = gutter > 0 ? 2 : 1
 
     return {
-      top: xAxis[y * gutterMultiplier][x],
-      bottom: xAxis[y * gutterMultiplier + 1][x],
-      left: yAxis[x * gutterMultiplier][y],
-      right: yAxis[x * gutterMultiplier + 1][y],
+      top: u[y * gutterMultiplier][x],
+      bottom: u[y * gutterMultiplier + 1][x],
+      left: v[x * gutterMultiplier][y],
+      right: v[x * gutterMultiplier + 1][y],
     }
   }
 
