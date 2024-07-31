@@ -2,7 +2,7 @@
 // Const
 // -----------------------------------------------------------------------------
 
-export const boundsValid = {
+export const boundingCurvesValid = {
   top: {
     startPoint: { x: 0, y: 0 },
     endPoint: { x: 100, y: 0 },
@@ -35,17 +35,21 @@ export const boundsValid = {
 
 // Define different sets of params to test
 // Save the results to JSON files to import into tests
-// Set 'skipSnapshot' to 'true' for each item to skip the snapshot
-const fixtures = [
+// Set 'skipSnapshot' falsetrue' for each item to skip the snapshot
+const allFixtures = [
   {
     name: '3x3 grid',
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
-      bounds: boundsValid,
+      bounds: boundingCurvesValid,
       grid: {
         columns: 3,
         rows: 3,
+      },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getGridCellBounds: { args: [2, 2] },
       },
     },
   },
@@ -54,52 +58,70 @@ const fixtures = [
     skipSnapshot: false,
     skipTest: false,
     input: {
-      bounds: boundsValid,
+      bounds: boundingCurvesValid,
       grid: {
         columns: 3,
         rows: 3,
         gutter: 0.1,
       },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getGridCellBounds: { args: [2, 2] },
+      },
     },
   },
   {
     name: '3x3 grid with linear interpolationStrategy',
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
-      bounds: boundsValid,
+      bounds: boundingCurvesValid,
       grid: {
         columns: 3,
         rows: 3,
         interpolationStrategy: 'linear',
       },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getGridCellBounds: { args: [2, 2] },
+      },
     },
   },
   {
     name: '3x3 grid with curves lineStrategy',
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
-      bounds: boundsValid,
+      bounds: boundingCurvesValid,
       grid: {
         columns: 3,
         rows: 3,
         lineStrategy: 'curves',
       },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getGridCellBounds: { args: [2, 2] },
+      },
     },
   },
   {
     name: 'Variant columns and rows',
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
-      bounds: boundsValid,
+      bounds: boundingCurvesValid,
       grid: {
         columns: [5, 1, 5, 4, 5, 1, 5, 1, 5],
         rows: [5, 1, 5, 3, 5, 1, 10],
       },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getGridCellBounds: { args: [2, 2] },
+      },
     },
   },
 ]
+
+const fixtures = allFixtures.filter(({ skipTest }) => skipTest !== true)
 
 export default fixtures

@@ -1,16 +1,13 @@
 import { beforeAll } from '@jest/globals'
-import path from 'path'
 import getGrid from '../src/'
-import fixtures, { boundsValid } from './fixtures.js'
-import { __dirname, readFileAsync } from './helpers.js'
+import fixtures, { boundingCurvesValid } from './fixtures.js'
+import { loadFixtureData } from './helpers.js'
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
-
-const fixturesFiltered = fixtures.filter(({ skipTest }) => skipTest !== true)
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -33,7 +30,7 @@ describe(`getGrid`, () => {
 
       it(`throws if top and left bounding curves don't meet`, () => {
         expect(() => {
-          const bounds = clone(boundsValid)
+          const bounds = clone(boundingCurvesValid)
           bounds.top.startPoint.x = -10
           getGrid(bounds)
         }).toThrow(
@@ -43,7 +40,7 @@ describe(`getGrid`, () => {
 
       it(`throws if top and right bounding curves don't meet`, () => {
         expect(() => {
-          const bounds = clone(boundsValid)
+          const bounds = clone(boundingCurvesValid)
           bounds.right.startPoint.x = -10
           getGrid(bounds)
         }).toThrow(
@@ -53,7 +50,7 @@ describe(`getGrid`, () => {
 
       it(`throws if bottom and left bounding curves don't meet`, () => {
         expect(() => {
-          const bounds = clone(boundsValid)
+          const bounds = clone(boundingCurvesValid)
           bounds.left.endPoint.x = -10
           getGrid(bounds)
         }).toThrow(
@@ -63,7 +60,7 @@ describe(`getGrid`, () => {
 
       it(`throws if bottom and right bounding curves don't meet`, () => {
         expect(() => {
-          const bounds = clone(boundsValid)
+          const bounds = clone(boundingCurvesValid)
           bounds.right.endPoint.x = -10
           getGrid(bounds)
         }).toThrow(
@@ -76,25 +73,25 @@ describe(`getGrid`, () => {
       describe(`columns and rows`, () => {
         it(`throws if no columns are supplied`, () => {
           expect(() => {
-            getGrid(boundsValid, {})
+            getGrid(boundingCurvesValid, {})
           }).toThrow('You must supply grid.columns(Array or Int)')
         })
 
         it(`throws if no rows are supplied`, () => {
           expect(() => {
-            getGrid(boundsValid, { columns: [] })
+            getGrid(boundingCurvesValid, { columns: [] })
           }).toThrow('You must supply grid.rows(Array or Int)')
         })
 
         it(`throws if columns are not Array or Int`, () => {
           expect(() => {
-            getGrid(boundsValid, { columns: {} })
+            getGrid(boundingCurvesValid, { columns: {} })
           }).toThrow('grid.columns must be an Array of Ints or Int')
         })
 
         it(`throws if rows are not Array or Int`, () => {
           expect(() => {
-            getGrid(boundsValid, { columns: [], rows: {} })
+            getGrid(boundingCurvesValid, { columns: [], rows: {} })
           }).toThrow(
             'grid.rows must be an Int, an Array of Ints, or an Array of objects'
           )
@@ -104,7 +101,7 @@ describe(`getGrid`, () => {
       describe(`interpolationStrategy`, () => {
         it('throws if interpolationStrategy name is not recognised', () => {
           expect(() => {
-            getGrid(boundsValid, {
+            getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
               interpolationStrategy: 'nope',
@@ -118,7 +115,7 @@ describe(`getGrid`, () => {
       describe(`precision`, () => {
         it('throws if precision is not a positive integer', () => {
           expect(() => {
-            getGrid(boundsValid, {
+            getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
               precision: 'abc',
@@ -128,7 +125,7 @@ describe(`getGrid`, () => {
           )
 
           expect(() => {
-            getGrid(boundsValid, {
+            getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
               precision: -3,
@@ -142,7 +139,7 @@ describe(`getGrid`, () => {
       describe(`lineStrategy`, () => {
         it('throws if lineStrategy name is not recognised', () => {
           expect(() => {
-            getGrid(boundsValid, {
+            getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
               lineStrategy: 'nope',
@@ -156,7 +153,7 @@ describe(`getGrid`, () => {
       describe(`api`, () => {
         describe(`getPoint`, () => {
           it(`throws if u value is less than 0`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -165,7 +162,7 @@ describe(`getGrid`, () => {
             }).toThrow(`u value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if u value is greater than 1`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -174,7 +171,7 @@ describe(`getGrid`, () => {
             }).toThrow(`u value must be between 0 and 1, but was '2'`)
           })
           it(`throws if v value is less than 0`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -183,7 +180,7 @@ describe(`getGrid`, () => {
             }).toThrow(`v value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if v value is greater than 1`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -194,7 +191,7 @@ describe(`getGrid`, () => {
         })
         describe(`getGridCellBounds`, () => {
           it(`throws if gridCell x coordinate is greater than number of columns -1`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -206,7 +203,7 @@ describe(`getGrid`, () => {
           })
 
           it(`throws if gridCell y coordinate is greater than number of rows -1`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -218,7 +215,7 @@ describe(`getGrid`, () => {
           })
 
           it(`throws if gridCell coordinates are negative`, () => {
-            const grid = getGrid(boundsValid, {
+            const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
@@ -239,23 +236,21 @@ describe(`getGrid`, () => {
   })
 
   // Loop through different types of grid
-  describe.each(fixturesFiltered)(
-    `For '$name' returns correct grid`,
+  describe.each(fixtures)(
+    `For fixture: '$name' supplies …`,
     ({ name, input }) => {
       const grid = getGrid(input.bounds, input.grid)
       let output
 
       beforeAll(async () => {
-        const filePath = path.join(__dirname, `./fixtures/${name}.json`)
-        const fixureJSON = await readFileAsync(filePath)
-        output = JSON.parse(fixureJSON)
+        output = await loadFixtureData(name)
       })
 
       describe('model', () => {
         const { model } = grid
 
         it(`with original boundingCurves`, () => {
-          expect(model.boundingCurves).toEqual(boundsValid)
+          expect(model.boundingCurves).toEqual(boundingCurvesValid)
         })
 
         it(`with arrays of column and row values`, () => {
@@ -265,19 +260,18 @@ describe(`getGrid`, () => {
       })
 
       describe(`API`, () => {
+        describe(`getPoint`, () => {
+          it(`returns point at supplied coordinates`, () => {
+            const point = grid.getPoint(...input.api.getPoint.args)
+
+            expect(point).toEqual(output.getPoint)
+          })
+        })
+
         describe(`getIntersections`, () => {
           it(`returns all intersections between curves`, () => {
             const intersectons = grid.getIntersections()
             expect(intersectons).toEqual(output.getIntersections)
-          })
-        })
-
-        describe(`getPoint`, () => {
-          it(`returns point at supplied coordinates`, () => {
-            const args = [0.5, 0.25]
-            const point = grid.getPoint(...args)
-
-            expect(point).toEqual(output.getPoint)
           })
         })
 
@@ -290,8 +284,9 @@ describe(`getGrid`, () => {
 
         describe(`getGridCellBounds`, () => {
           it(`provides bounds for the grid square at the supplied coordinates`, () => {
-            const args = [2, 2]
-            const gridSquareBounds = grid.getGridCellBounds(...args)
+            const gridSquareBounds = grid.getGridCellBounds(
+              ...input.api.getGridCellBounds.args
+            )
             expect(gridSquareBounds).toEqual(output.getGridCellBounds)
           })
         })

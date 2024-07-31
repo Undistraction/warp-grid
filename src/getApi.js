@@ -51,16 +51,16 @@ const getApi = (
   const getGridCellBounds = (x, y) => {
     validateGetSquareArguments(x, y, columns, rows)
 
-    const { u, v } = getLines()
+    const { xAxis, yAxis } = getLines()
 
     // If there is a gutter, we need to skip over the gutter space
     const gutterMultiplier = gutter > 0 ? 2 : 1
 
     return {
-      top: u[y * gutterMultiplier][x],
-      bottom: u[y * gutterMultiplier + 1][x],
-      left: v[x * gutterMultiplier][y],
-      right: v[x * gutterMultiplier + 1][y],
+      top: xAxis[y * gutterMultiplier][x],
+      bottom: xAxis[y * gutterMultiplier + 1][x],
+      left: yAxis[x * gutterMultiplier][y],
+      right: yAxis[x * gutterMultiplier + 1][y],
     }
   }
 

@@ -7,6 +7,7 @@ module.exports = {
     browser: true,
     jest: true,
     node: true,
+    es6: true,
     'jest/globals': true,
   },
 
@@ -15,11 +16,7 @@ module.exports = {
     sourceType: 'module',
   },
 
-  settings: {
-    react: {
-      version: '18',
-    },
-  },
+  settings: {},
 
   extends: ['eslint:recommended', 'plugin:import/recommended'],
 

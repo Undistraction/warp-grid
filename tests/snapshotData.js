@@ -17,6 +17,8 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
     return
   }
 
+  console.log('@@input', input)
+
   console.log('-----------------------------')
   console.log('-----------------------------')
   console.log(`Data for '${name}'`)
@@ -25,10 +27,10 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   const patch = getGrid(input.bounds, input.grid)
 
   console.log('-----------------------------')
-  console.log('api.getGridCellBounds')
+  console.log('api.getPoint')
   console.log('-----------------------------')
-  const getGridCellBounds = patch.getGridCellBounds(0, 2)
-  print(getGridCellBounds)
+  const getPoint = patch.getPoint(...input.api.getPoint.args)
+  print(getPoint)
 
   console.log('-----------------------------')
   console.log('api.getIntersections')
@@ -37,16 +39,18 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   print(getIntersections)
 
   console.log('-----------------------------')
-  console.log('api.getPoint')
-  console.log('-----------------------------')
-  const getPoint = patch.getPoint(0.5, 0.25)
-  print(getPoint)
-
-  console.log('-----------------------------')
   console.log('api.getLines')
   console.log('-----------------------------')
   const getLines = patch.getLines()
   print(getLines)
+
+  console.log('-----------------------------')
+  console.log('api.getGridCellBounds')
+  console.log('-----------------------------')
+  const getGridCellBounds = patch.getGridCellBounds(
+    ...input.api.getGridCellBounds.args
+  )
+  print(getGridCellBounds)
 
   console.log('-----------------------------')
   console.log('api.getAllGridCellBounds')
@@ -57,13 +61,11 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   const snapshot = JSON.stringify(
     {
       model: patch.model,
-      api: {
-        getGridCellBounds,
-        getIntersections,
-        getPoint,
-        getLines,
-        getAllGridCellBounds,
-      },
+      getGridCellBounds,
+      getIntersections,
+      getPoint,
+      getLines,
+      getAllGridCellBounds,
     },
     null,
     2

@@ -242,7 +242,7 @@
     "y": 19.63775315990067
   },
   "getLines": {
-    "u": [
+    "xAxis": [
       [
         {
           "startPoint": {
@@ -468,7 +468,7 @@
         }
       ]
     ],
-    "v": [
+    "yAxis": [
       [
         {
           "startPoint": {
