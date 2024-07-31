@@ -156,79 +156,79 @@ describe(`getGrid`, () => {
       describe(`api`, () => {
         describe(`getPoint`, () => {
           it(`throws if u value is less than 0`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getPoint(-1, 0)
+              grid.getPoint(-1, 0)
             }).toThrow(`u value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if u value is greater than 1`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getPoint(2, 0)
+              grid.getPoint(2, 0)
             }).toThrow(`u value must be between 0 and 1, but was '2'`)
           })
           it(`throws if v value is less than 0`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getPoint(0, -1)
+              grid.getPoint(0, -1)
             }).toThrow(`v value must be between 0 and 1, but was '-1'`)
           })
           it(`throws if v value is greater than 1`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getPoint(0, 2)
+              grid.getPoint(0, 2)
             }).toThrow(`v value must be between 0 and 1, but was '2'`)
           })
         })
         describe(`getGridCellBounds`, () => {
           it(`throws if gridCell x coordinate is greater than number of columns -1`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getGridCellBounds(4, 2)
+              grid.getGridCellBounds(4, 2)
             }).toThrow(
               `Grid is '4' columns wide but coordinates are zero-based, and you passed x:'4'`
             )
           })
 
           it(`throws if gridCell y coordinate is greater than number of rows -1`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getGridCellBounds(3, 3)
+              grid.getGridCellBounds(3, 3)
             }).toThrow(
               `Grid is '3' rows high but coordinates are zero-based, and you passed y:'3'`
             )
           })
 
           it(`throws if gridCell coordinates are negative`, () => {
-            const patch = getGrid(boundsValid, {
+            const grid = getGrid(boundsValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              patch.getGridCellBounds(-1, 1)
+              grid.getGridCellBounds(-1, 1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'-1' x y:'1'`
             )
             expect(() => {
-              patch.getGridCellBounds(1, -1)
+              grid.getGridCellBounds(1, -1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'1' x y:'-1'`
             )
@@ -240,9 +240,9 @@ describe(`getGrid`, () => {
 
   // Loop through different types of grid
   describe.each(fixturesFiltered)(
-    `For '$name' returns correct patch`,
+    `For '$name' returns correct grid`,
     ({ name, input }) => {
-      const patch = getGrid(input.bounds, input.grid)
+      const grid = getGrid(input.bounds, input.grid)
       let output
 
       beforeAll(async () => {
@@ -252,7 +252,7 @@ describe(`getGrid`, () => {
       })
 
       describe('model', () => {
-        const { model } = patch
+        const { model } = grid
 
         it(`with original boundingCurves`, () => {
           expect(model.boundingCurves).toEqual(boundsValid)
@@ -264,18 +264,10 @@ describe(`getGrid`, () => {
         })
       })
 
-      describe(`with an API`, () => {
-        describe(`getGridCellBounds`, () => {
-          it(`provides bounds for the grid square at the supplied coordinates`, () => {
-            const args = [2, 2]
-            const gridSquareBounds = patch.getGridCellBounds(...args)
-            expect(gridSquareBounds).toEqual(output.getGridCellBounds)
-          })
-        })
-
+      describe(`API`, () => {
         describe(`getIntersections`, () => {
           it(`returns all intersections between curves`, () => {
-            const intersectons = patch.getIntersections()
+            const intersectons = grid.getIntersections()
             expect(intersectons).toEqual(output.getIntersections)
           })
         })
@@ -283,7 +275,7 @@ describe(`getGrid`, () => {
         describe(`getPoint`, () => {
           it(`returns point at supplied coordinates`, () => {
             const args = [0.5, 0.25]
-            const point = patch.getPoint(...args)
+            const point = grid.getPoint(...args)
 
             expect(point).toEqual(output.getPoint)
           })
@@ -291,14 +283,22 @@ describe(`getGrid`, () => {
 
         describe(`getLines`, () => {
           it(`returns curves along x and y axes`, () => {
-            const curves = patch.getLines()
+            const curves = grid.getLines()
             expect(curves).toEqual(output.getLines)
+          })
+        })
+
+        describe(`getGridCellBounds`, () => {
+          it(`provides bounds for the grid square at the supplied coordinates`, () => {
+            const args = [2, 2]
+            const gridSquareBounds = grid.getGridCellBounds(...args)
+            expect(gridSquareBounds).toEqual(output.getGridCellBounds)
           })
         })
 
         describe(`getAllGridCellBounds`, () => {
           it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
-            const gridCellBounds = patch.getAllGridCellBounds()
+            const gridCellBounds = grid.getAllGridCellBounds()
             expect(gridCellBounds).toEqual(output.getAllGridCellBounds)
           })
         })

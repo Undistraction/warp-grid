@@ -11,9 +11,6 @@ importers:
 
   .:
     dependencies:
-      coons-patch:
-        specifier: ^1.5.0
-        version: 1.5.0
       fast-memoize:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1272,9 +1269,6 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
-
-  coons-patch@1.5.0:
-    resolution: {integrity: sha512-aB8hh5GQ2UTqb8brQxLLFdpNc5loJ3kxP6l5pFk0DMwk6p15/9QYrtYoSyj4xxWbbkJd2kBZqAv2wofcnyeBnw==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -4974,11 +4968,6 @@ snapshots:
   convert-hrtime@5.0.0: {}
 
   convert-source-map@2.0.0: {}
-
-  coons-patch@1.5.0:
-    dependencies:
-      fast-memoize: 2.5.2
-      matrix-js: 1.7.1
 
   core-util-is@1.0.3: {}
 

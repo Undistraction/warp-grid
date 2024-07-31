@@ -25,27 +25,21 @@ const getApi = (
   { interpolatePointOnCurve, interpolateLineOnXAxis, interpolateLineOnYAxis }
 ) => {
   const getPoint = (u, v) => {
-    return getSurfacePoint(boundingCurves, u, v, interpolatePointOnCurve)
+    return getSurfacePoint(boundingCurves, u, v, { interpolatePointOnCurve })
   }
 
   const getLines = () => {
-    return getSurfaceCurves(
-      boundingCurves,
-      columns,
-      rows,
+    return getSurfaceCurves(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
       interpolateLineOnXAxis,
-      interpolateLineOnYAxis
-    )
+      interpolateLineOnYAxis,
+    })
   }
 
   const getIntersections = () => {
-    return getSurfaceIntersectionPoints(
-      boundingCurves,
-      columns,
-      rows,
-      interpolatePointOnCurve
-    )
+    return getSurfaceIntersectionPoints(boundingCurves, columns, rows, {
+      interpolatePointOnCurve,
+    })
   }
 
   // Get four curves that describe the bounds of the grid-square with the

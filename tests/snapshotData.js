@@ -27,7 +27,7 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   console.log('-----------------------------')
   console.log('api.getGridCellBounds')
   console.log('-----------------------------')
-  const getGridCellBounds = patch.getGridCellBounds(2, 2)
+  const getGridCellBounds = patch.getGridCellBounds(0, 2)
   print(getGridCellBounds)
 
   console.log('-----------------------------')

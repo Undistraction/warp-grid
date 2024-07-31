@@ -51,7 +51,7 @@ const fixtures = [
   },
   {
     name: '3x3 grid with gutters',
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
       bounds: boundsValid,
