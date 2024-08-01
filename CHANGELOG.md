@@ -1,17 +1,23 @@
+## [1.2.1](https://github.com/undistraction/warp-grid/compare/v1.2.0...v1.2.1) (2024-08-01)
+
+### Bug Fixes
+
+* Types not being correctly built ([edaebc3](https://github.com/undistraction/warp-grid/commit/edaebc30a749b8bb5fdd5f0c1ae7731f33231409))
+
 ## [1.2.0](https://github.com/undistraction/warp-grid/compare/v1.1.0...v1.2.0) (2024-08-01)
 
 ### ⚠ BREAKING CHANGES
 
-* CHANGE
-* CHANGE
+- CHANGE
+- CHANGE
 
 ### Features
 
-* Force release ([2c86a98](https://github.com/undistraction/warp-grid/commit/2c86a98d448927abe222cb4cc978cf6c257998ad))
+- Force release ([2c86a98](https://github.com/undistraction/warp-grid/commit/2c86a98d448927abe222cb4cc978cf6c257998ad))
 
 ### Code Refactoring
 
-* Better naming ([a87589a](https://github.com/undistraction/warp-grid/commit/a87589a6bc2d009b8202609d622a56ac78948961))
+- Better naming ([a87589a](https://github.com/undistraction/warp-grid/commit/a87589a6bc2d009b8202609d622a56ac78948961))
 
 ## [1.1.0](https://github.com/undistraction/warp-grid/compare/v1.0.0...v1.1.0) (2024-08-01)
 
