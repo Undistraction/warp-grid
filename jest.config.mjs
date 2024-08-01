@@ -31,9 +31,9 @@ const config = {
 
   // Settings to keep ts-jest happy
   extensionsToTreatAsEsm: ['.ts'],
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
+  // moduleNameMapper: {
+  //   '^(\\.{1,2}/.*)\\.js$': '$1',
+  // },
   transform: {
     '^.+.tsx?$': ['ts-jest', { useESM: true }],
   },
