@@ -53,10 +53,10 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   print(warpGridCellBounds)
 
   console.log('-----------------------------')
-  console.log('api.getAllGridCellBounds')
+  console.log('api.getAllCellBounds')
   console.log('-----------------------------')
-  const getAllGridCellBounds = patch.getAllGridCellBounds()
-  print(getAllGridCellBounds)
+  const getAllCellBounds = patch.getAllCellBounds()
+  print(getAllCellBounds)
 
   const snapshot = JSON.stringify(
     {
@@ -65,7 +65,7 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
       getIntersections,
       getPoint,
       getLines,
-      getAllGridCellBounds,
+      getAllCellBounds,
     },
     null,
     2

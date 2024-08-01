@@ -2,13 +2,13 @@
 
 ### ⚠ BREAKING CHANGES
 
-* CHANGE
+- CHANGE
 
 ### Features
 
-* Integrate API changes ([559322b](https://github.com/undistraction/warp-grid/commit/559322bd69d3e8a17cb8a44e1d337ab50f40c8c3))
-* Integrate with coons-patch changes ([cf18b4e](https://github.com/undistraction/warp-grid/commit/cf18b4e900260ef576ce17722c35b09e0cc56f00))
-* Switch to typescript ([baad233](https://github.com/undistraction/warp-grid/commit/baad2333a28ea02a9c09c0ecc7d7721090e98190))
+- Integrate API changes ([559322b](https://github.com/undistraction/warp-grid/commit/559322bd69d3e8a17cb8a44e1d337ab50f40c8c3))
+- Integrate with coons-patch changes ([cf18b4e](https://github.com/undistraction/warp-grid/commit/cf18b4e900260ef576ce17722c35b09e0cc56f00))
+- Switch to typescript ([baad233](https://github.com/undistraction/warp-grid/commit/baad2333a28ea02a9c09c0ecc7d7721090e98190))
 
 ## 1.0.0 (2024-07-30)
 
@@ -20,7 +20,7 @@
 - Add back support for arbitrary grid column and row widths ([e797dbb](https://github.com/undistraction/warp-grid/commit/e797dbb50e7fcb7167da11213979ba8df10a693a))
 - Add control point mirroring and linking ([1f35f0f](https://github.com/undistraction/warp-grid/commit/1f35f0fc0ef55e7c33f3c34d05ac8a6445acf242))
 - Add easing support ([e81d910](https://github.com/undistraction/warp-grid/commit/e81d910cfa2486e462642e4b745cae24c2af86e0))
-- Add getAllGridCellBounds to api ([048f8ce](https://github.com/undistraction/warp-grid/commit/048f8cef2a8e03f6068c25217a3c1992ee13c5d7))
+- Add getAllCellBounds to api ([048f8ce](https://github.com/undistraction/warp-grid/commit/048f8cef2a8e03f6068c25217a3c1992ee13c5d7))
 - Add hide/show bounds and corner points ([f59076a](https://github.com/undistraction/warp-grid/commit/f59076a0c915dfd4d7af7c070d8682b59f351d65))
 - Add support for straight-line strategy ([00de81f](https://github.com/undistraction/warp-grid/commit/00de81f0edc183c51840bc57934f259e00e4dbdf))
 - Add support or arbitrary column widths ([997e8b8](https://github.com/undistraction/warp-grid/commit/997e8b8bf48e78a3a38d7dc3e518caca0ee7982a))

@@ -111,8 +111,8 @@ export interface GridApi {
   getPoint: (u: number, v: number) => Point
   getIntersections: () => Point[]
   getLines: () => Lines
-  getGridCellBounds: () => BoundingCurves
-  getAllGridCellBounds: () => BoundingCurves[]
+  getCellBounds: () => BoundingCurves
+  getAllCellBounds: () => BoundingCurves[]
 }
 
 export interface WarpGrid extends GridApi {

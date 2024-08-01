@@ -189,14 +189,14 @@ describe(`getGrid`, () => {
             }).toThrow(`v value must be between 0 and 1, but was '2'`)
           })
         })
-        describe(`getGridCellBounds`, () => {
+        describe(`getCellBounds`, () => {
           it(`throws if gridCell x coordinate is greater than number of columns -1`, () => {
             const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              grid.getGridCellBounds(4, 2)
+              grid.getCellBounds(4, 2)
             }).toThrow(
               `Grid is '4' columns wide but coordinates are zero-based, and you passed x:'4'`
             )
@@ -208,7 +208,7 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              grid.getGridCellBounds(3, 3)
+              grid.getCellBounds(3, 3)
             }).toThrow(
               `Grid is '3' rows high but coordinates are zero-based, and you passed y:'3'`
             )
@@ -220,12 +220,12 @@ describe(`getGrid`, () => {
               rows: 3,
             })
             expect(() => {
-              grid.getGridCellBounds(-1, 1)
+              grid.getCellBounds(-1, 1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'-1' x y:'1'`
             )
             expect(() => {
-              grid.getGridCellBounds(1, -1)
+              grid.getCellBounds(1, -1)
             }).toThrow(
               `Coordinates must not be negative. You supplied x:'1' x y:'-1'`
             )
@@ -282,19 +282,19 @@ describe(`getGrid`, () => {
           })
         })
 
-        describe(`getGridCellBounds`, () => {
+        describe(`getCellBounds`, () => {
           it(`provides bounds for the grid square at the supplied coordinates`, () => {
-            const gridSquareBounds = grid.getGridCellBounds(
-              ...input.api.getGridCellBounds.args
+            const gridSquareBounds = grid.getCellBounds(
+              ...input.api.getCellBounds.args
             )
-            expect(gridSquareBounds).toEqual(output.getGridCellBounds)
+            expect(gridSquareBounds).toEqual(output.getCellBounds)
           })
         })
 
-        describe(`getAllGridCellBounds`, () => {
+        describe(`getAllCellBounds`, () => {
           it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
-            const gridCellBounds = grid.getAllGridCellBounds()
-            expect(gridCellBounds).toEqual(output.getAllGridCellBounds)
+            const gridCellBounds = grid.getAllCellBounds()
+            expect(gridCellBounds).toEqual(output.getAllCellBounds)
           })
         })
       })

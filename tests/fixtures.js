@@ -49,7 +49,7 @@ const allFixtures = [
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
-        getGridCellBounds: { args: [2, 2] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },
@@ -66,7 +66,7 @@ const allFixtures = [
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
-        getGridCellBounds: { args: [2, 2] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },
@@ -83,7 +83,7 @@ const allFixtures = [
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
-        getGridCellBounds: { args: [2, 2] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },
@@ -100,7 +100,7 @@ const allFixtures = [
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
-        getGridCellBounds: { args: [2, 2] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },
@@ -116,7 +116,7 @@ const allFixtures = [
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
-        getGridCellBounds: { args: [2, 2] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },

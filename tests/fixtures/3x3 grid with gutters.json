@@ -113,7 +113,7 @@
       }
     ]
   },
-  "getGridCellBounds": {
+  "getCellBounds": {
     "top": {
       "startPoint": {
         "x": 72.35810262515162,
@@ -1015,7 +1015,7 @@
       ]
     ]
   },
-  "getAllGridCellBounds": [
+  "getAllCellBounds": [
     {
       "top": {
         "startPoint": {

@@ -45,10 +45,20 @@ const getApi = (
   gutter: number,
   { interpolatePointOnCurve, interpolateLineU, interpolateLineV }: GetAPiCnfig
 ): GridApi => {
-  const getPoint = (u: number, v: number): Point => {
-    return getSurfacePoint(boundingCurves, u, v, { interpolatePointOnCurve })
+  /**
+   * Retrieves the point on the surface based on the given coordinates.
+   * @param x - The x-coordinate of the point.
+   * @param y - The y-coordinate of the point.
+   * @returns The point on the surface.
+   */
+  const getPoint = (x: number, y: number): Point => {
+    return getSurfacePoint(boundingCurves, x, y, { interpolatePointOnCurve })
   }
 
+  /**
+   * Retrieves the lines for the grid axes.
+   * @returns An object containing the lines for the x-axis and y-axis.
+   */
   const getLines = (): Lines => {
     const { u, v } = getSurfaceCurves(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
@@ -61,16 +71,26 @@ const getApi = (
     }
   }
 
+  /**
+   * Retrieves the intersection points on the surface.
+   *
+   * @returns An array of Point objects representing the intersection points.
+   */
   const getIntersections = (): Point[] => {
     return getSurfaceIntersectionPoints(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
     })
   }
 
-  // Get four curves that describe the bounds of the grid-square with the
-  // supplied grid coordinates
-  const getGridCellBounds = (x: number, y: number): BoundingCurves => {
-    validateGetSquareArguments(x, y, columns, rows)
+  /**
+   * Retrieves the bounding curves of a cell in the grid.
+   *
+   * @param column - The column index of the cell.
+   * @param row - The row index of the cell.
+   * @returns The bounding curves of the cell.
+   */
+  const getCellBounds = (column: number, row: number): BoundingCurves => {
+    validateGetSquareArguments(column, row, columns, rows)
 
     const { xAxis, yAxis } = getLines()
 
@@ -78,32 +98,39 @@ const getApi = (
     const gutterMultiplier = gutter > 0 ? 2 : 1
 
     return {
-      top: xAxis[y * gutterMultiplier][x],
-      bottom: xAxis[y * gutterMultiplier + 1][x],
-      left: yAxis[x * gutterMultiplier][y],
-      right: yAxis[x * gutterMultiplier + 1][y],
+      top: xAxis[row * gutterMultiplier][column],
+      bottom: xAxis[row * gutterMultiplier + 1][column],
+      left: yAxis[column * gutterMultiplier][row],
+      right: yAxis[column * gutterMultiplier + 1][row],
     }
   }
 
-  const getAllGridCellBoundsReducer = (
-    acc: BoundingCurves[],
-    column: Step,
-    columnIdx: number
-  ): BoundingCurves[] => {
-    const cellBounds = rows
-      .filter(stepIsNotGutter)
-      .map((row: Step, rowIdx: number) => {
-        return getGridCellBounds(columnIdx, rowIdx)
-      })
-    return [...acc, ...cellBounds]
-  }
-
-  const getAllGridCellBounds = (): BoundingCurves[] => {
+  /**
+   * Retrieves the bounding curves for all cells in the grid, excluding gutter
+   * steps.
+   *
+   * @returns {BoundingCurves[]} An array of bounding curves for each cell.
+   */
+  const getAllCellBounds = (): BoundingCurves[] => {
     // We only want to run through steps that are not gutters so we filter both
     // rows and columns first
     return columns
       .filter(stepIsNotGutter)
-      .reduce(getAllGridCellBoundsReducer, [])
+      .reduce(
+        (
+          acc: BoundingCurves[],
+          column: Step,
+          columnIdx: number
+        ): BoundingCurves[] => {
+          const cellBounds = rows
+            .filter(stepIsNotGutter)
+            .map((row: Step, rowIdx: number) => {
+              return getCellBounds(columnIdx, rowIdx)
+            })
+          return [...acc, ...cellBounds]
+        },
+        []
+      )
   }
 
   return mapObj(
@@ -114,8 +141,8 @@ const getApi = (
       getPoint,
       getLines,
       getIntersections,
-      getGridCellBounds,
-      getAllGridCellBounds,
+      getCellBounds,
+      getAllCellBounds,
     }
   ) as GridApi
 }
