@@ -37,8 +37,6 @@ const config = {
   transform: {
     '^.+.tsx?$': ['ts-jest', { useESM: true }],
   },
-
-  testPathIgnorePatterns: ['./dist'],
 }
 
 export default config

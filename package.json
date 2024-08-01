@@ -42,8 +42,8 @@
     "docs": "typedoc",
     "docs-open": "open ./docs/index.html",
     "release-preview": "semantic-release --no-ci --dry-run --debug",
-    "link": "pnpm link --global",
-    "unlink": "pnpm unlink --global"
+    "link": "pnpm link --global coons-patch",
+    "unlink": "pnpm unlink --global coons-patch"
   },
   "keywords": [
     "coons patch",
