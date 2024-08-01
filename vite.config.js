@@ -1,6 +1,7 @@
 import { resolve } from 'path'
 // eslint-disable-next-line
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -9,16 +10,30 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig(() => {
   return {
+    logLevel: 'info',
     build: {
       minify: false,
       sourcemap: true,
       lib: {
-        entry: resolve(__dirname, 'src/index.js'),
-        name: 'warp-grid',
-        // the phtmlroper extensions will be added
-        fileName: 'warp-grid',
-        formats: ['es', 'cjs', 'umd'],
+        entry: resolve(__dirname, 'src/index.ts'),
+        name: 'Warp Grid',
+        formats: ['es', 'cjs'],
+        // Choose names for build artifacts
+        fileName: (format) => {
+          if (format === 'es') {
+            return 'index.mjs'
+          }
+          if (format === 'cjs') {
+            return 'index.common.js'
+          }
+        },
       },
     },
+    plugins: [
+      // Generate a single types file for all our types
+      dts({
+        rollupTypes: true,
+      }),
+    ],
   }
 })

@@ -1,20 +1,22 @@
 {
   "name": "warp-grid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "packageManager": "pnpm@9.6.0",
-  "description": "Create a Coons patch for a four-sided shape and manipulate the grid",
-  "main": "dist/warp-grid.js",
+  "description": "Create a complex grid, warped in 2D space and access data about its lines and cells",
   "exports": {
     ".": {
-      "import": "./dist/warp-grid.js",
-      "require": "./dist/index.umd.cjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.common.js",
+      "types": "./dist/index.d.ts",
+      "source": "./src/index.ts"
     }
   },
   "files": [
     "/dist",
-    "/src"
+    "/src",
+    "/docs"
   ],
-  "homepage": "https://warp-grid-editor.undistraction.com",
+  "homepage": "https://warp-grid.undistraction.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/undistraction/warp-grid.git"
@@ -31,15 +33,17 @@
     "prepare": "husky",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests",
     "test-watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js ./tests --watchAll",
-    "test-snapshot": " node ./tests/snapshotData",
+    "test-snapshot": "node ./tests/snapshotData",
     "lint": "pnpm run lint-prettier && pnpm run lint-eslint",
     "lint-prettier": "prettier . --write",
-    "lint-eslint": "eslint './**/*.{js,jsx,cjs}'",
-    "build": "vite build",
+    "lint-eslint": "eslint './**/*.{ts, js, jcjs}'",
+    "build": "vite build && pnpm run docs",
     "build-watch": "vite build --watch",
-    "release": "semantic-release --no-ci --dry-run --debug",
-    "link": "pnpm link --global && pnpm link --global coons-patch",
-    "unlink": "pnpm unlink --global && pnpm unlink --global coons-patch"
+    "docs": "typedoc",
+    "docs-open": "open ./docs/index.html",
+    "release-preview": "semantic-release --no-ci --dry-run --debug",
+    "link": "pnpm link --global",
+    "unlink": "pnpm unlink --global"
   },
   "keywords": [
     "coons patch",
@@ -57,10 +61,15 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^10.1.1",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "babel-jest": "^29.7.0",
     "commitlint": "^19.3.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^28.6.0",
     "globals": "^15.8.0",
@@ -73,12 +82,15 @@
     "prettier": "3.3.2",
     "prop-types": "^15.8.1",
     "semantic-release": "^24.0.0",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.3"
+    "ts-jest": "^29.2.3",
+    "typedoc": "^0.26.5",
+    "typescript": "5.4.2",
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "3.9.1"
   },
   "dependencies": {
-    "fast-memoize": "^2.5.2",
-    "matrix-js": "^1.7.1"
+    "coons-patch": "^1.7.0",
+    "fast-memoize": "^2.5.2"
   },
   "pnpm": {
     "overrides": {
