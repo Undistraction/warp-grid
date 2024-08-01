@@ -2,10 +2,10 @@
 // Utils
 // -----------------------------------------------------------------------------
 
-const roundToN = (n, value) => Number(value.toFixed(n))
+const roundToN = (n: number, value: number): number => Number(value.toFixed(n))
 
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
-export const roundTo5 = (value) => roundToN(5, value)
+export const roundTo5 = (value: number) => roundToN(5, value)

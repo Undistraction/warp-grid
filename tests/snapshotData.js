@@ -1,9 +1,9 @@
 import path from 'path'
-import getGrid from '../dist/warp-grid.js'
+import warpGrid from '../src/index'
 import fixtures from './fixtures.js'
 import { __dirname, writeFileAsync } from './helpers.js'
 
-console.log('Generating data for fixtures', getGrid)
+console.log('Generating data for fixtures', warpGrid)
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -24,7 +24,7 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   console.log(`Data for '${name}'`)
   console.log('-----------------------------')
   console.log('-----------------------------')
-  const patch = getGrid(input.bounds, input.grid)
+  const patch = warpGrid(input.bounds, input.grid)
 
   console.log('-----------------------------')
   console.log('api.getPoint')
@@ -45,12 +45,12 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   print(getLines)
 
   console.log('-----------------------------')
-  console.log('api.getGridCellBounds')
+  console.log('api.warpGridCellBounds')
   console.log('-----------------------------')
-  const getGridCellBounds = patch.getGridCellBounds(
-    ...input.api.getGridCellBounds.args
+  const warpGridCellBounds = patch.warpGridCellBounds(
+    ...input.api.warpGridCellBounds.args
   )
-  print(getGridCellBounds)
+  print(warpGridCellBounds)
 
   console.log('-----------------------------')
   console.log('api.getAllGridCellBounds')
@@ -61,7 +61,7 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   const snapshot = JSON.stringify(
     {
       model: patch.model,
-      getGridCellBounds,
+      warpGridCellBounds,
       getIntersections,
       getPoint,
       getLines,

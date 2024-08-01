@@ -1,13 +1,20 @@
-import { INTERPOLATION_STRATEGY_ID, LINE_STRATEGY_ID } from './const'
+import {
+  BoundingCurves,
+  GridDefinitionWithDefaults,
+  InterpolationStrategy,
+  LineStrategy,
+  Point,
+  Steps,
+} from './types'
 import { mapObj } from './utils/functional'
+import { isArray, isInt, isNil, isPlainObj, isUndefined } from './utils/is'
 import { roundTo5 } from './utils/math'
-import { isArray, isInt, isNil, isPlainObj, isUndefined } from './utils/types'
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
-const getPointsAreSame = (point1, point2) => {
+const getPointsAreSame = (point1: Point, point2: Point): boolean => {
   // Round the points to 5 decimal places to avoid rounding issues where the
   // values are fractionally different
   const roundedPoint1 = mapObj(roundTo5, point1)
@@ -22,13 +29,13 @@ const getPointsAreSame = (point1, point2) => {
 // Exports
 // -----------------------------------------------------------------------------
 
-export const validateT = (t) => {
+export const validateT = (t: number): void => {
   if (t < 0 || t > 1) {
     throw new Error(`t value must be between 0 and 1, but was '${t}'`)
   }
 }
 
-export const validateCornerPoints = (boundingCurves) => {
+export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
   if (
     !getPointsAreSame(
       boundingCurves.top.startPoint,
@@ -73,7 +80,9 @@ export const validateCornerPoints = (boundingCurves) => {
   }
 }
 
-export const validateBoundingCurves = (boundingCurves) => {
+export const validateBoundingCurves = (
+  boundingCurves: BoundingCurves
+): void => {
   if (isNil(boundingCurves)) {
     throw new Error('You must supply boundingCurves(Object)')
   }
@@ -85,8 +94,11 @@ export const validateBoundingCurves = (boundingCurves) => {
   validateCornerPoints(boundingCurves)
 }
 
-export const validateGrid = (grid) => {
-  const { rows, columns, interpolationStrategy, lineStrategy, precision } = grid
+export const validateGrid = (
+  gridDefinition: GridDefinitionWithDefaults
+): void => {
+  const { rows, columns, interpolationStrategy, lineStrategy, precision } =
+    gridDefinition
 
   if (isNil(columns)) {
     throw new Error('You must supply grid.columns(Array or Int)')
@@ -107,7 +119,7 @@ export const validateGrid = (grid) => {
   }
 
   if (!isUndefined(interpolationStrategy)) {
-    const possibleValues = Object.values(INTERPOLATION_STRATEGY_ID)
+    const possibleValues = Object.values(InterpolationStrategy)
     if (!possibleValues.includes(interpolationStrategy)) {
       throw new Error(
         `Interpolation strategy '${interpolationStrategy}' is not recognised. Must be one of '${possibleValues}'`
@@ -116,7 +128,7 @@ export const validateGrid = (grid) => {
   }
 
   if (!isUndefined(lineStrategy)) {
-    const possibleValues = Object.values(LINE_STRATEGY_ID)
+    const possibleValues = Object.values(LineStrategy)
     if (!possibleValues.includes(lineStrategy)) {
       throw new Error(
         `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
@@ -133,7 +145,7 @@ export const validateGrid = (grid) => {
   }
 }
 
-export const validateGetPointArguments = (u, v) => {
+export const validateGetPointArguments = (u: number, v: number): void => {
   if (u < 0 || u > 1) {
     throw new Error(`u value must be between 0 and 1, but was '${u}'`)
   }
@@ -143,7 +155,12 @@ export const validateGetPointArguments = (u, v) => {
   }
 }
 
-export const validateGetSquareArguments = (x, y, columns, rows) => {
+export const validateGetSquareArguments = (
+  x: number,
+  y: number,
+  columns: Steps,
+  rows: Steps
+): void => {
   const columnCount = columns.length
   const rowCount = rows.length
 
