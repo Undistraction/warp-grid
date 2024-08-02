@@ -111,7 +111,7 @@ export interface GridApi {
   getPoint: (u: number, v: number) => Point
   getIntersections: () => Point[]
   getLines: () => Lines
-  getCellBounds: () => BoundingCurves
+  getCellBounds: (columns: number, rows: number) => BoundingCurves
   getAllCellBounds: () => BoundingCurves[]
 }
 

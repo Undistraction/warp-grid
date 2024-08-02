@@ -11,8 +11,8 @@
     "strict": true,
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false,
-    "typeRoots": ["./src/@types", "./node_modules/@types"],
     "declaration": true,
-    "declarationDir": "./dist"
+    "declarationDir": "./dist",
+    "types": ["coons-patch"]
   }
 }

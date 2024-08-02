@@ -14,7 +14,6 @@ import {
   Point,
   Step,
 } from './types'
-import { mapObj } from './utils/functional'
 import { validateGetSquareArguments } from './validation'
 
 // -----------------------------------------------------------------------------
@@ -51,15 +50,15 @@ const getApi = (
    * @param y - The y-coordinate of the point.
    * @returns The point on the surface.
    */
-  const getPoint = (x: number, y: number): Point => {
+  const getPoint = memoize((x: number, y: number): Point => {
     return getSurfacePoint(boundingCurves, x, y, { interpolatePointOnCurve })
-  }
+  })
 
   /**
    * Retrieves the lines for the grid axes.
    * @returns An object containing the lines for the x-axis and y-axis.
    */
-  const getLines = (): Lines => {
+  const getLines = memoize((): Lines => {
     const { u, v } = getSurfaceCurves(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
       interpolateLineU,
@@ -69,18 +68,18 @@ const getApi = (
       xAxis: u,
       yAxis: v,
     }
-  }
+  })
 
   /**
    * Retrieves the intersection points on the surface.
    *
    * @returns An array of Point objects representing the intersection points.
    */
-  const getIntersections = (): Point[] => {
+  const getIntersections = memoize((): Point[] => {
     return getSurfaceIntersectionPoints(boundingCurves, columns, rows, {
       interpolatePointOnCurve,
     })
-  }
+  })
 
   /**
    * Retrieves the bounding curves of a cell in the grid.
@@ -89,21 +88,23 @@ const getApi = (
    * @param row - The row index of the cell.
    * @returns The bounding curves of the cell.
    */
-  const getCellBounds = (column: number, row: number): BoundingCurves => {
-    validateGetSquareArguments(column, row, columns, rows)
+  const getCellBounds = memoize(
+    (column: number, row: number): BoundingCurves => {
+      validateGetSquareArguments(column, row, columns, rows)
 
-    const { xAxis, yAxis } = getLines()
+      const { xAxis, yAxis } = getLines()
 
-    // If there is a gutter, we need to skip over the gutter space
-    const gutterMultiplier = gutter > 0 ? 2 : 1
+      // If there is a gutter, we need to skip over the gutter space
+      const gutterMultiplier = gutter > 0 ? 2 : 1
 
-    return {
-      top: xAxis[row * gutterMultiplier][column],
-      bottom: xAxis[row * gutterMultiplier + 1][column],
-      left: yAxis[column * gutterMultiplier][row],
-      right: yAxis[column * gutterMultiplier + 1][row],
+      return {
+        top: xAxis[row * gutterMultiplier][column],
+        bottom: xAxis[row * gutterMultiplier + 1][column],
+        left: yAxis[column * gutterMultiplier][row],
+        right: yAxis[column * gutterMultiplier + 1][row],
+      }
     }
-  }
+  )
 
   /**
    * Retrieves the bounding curves for all cells in the grid, excluding gutter
@@ -111,7 +112,7 @@ const getApi = (
    *
    * @returns {BoundingCurves[]} An array of bounding curves for each cell.
    */
-  const getAllCellBounds = (): BoundingCurves[] => {
+  const getAllCellBounds = memoize((): BoundingCurves[] => {
     // We only want to run through steps that are not gutters so we filter both
     // rows and columns first
     return columns
@@ -131,20 +132,15 @@ const getApi = (
         },
         []
       )
-  }
+  })
 
-  return mapObj(
-    (f) => {
-      return memoize(f)
-    },
-    {
-      getPoint,
-      getLines,
-      getIntersections,
-      getCellBounds,
-      getAllCellBounds,
-    }
-  ) as GridApi
+  return {
+    getPoint,
+    getLines,
+    getIntersections,
+    getCellBounds,
+    getAllCellBounds,
+  }
 }
 
 export default getApi
