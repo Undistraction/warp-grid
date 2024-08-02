@@ -1,9 +1,47 @@
-import { describe, expect, it } from 'vitest'
-import { mapObj } from '../../src/utils/functional'
+import { mapObj, times } from '../../src/utils/functional'
 
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
+
+describe(`times`, () => {
+  it(`should call the callback n times`, () => {
+    const callback = vi.fn()
+    const n = 5
+    times(callback, n)
+    expect(callback).toHaveBeenCalledTimes(n)
+  })
+
+  it(`should pass the correct index to the callback`, () => {
+    const callback = vi.fn()
+    const n = 5
+    times(callback, n)
+    expect(callback.mock.calls).toEqual([[0], [1], [2], [3], [4]])
+  })
+
+  it(`should return an array of results from the callback`, () => {
+    const callback = vi.fn((i) => i * 2)
+    const n = 5
+    const result = times(callback, n)
+    expect(result).toEqual([0, 2, 4, 6, 8])
+  })
+
+  it(`should return an empty array if n is 0`, () => {
+    const callback = vi.fn()
+    const n = 0
+    const result = times(callback, n)
+    expect(result).toEqual([])
+    expect(callback).not.toHaveBeenCalled()
+  })
+
+  it(`should return an empty array if n is negative`, () => {
+    const callback = vi.fn()
+    const n = -5
+    const result = times(callback, n)
+    expect(result).toEqual([])
+    expect(callback).not.toHaveBeenCalled()
+  })
+})
 
 describe(`mapObj`, () => {
   it(`return a new object with its values the result of applying the callback`, () => {

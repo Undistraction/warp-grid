@@ -1,4 +1,3 @@
-import { beforeAll, describe, expect, it } from 'vitest'
 import getGrid from '../src/'
 import fixtures, { boundingCurvesValid } from './fixtures.js'
 import { loadFixtureData } from './helpers.js'
