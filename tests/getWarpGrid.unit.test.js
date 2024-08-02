@@ -19,13 +19,13 @@ describe(`getGrid`, () => {
       it(`throws if no boundingCurves is supplied`, () => {
         expect(() => {
           getGrid()
-        }).toThrow('You must supply boundingCurves(Object)')
+        }).toThrow(`You must supply boundingCurves(Object)`)
       })
 
       it(`throws if boundingCurves is not an object`, () => {
         expect(() => {
           getGrid([])
-        }).toThrow('boundingCurves must be an object')
+        }).toThrow(`boundingCurves must be an object`)
       })
 
       it(`throws if top and left bounding curves don't meet`, () => {
@@ -34,7 +34,7 @@ describe(`getGrid`, () => {
           bounds.top.startPoint.x = -10
           getGrid(bounds)
         }).toThrow(
-          'top curve startPoint and left curve startPoint must have same coordinates'
+          `top curve startPoint and left curve startPoint must have same coordinates`
         )
       })
 
@@ -44,7 +44,7 @@ describe(`getGrid`, () => {
           bounds.right.startPoint.x = -10
           getGrid(bounds)
         }).toThrow(
-          'top curve endPoint and right curve startPoint must have the same coordinates'
+          `top curve endPoint and right curve startPoint must have the same coordinates`
         )
       })
 
@@ -54,7 +54,7 @@ describe(`getGrid`, () => {
           bounds.left.endPoint.x = -10
           getGrid(bounds)
         }).toThrow(
-          'bottom curve startPoint and left curve endPoint must have the same coordinates'
+          `bottom curve startPoint and left curve endPoint must have the same coordinates`
         )
       })
 
@@ -64,7 +64,7 @@ describe(`getGrid`, () => {
           bounds.right.endPoint.x = -10
           getGrid(bounds)
         }).toThrow(
-          'bottom curve endPoint and right curve endPoint must have the same coordinates'
+          `bottom curve endPoint and right curve endPoint must have the same coordinates`
         )
       })
     })
@@ -74,37 +74,37 @@ describe(`getGrid`, () => {
         it(`throws if no columns are supplied`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, {})
-          }).toThrow('You must supply grid.columns(Array or Int)')
+          }).toThrow(`You must supply grid.columns(Array or Int)`)
         })
 
         it(`throws if no rows are supplied`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: [] })
-          }).toThrow('You must supply grid.rows(Array or Int)')
+          }).toThrow(`You must supply grid.rows(Array or Int)`)
         })
 
         it(`throws if columns are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: {} })
-          }).toThrow('grid.columns must be an Array of Ints or Int')
+          }).toThrow(`grid.columns must be an Array of Ints or Int`)
         })
 
         it(`throws if rows are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: [], rows: {} })
           }).toThrow(
-            'grid.rows must be an Int, an Array of Ints, or an Array of objects'
+            `grid.rows must be an Int, an Array of Ints, or an Array of objects`
           )
         })
       })
 
       describe(`interpolationStrategy`, () => {
-        it('throws if interpolationStrategy name is not recognised', () => {
+        it(`throws if interpolationStrategy name is not recognised`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
-              interpolationStrategy: 'nope',
+              interpolationStrategy: `nope`,
             })
           }).toThrow(
             `Interpolation strategy 'nope' is not recognised. Must be one of 'linear,even'`
@@ -113,12 +113,12 @@ describe(`getGrid`, () => {
       })
 
       describe(`precision`, () => {
-        it('throws if precision is not a positive integer', () => {
+        it(`throws if precision is not a positive integer`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
-              precision: 'abc',
+              precision: `abc`,
             })
           }).toThrow(
             `Precision must be a positive integer greater than 0, but was 'abc`
@@ -137,12 +137,12 @@ describe(`getGrid`, () => {
       })
 
       describe(`lineStrategy`, () => {
-        it('throws if lineStrategy name is not recognised', () => {
+        it(`throws if lineStrategy name is not recognised`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
-              lineStrategy: 'nope',
+              lineStrategy: `nope`,
             })
           }).toThrow(
             `Line strategy 'nope' is not recognised. Must be one of 'straightLines,curves'`
@@ -237,7 +237,7 @@ describe(`getGrid`, () => {
 
   // Loop through different types of grid
   describe.each(fixtures)(
-    `For fixture: '$name' supplies …`,
+    `for fixture: '$name' supplies …`,
     ({ name, input }) => {
       const grid = getGrid(input.bounds, input.grid)
       let output
@@ -246,7 +246,7 @@ describe(`getGrid`, () => {
         output = await loadFixtureData(name)
       })
 
-      describe('model', () => {
+      describe(`model`, () => {
         const { model } = grid
 
         it(`with original boundingCurves`, () => {
@@ -259,7 +259,7 @@ describe(`getGrid`, () => {
         })
       })
 
-      describe(`API`, () => {
+      describe(`aPI`, () => {
         describe(`getPoint`, () => {
           it(`returns point at supplied coordinates`, () => {
             const point = grid.getPoint(...input.api.getPoint.args)

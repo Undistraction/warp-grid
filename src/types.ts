@@ -3,13 +3,13 @@
 // -----------------------------------------------------------------------------
 
 export enum Coordinate {
-  X = 'x',
-  Y = 'y',
+  X = `x`,
+  Y = `y`,
 }
 
 export enum InterpolationStrategy {
-  LINEAR = 'linear',
-  EVEN = 'even',
+  LINEAR = `linear`,
+  EVEN = `even`,
 }
 
 export enum LineStrategy {

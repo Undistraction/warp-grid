@@ -38,7 +38,7 @@ export const boundingCurvesValid = {
 // Set 'skipSnapshot' falsetrue' for each item to skip the snapshot
 const allFixtures = [
   {
-    name: '3x3 grid',
+    name: `3x3 grid`,
     skipSnapshot: false,
     skipTest: false,
     input: {
@@ -54,7 +54,7 @@ const allFixtures = [
     },
   },
   {
-    name: '3x3 grid with gutters',
+    name: `3x3 grid with gutters`,
     skipSnapshot: false,
     skipTest: false,
     input: {
@@ -71,7 +71,7 @@ const allFixtures = [
     },
   },
   {
-    name: '3x3 grid with linear interpolationStrategy',
+    name: `3x3 grid with linear interpolationStrategy`,
     skipSnapshot: false,
     skipTest: false,
     input: {
@@ -79,7 +79,7 @@ const allFixtures = [
       grid: {
         columns: 3,
         rows: 3,
-        interpolationStrategy: 'linear',
+        interpolationStrategy: `linear`,
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
@@ -88,7 +88,7 @@ const allFixtures = [
     },
   },
   {
-    name: '3x3 grid with curves lineStrategy',
+    name: `3x3 grid with curves lineStrategy`,
     skipSnapshot: false,
     skipTest: false,
     input: {
@@ -96,7 +96,7 @@ const allFixtures = [
       grid: {
         columns: 3,
         rows: 3,
-        lineStrategy: 'curves',
+        lineStrategy: `curves`,
       },
       api: {
         getPoint: { args: [0.5, 0.25] },
@@ -105,7 +105,7 @@ const allFixtures = [
     },
   },
   {
-    name: 'Variant columns and rows',
+    name: `Variant columns and rows`,
     skipSnapshot: false,
     skipTest: false,
     input: {

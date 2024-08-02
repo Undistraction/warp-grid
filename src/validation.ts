@@ -84,11 +84,11 @@ export const validateBoundingCurves = (
   boundingCurves: BoundingCurves
 ): void => {
   if (isNil(boundingCurves)) {
-    throw new Error('You must supply boundingCurves(Object)')
+    throw new Error(`You must supply boundingCurves(Object)`)
   }
 
   if (!isPlainObj(boundingCurves)) {
-    throw new Error('boundingCurves must be an object')
+    throw new Error(`boundingCurves must be an object`)
   }
 
   validateCornerPoints(boundingCurves)
@@ -101,20 +101,20 @@ export const validateGrid = (
     gridDefinition
 
   if (isNil(columns)) {
-    throw new Error('You must supply grid.columns(Array or Int)')
+    throw new Error(`You must supply grid.columns(Array or Int)`)
   }
 
   if (!isArray(columns) && !isInt(columns)) {
-    throw new Error('grid.columns must be an Array of Ints or Int')
+    throw new Error(`grid.columns must be an Array of Ints or Int`)
   }
 
   if (isNil(rows)) {
-    throw new Error('You must supply grid.rows(Array or Int)')
+    throw new Error(`You must supply grid.rows(Array or Int)`)
   }
 
   if (!isArray(rows) && !isInt(rows)) {
     throw new Error(
-      'grid.rows must be an Int, an Array of Ints, or an Array of objects'
+      `grid.rows must be an Int, an Array of Ints, or an Array of objects`
     )
   }
 

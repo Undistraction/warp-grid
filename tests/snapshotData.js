@@ -3,7 +3,7 @@ import warpGrid from '../src/index'
 import fixtures from './fixtures.js'
 import { __dirname, writeFileAsync } from './helpers.js'
 
-console.log('Generating data for fixtures', warpGrid)
+console.log(`Generating data for fixtures`, warpGrid)
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -17,44 +17,44 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
     return
   }
 
-  console.log('@@input', input)
+  console.log(`@@input`, input)
 
-  console.log('-----------------------------')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`-----------------------------`)
   console.log(`Data for '${name}'`)
-  console.log('-----------------------------')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`-----------------------------`)
   const patch = warpGrid(input.bounds, input.grid)
 
-  console.log('-----------------------------')
-  console.log('api.getPoint')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`api.getPoint`)
+  console.log(`-----------------------------`)
   const getPoint = patch.getPoint(...input.api.getPoint.args)
   print(getPoint)
 
-  console.log('-----------------------------')
-  console.log('api.getIntersections')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`api.getIntersections`)
+  console.log(`-----------------------------`)
   const getIntersections = patch.getIntersections()
   print(getIntersections)
 
-  console.log('-----------------------------')
-  console.log('api.getLines')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`api.getLines`)
+  console.log(`-----------------------------`)
   const getLines = patch.getLines()
   print(getLines)
 
-  console.log('-----------------------------')
-  console.log('api.warpGridCellBounds')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`api.warpGridCellBounds`)
+  console.log(`-----------------------------`)
   const warpGridCellBounds = patch.warpGridCellBounds(
     ...input.api.warpGridCellBounds.args
   )
   print(warpGridCellBounds)
 
-  console.log('-----------------------------')
-  console.log('api.getAllCellBounds')
-  console.log('-----------------------------')
+  console.log(`-----------------------------`)
+  console.log(`api.getAllCellBounds`)
+  console.log(`-----------------------------`)
   const getAllCellBounds = patch.getAllCellBounds()
   print(getAllCellBounds)
 
