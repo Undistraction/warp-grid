@@ -8,4 +8,5 @@ module.exports = {
   navigation: {
     includeGroups: true,
   },
+  visibilityFilters: {},
 }
