@@ -17,9 +17,6 @@ importers:
       fast-memoize:
         specifier: ^2.5.2
         version: 2.5.2
-      vitest:
-        specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.14.10)(jsdom@20.0.3)
     devDependencies:
       '@commitlint/config-conventional':
         specifier: ^19.2.2
@@ -126,6 +123,9 @@ importers:
       vite-plugin-dts:
         specifier: 3.9.1
         version: 3.9.1(@types/node@20.14.10)(rollup@4.18.0)(typescript@5.4.2)(vite@5.3.3(@types/node@20.14.10))
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@20.14.10)(jsdom@20.0.3)
 
 packages:
 
