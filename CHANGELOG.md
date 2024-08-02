@@ -1,8 +1,14 @@
+## [1.3.0](https://github.com/undistraction/warp-grid/compare/v1.2.1...v1.3.0) (2024-08-02)
+
+### Features
+
+* Move memoization to internal functions ([348ed42](https://github.com/undistraction/warp-grid/commit/348ed4258697bbab7379f7d604a16bd8c6c7dbf6))
+
 ## [1.2.1](https://github.com/undistraction/warp-grid/compare/v1.2.0...v1.2.1) (2024-08-01)
 
 ### Bug Fixes
 
-* Types not being correctly built ([edaebc3](https://github.com/undistraction/warp-grid/commit/edaebc30a749b8bb5fdd5f0c1ae7731f33231409))
+- Types not being correctly built ([edaebc3](https://github.com/undistraction/warp-grid/commit/edaebc30a749b8bb5fdd5f0c1ae7731f33231409))
 
 ## [1.2.0](https://github.com/undistraction/warp-grid/compare/v1.1.0...v1.2.0) (2024-08-01)
 
