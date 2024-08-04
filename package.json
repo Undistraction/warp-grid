@@ -32,7 +32,7 @@
   "scripts": {
     "prepare": "husky",
     "test": "vitest run",
-    "test-watch": "vitst",
+    "test-watch": "vitest",
     "test-snapshot": "node ./tests/snapshotData",
     "lint": "pnpm run lint-prettier && pnpm run lint-eslint",
     "lint-prettier": "prettier . --write",
@@ -42,8 +42,8 @@
     "docs": "typedoc",
     "docs-open": "open ./docs/index.html",
     "release-preview": "semantic-release --no-ci --dry-run --debug",
-    "link": "pnpm link --global coons-patch",
-    "unlink": "pnpm unlink --global coons-patch"
+    "link": "pnpm link ../coons-patch",
+    "unlink": "pnpm unlink ../coons-patch"
   },
   "keywords": [
     "coons patch",
