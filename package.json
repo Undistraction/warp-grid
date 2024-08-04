@@ -5,7 +5,7 @@
   "description": "Create a complex grid, warped in 2D space and access data about its lines and cells",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts",
       "source": "./src/index.ts"
@@ -43,7 +43,8 @@
     "docs-open": "open ./docs/index.html",
     "release-preview": "semantic-release --no-ci --dry-run --debug",
     "link": "pnpm link ../coons-patch",
-    "unlink": "pnpm unlink ../coons-patch"
+    "unlink": "pnpm unlink ../coons-patch",
+    "tsc": "tsc src/**/*.ts --noEmit"
   },
   "keywords": [
     "coons patch",

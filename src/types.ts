@@ -18,44 +18,99 @@ export enum LineStrategy {
 }
 
 // -----------------------------------------------------------------------------
-// Types
+// Interfaces
 // -----------------------------------------------------------------------------
 
-export type Point = {
+export interface Point {
   x: number
   y: number
   t?: number
 }
 
-export type Curve = {
+export interface Curve {
   startPoint: Point
   endPoint: Point
   controlPoint1: Point
   controlPoint2: Point
 }
 
-export type Points = Point[]
-
-export type BoundingCurves = {
+export interface BoundingCurves {
   top: Curve
   bottom: Curve
   left: Curve
   right: Curve
 }
 
-export type Step = {
+export interface Step {
   value: number
   isGutter?: boolean
 }
 
-export type StepCurves = Curve[]
-
-export type Lines = {
+export interface Lines {
   xAxis: StepCurves[]
   yAxis: StepCurves[]
 }
 
-export type InterpolatePointOnCurve = (t: number, curve: Curve) => Point
+export interface GridDefinition {
+  columns: Steps
+  rows: Steps
+  gutter?: number
+  lineStrategy?: LineStrategy
+  interpolationStrategy?: InterpolationStrategy
+  precision?: number
+}
+
+export interface GridDefinitionWithDefaults {
+  columns: Steps
+  rows: Steps
+  gutter: number
+  lineStrategy: LineStrategy
+  interpolationStrategy: InterpolationStrategy
+  precision: number
+}
+
+export interface GridModel {
+  boundingCurves: BoundingCurves
+  columns: Steps
+  rows: Steps
+}
+
+export interface GridApi {
+  getPoint: (u: number, v: number) => Point
+  getIntersections: () => Point[]
+  getLines: () => Lines
+  getCellBounds: (columns: number, rows: number) => BoundingCurves
+  getAllCellBounds: () => BoundingCurves[]
+}
+
+export interface WarpGrid extends GridApi {
+  model: GridModel
+}
+
+export interface ObjectWithStringKeys {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  [key: string]: any
+}
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+export type Points = Point[]
+
+export type StepCurves = Curve[]
+
+export type UnprocessedStep = number | Step
+
+export type UnprocessedSteps = number | (number | Step)[]
+
+export type ExpandedSteps = (number | Step)[]
+
+export type Steps = Step[]
+
+// -----------------------------------------------------------------------------
+// Types: Function signatures
+// -----------------------------------------------------------------------------
 
 export type InterpolateLineU = (
   boundingCurves: BoundingCurves,
@@ -75,49 +130,4 @@ export type InterpolateLineV = (
   interpolatePointOnCurve: InterpolatePointOnCurve
 ) => Curve
 
-export type UnprocessedStep = number | Step
-
-export type UnprocessedSteps = number | (number | Step)[]
-
-export type ExpandedSteps = (number | Step)[]
-
-export type Steps = Step[]
-
-export type GridDefinition = {
-  columns: Steps
-  rows: Steps
-  gutter?: number
-  lineStrategy?: LineStrategy
-  interpolationStrategy?: InterpolationStrategy
-  precision?: number
-}
-
-export type GridDefinitionWithDefaults = {
-  columns: Steps
-  rows: Steps
-  gutter: number
-  lineStrategy: LineStrategy
-  interpolationStrategy: InterpolationStrategy
-  precision: number
-}
-
-export type GridModel = {
-  boundingCurves: BoundingCurves
-  columns: Steps
-  rows: Steps
-}
-
-export interface GridApi {
-  getPoint: (u: number, v: number) => Point
-  getIntersections: () => Point[]
-  getLines: () => Lines
-  getCellBounds: (columns: number, rows: number) => BoundingCurves
-  getAllCellBounds: () => BoundingCurves[]
-}
-
-export interface WarpGrid extends GridApi {
-  model: GridModel
-}
-
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-export type ObjectWithStringKeys = { [key: string]: any }
+export type InterpolatePointOnCurve = (t: number, curve: Curve) => Point
