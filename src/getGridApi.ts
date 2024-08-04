@@ -21,7 +21,7 @@ import { validateGetSquareArguments } from './validation'
 // -----------------------------------------------------------------------------
 
 // Internal
-type GetAPiCnfig = {
+type GetAPiConfig = {
   interpolatePointOnCurve: InterpolatePointOnCurve
   interpolateLineU: InterpolateLineU
   interpolateLineV: InterpolateLineV
@@ -42,7 +42,7 @@ const getApi = (
   columns: Step[],
   rows: Step[],
   gutter: number,
-  { interpolatePointOnCurve, interpolateLineU, interpolateLineV }: GetAPiCnfig
+  { interpolatePointOnCurve, interpolateLineU, interpolateLineV }: GetAPiConfig
 ): GridApi => {
   /**
    * Retrieves the point on the surface based on the given coordinates.
