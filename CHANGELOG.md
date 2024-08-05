@@ -1,16 +1,22 @@
+## [1.5.0](https://github.com/undistraction/warp-grid/compare/v1.4.0...v1.5.0) (2024-08-05)
+
+### Features
+
+* Switch type of columns and rows in Grid def ([0830dc3](https://github.com/undistraction/warp-grid/commit/0830dc30c0bc76c90f8dbd57204956aa9c9a5e20))
+
 ## [1.4.0](https://github.com/undistraction/warp-grid/compare/v1.3.0...v1.4.0) (2024-08-05)
 
 ### ⚠ BREAKING CHANGES
 
-* CHANGE
+- CHANGE
 
 ### Features
 
-* Force publish ([27b458b](https://github.com/undistraction/warp-grid/commit/27b458bdd59c4307ec4575b4573ce100c72db246))
+- Force publish ([27b458b](https://github.com/undistraction/warp-grid/commit/27b458bdd59c4307ec4575b4573ce100c72db246))
 
 ### Bug Fixes
 
-* Typo in variable name ([1162f2d](https://github.com/undistraction/warp-grid/commit/1162f2da33b2203f7473108e6ef081fdde656d61))
+- Typo in variable name ([1162f2d](https://github.com/undistraction/warp-grid/commit/1162f2da33b2203f7473108e6ef081fdde656d61))
 
 ## [1.3.0](https://github.com/undistraction/warp-grid/compare/v1.2.1...v1.3.0) (2024-08-02)
 
