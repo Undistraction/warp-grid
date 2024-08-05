@@ -52,8 +52,8 @@ export interface Lines {
 }
 
 export interface GridDefinition {
-  columns: Steps
-  rows: Steps
+  columns: StepDefinition
+  rows: StepDefinition
   gutter?: number
   lineStrategy?: LineStrategy
   interpolationStrategy?: InterpolationStrategy
@@ -107,6 +107,8 @@ export type UnprocessedSteps = number | (number | Step)[]
 export type ExpandedSteps = (number | Step)[]
 
 export type Steps = Step[]
+
+export type StepDefinition = number | number[] | Step[]
 
 // -----------------------------------------------------------------------------
 // Types: Function signatures
