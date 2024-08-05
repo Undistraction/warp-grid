@@ -6,6 +6,7 @@ import {
   interpolateStraightLineU,
   interpolateStraightLineV,
 } from 'coons-patch'
+
 import getApi from './getGridApi'
 import {
   BoundingCurves,

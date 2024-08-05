@@ -1,4 +1,5 @@
 import path from 'path'
+
 import warpGrid from '../src/index'
 import fixtures from './fixtures.js'
 import { __dirname, writeFileAsync } from './helpers.js'
