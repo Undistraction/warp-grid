@@ -1,8 +1,18 @@
+## [1.5.1](https://github.com/undistraction/warp-grid/compare/v1.5.0...v1.5.1) (2024-08-05)
+
+### ⚠ BREAKING CHANGES
+
+* CHANGE
+
+### Bug Fixes
+
+* Switch ts module type for single-file type export ([e314ed9](https://github.com/undistraction/warp-grid/commit/e314ed96d9f771c06cf1abe955c2112f8e9954b2))
+
 ## [1.5.0](https://github.com/undistraction/warp-grid/compare/v1.4.0...v1.5.0) (2024-08-05)
 
 ### Features
 
-* Switch type of columns and rows in Grid def ([0830dc3](https://github.com/undistraction/warp-grid/commit/0830dc30c0bc76c90f8dbd57204956aa9c9a5e20))
+- Switch type of columns and rows in Grid def ([0830dc3](https://github.com/undistraction/warp-grid/commit/0830dc30c0bc76c90f8dbd57204956aa9c9a5e20))
 
 ## [1.4.0](https://github.com/undistraction/warp-grid/compare/v1.3.0...v1.4.0) (2024-08-05)
 

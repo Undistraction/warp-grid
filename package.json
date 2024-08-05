@@ -1,6 +1,6 @@
 {
   "name": "warp-grid",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "packageManager": "pnpm@9.6.0",
   "description": "Create a complex grid, warped in 2D space and access data about its lines and cells",
   "exports": {
