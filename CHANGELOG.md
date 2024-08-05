@@ -1,8 +1,22 @@
+## [1.4.0](https://github.com/undistraction/warp-grid/compare/v1.3.0...v1.4.0) (2024-08-05)
+
+### ⚠ BREAKING CHANGES
+
+* CHANGE
+
+### Features
+
+* Force publish ([27b458b](https://github.com/undistraction/warp-grid/commit/27b458bdd59c4307ec4575b4573ce100c72db246))
+
+### Bug Fixes
+
+* Typo in variable name ([1162f2d](https://github.com/undistraction/warp-grid/commit/1162f2da33b2203f7473108e6ef081fdde656d61))
+
 ## [1.3.0](https://github.com/undistraction/warp-grid/compare/v1.2.1...v1.3.0) (2024-08-02)
 
 ### Features
 
-* Move memoization to internal functions ([348ed42](https://github.com/undistraction/warp-grid/commit/348ed4258697bbab7379f7d604a16bd8c6c7dbf6))
+- Move memoization to internal functions ([348ed42](https://github.com/undistraction/warp-grid/commit/348ed4258697bbab7379f7d604a16bd8c6c7dbf6))
 
 ## [1.2.1](https://github.com/undistraction/warp-grid/compare/v1.2.0...v1.2.1) (2024-08-01)
 
