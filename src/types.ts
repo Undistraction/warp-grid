@@ -60,14 +60,7 @@ export interface GridDefinition {
   precision?: number
 }
 
-export interface GridDefinitionWithDefaults {
-  columns: Steps
-  rows: Steps
-  gutter: number
-  lineStrategy: LineStrategy
-  interpolationStrategy: InterpolationStrategy
-  precision: number
-}
+export type GridDefinitionWithDefaults = Required<GridDefinition>
 
 export interface GridModel {
   boundingCurves: BoundingCurves
