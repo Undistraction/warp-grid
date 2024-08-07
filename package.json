@@ -44,7 +44,7 @@
     "release-preview": "semantic-release --no-ci --dry-run --debug",
     "link": "pnpm link ../coons-patch",
     "unlink": "pnpm unlink ../coons-patch",
-    "tsc": "tsc src/**/*.ts --noEmit"
+    "tsc": "tsc"
   },
   "keywords": [
     "coons patch",

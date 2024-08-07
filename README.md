@@ -22,6 +22,8 @@ pnpm add warp-grid
 
 [Documenation](http://warp-grid-docs.undistraction.com/)
 
+This package is written in TypeScript and exports its types.
+
 ## Quick-start
 
 The basic workflow is that you pass bounds representing the edges of a square, and a grid configuration object describing the grid you'd like to map onto the square, and in return you receive an object with information about the coons patch, and a small API to allow you to get metrics describing the patch. This means no expensive calculations are done up front, but all the API functions are memoized to ensure expensive calculations only happen when needed.

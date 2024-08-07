@@ -2,11 +2,11 @@
 
 ### ⚠ BREAKING CHANGES
 
-* CHANGE
+- CHANGE
 
 ### Bug Fixes
 
-* Switch ts module type for single-file type export ([e314ed9](https://github.com/undistraction/warp-grid/commit/e314ed96d9f771c06cf1abe955c2112f8e9954b2))
+- Switch ts module type for single-file type export ([e314ed9](https://github.com/undistraction/warp-grid/commit/e314ed96d9f771c06cf1abe955c2112f8e9954b2))
 
 ## [1.5.0](https://github.com/undistraction/warp-grid/compare/v1.4.0...v1.5.0) (2024-08-05)
 
