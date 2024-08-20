@@ -42,7 +42,7 @@ const getApi = (
   boundingCurves: BoundingCurves,
   columns: Step[],
   rows: Step[],
-  gutter: number,
+  gutter: [number, number],
   { interpolatePointOnCurve, interpolateLineU, interpolateLineV }: GetAPiConfig
 ): GridApi => {
   /**
@@ -96,13 +96,14 @@ const getApi = (
       const { xAxis, yAxis } = getLines()
 
       // If there is a gutter, we need to skip over the gutter space
-      const gutterMultiplier = gutter > 0 ? 2 : 1
+      const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
+      const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
 
       return {
-        top: xAxis[row * gutterMultiplier][column],
-        bottom: xAxis[row * gutterMultiplier + 1][column],
-        left: yAxis[column * gutterMultiplier][row],
-        right: yAxis[column * gutterMultiplier + 1][row],
+        top: xAxis[row * gutterMultiplierX][column],
+        bottom: xAxis[row * gutterMultiplierX + 1][column],
+        left: yAxis[column * gutterMultiplierY][row],
+        right: yAxis[column * gutterMultiplierY + 1][row],
       }
     }
   )

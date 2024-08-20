@@ -19,6 +19,7 @@ import {
   LineStrategy,
   WarpGrid,
 } from './types'
+import { isNumber } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'
 
@@ -95,10 +96,14 @@ const warpGrid = (
 
   const { gutter } = definitionWithDefaults
 
+  const gutterArray: [number, number] = isNumber(gutter)
+    ? [gutter, gutter]
+    : gutter
+
   const [columns, rows] = [
-    definitionWithDefaults.columns,
-    definitionWithDefaults.rows,
-  ].map(processSteps(gutter))
+    { steps: definitionWithDefaults.columns, gutter: gutterArray[0] },
+    { steps: definitionWithDefaults.rows, gutter: gutterArray[1] },
+  ].map(processSteps)
 
   // Get functions for interpolation based on grid config
   const interpolatePointOnCurve = getInterpolationStrategy(
@@ -108,7 +113,7 @@ const warpGrid = (
     definitionWithDefaults
   )
 
-  const api = getApi(boundingCurves, columns, rows, gutter, {
+  const api = getApi(boundingCurves, columns, rows, gutterArray, {
     interpolatePointOnCurve,
     interpolateLineU,
     interpolateLineV,

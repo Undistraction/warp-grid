@@ -7,7 +7,14 @@ import {
   Steps,
 } from './types'
 import { mapObj } from './utils/functional'
-import { isArray, isInt, isNil, isPlainObj, isUndefined } from './utils/is'
+import {
+  isArray,
+  isInt,
+  isNil,
+  isNumber,
+  isPlainObj,
+  isUndefined,
+} from './utils/is'
 import { roundTo5 } from './utils/math'
 
 // -----------------------------------------------------------------------------
@@ -97,8 +104,14 @@ export const validateBoundingCurves = (
 export const validateGrid = (
   gridDefinition: GridDefinitionWithDefaults
 ): void => {
-  const { rows, columns, interpolationStrategy, lineStrategy, precision } =
-    gridDefinition
+  const {
+    rows,
+    columns,
+    gutter,
+    interpolationStrategy,
+    lineStrategy,
+    precision,
+  } = gridDefinition
 
   if (isNil(columns)) {
     throw new Error(`You must supply grid.columns(Array or Int)`)
@@ -116,6 +129,18 @@ export const validateGrid = (
     throw new Error(
       `grid.rows must be an Int, an Array of Ints, or an Array of objects`
     )
+  }
+
+  if (!isNil(gutter)) {
+    if (isArray(gutter)) {
+      if (gutter.length > 2) {
+        throw new Error(
+          `if grid.gutters is an Array it must have a length of 2`
+        )
+      }
+    } else if (!isNumber(gutter)) {
+      throw new Error(`grid.gutters must be an Int or an Array of Ints`)
+    }
   }
 
   if (!isUndefined(interpolationStrategy)) {

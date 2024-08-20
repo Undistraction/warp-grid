@@ -135,9 +135,9 @@ These fields can be one of the following:
 
 ### Gutters
 
-If supplied, `gutters` will describe the width of horizontal gutters and the height of veritcal gutters (the spaces between the grid cells). They are also a ratio of the total value, for example, if columns are `[1,4,3]` and gutters are `1`, There will be three rows of 10%, 40% and 30% percent with two gutters of `10%` between them.
+If supplied, `gutter` will describe the width of horizontal gutters and the height of vertical gutters (the spaces between the grid cells). If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters are also a ratio of the total value, for example, if columns are `[1,4,3]` and gutters are `1`, There will be three rows of 10%, 40% and 30% percent with two gutters of `10%` between them.
 
-There is an additional way to add gutters without using the gutters property. You can add them to the rows or columns arrays, using an object with a `value` property, but also adding and `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`).
+There is an additional way to add gutters without using the gutters property. You can add them to the rows or columns arrays, using an object with a `value` property, but also adding and `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
 
 ### Interpolations
 
@@ -149,12 +149,13 @@ The grid also allows configuration params that change how it calculates the grid
 
 - `precision` If you choose to use `even`, this parameter control how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`. With `linear` this will have no effect.
 
-Here is an example of a grid config:
+Here is an example of a grid definition:
 
 ```javaScript
 {
   columns: 8,
-  rows: [10, 5, 20, 5, 10]
+  rows: [10, 5, 20, 5, 10],
+  gutters: [5, 3],
   interpolationStategy: `even`,
   lineStrategy: 'curves',
   precision: 30,
@@ -181,9 +182,9 @@ The return value is a `warp grid` object representing the patch and providing an
 }
 ```
 
-### Config object
+### Model object
 
-`config` provides access to the resolved configuration data that was used to generate the patch. The configuration data is not the same as the data you passed in, but is instead the internal representation of that data.
+`model` provides access to the resolved configuration data that was used to generate the patch. The configuration data is not the same as the data you passed in, but is instead the internal representation of that data.
 
 - `columns` contains an array of column values. This will always be made up of objects, regardless of how you supplied them.
 - `rows` contains an array of row values. This will always be made up of objects, regardless of how you supplied them.
@@ -268,3 +269,17 @@ pnpm run lint-eslint
 ### Release
 
 Releases are via semantic-release and executed on CI via Github actions. Docs are deployed to Vercel.
+
+### Linking
+
+To link into the local version of `coons-patch` for local testing run:
+
+```
+pnpm run link
+```
+
+To unlink (and use the package from npm):
+
+```
+pnpm run unlink
+```

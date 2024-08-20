@@ -1,6 +1,6 @@
 import path from 'path'
 
-import warpGrid from '../src/index'
+import warpGrid from '../dist/index.js'
 import fixtures from './fixtures.js'
 import { __dirname, writeFileAsync } from './helpers.js'
 
@@ -46,12 +46,10 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   print(getLines)
 
   console.log(`-----------------------------`)
-  console.log(`api.warpGridCellBounds`)
+  console.log(`api.getCellBounds`)
   console.log(`-----------------------------`)
-  const warpGridCellBounds = patch.warpGridCellBounds(
-    ...input.api.warpGridCellBounds.args
-  )
-  print(warpGridCellBounds)
+  const getCellBounds = patch.getCellBounds(...input.api.getCellBounds.args)
+  print(getCellBounds)
 
   console.log(`-----------------------------`)
   console.log(`api.getAllCellBounds`)
@@ -62,7 +60,7 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   const snapshot = JSON.stringify(
     {
       model: patch.model,
-      warpGridCellBounds,
+      getCellBounds,
       getIntersections,
       getPoint,
       getLines,

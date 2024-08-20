@@ -48,10 +48,14 @@ const insertGutters = (steps: Steps, gutter: number): Steps => {
 // Exports
 // -----------------------------------------------------------------------------
 
-export const processSteps =
-  (gutter: number) =>
-  (steps: UnprocessedSteps): Steps => {
-    const array = ensureArray(steps)
-    const arrayOfSteps = ensureObjects(array)
-    return insertGutters(arrayOfSteps, gutter)
-  }
+export const processSteps = ({
+  steps,
+  gutter,
+}: {
+  steps: UnprocessedSteps
+  gutter: number
+}): Steps => {
+  const stepsArray = ensureArray(steps)
+  const stepsArrayOfObjs = ensureObjects(stepsArray)
+  return insertGutters(stepsArrayOfObjs, gutter)
+}

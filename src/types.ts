@@ -54,7 +54,7 @@ export interface Lines {
 export interface GridDefinition {
   columns: StepDefinition
   rows: StepDefinition
-  gutter?: number
+  gutter?: number | [number, number]
   lineStrategy?: LineStrategy
   interpolationStrategy?: InterpolationStrategy
   precision?: number
