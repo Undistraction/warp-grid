@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/undistraction/warp-grid/compare/v1.5.1...v1.6.0) (2024-08-20)
+
+### Features
+
+* Add support for separate u and v gutters ([fb48f7b](https://github.com/undistraction/warp-grid/commit/fb48f7b614fb66c352f5e7abc23ba1aa7c7aa5a5))
+
 ## [1.5.1](https://github.com/undistraction/warp-grid/compare/v1.5.0...v1.5.1) (2024-08-05)
 
 ### ⚠ BREAKING CHANGES
