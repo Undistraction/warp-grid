@@ -1,14 +1,17 @@
 import {
   BoundingCurves,
   GridDefinitionWithDefaults,
+  InterpolatePointOnCurve,
   InterpolationStrategy,
   LineStrategy,
   Point,
   Steps,
+  UnprocessedSteps,
 } from './types'
 import { mapObj } from './utils/functional'
 import {
   isArray,
+  isFunction,
   isInt,
   isNil,
   isNumber,
@@ -36,9 +39,53 @@ const getPointsAreSame = (point1: Point, point2: Point): boolean => {
 // Exports
 // -----------------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+const validateFunction = (func: Function, name: string): void => {
+  if (!isFunction(func)) {
+    throw new Error(`${name} must be a function`)
+  }
+}
+
 export const validateT = (t: number): void => {
   if (t < 0 || t > 1) {
     throw new Error(`t value must be between 0 and 1, but was '${t}'`)
+  }
+}
+
+const validateColumnsAndRows = (
+  columns: UnprocessedSteps,
+  rows: UnprocessedSteps
+): void => {
+  if (!isInt(columns)) {
+    if (isArray(columns)) {
+      columns.map((column) => {
+        if (!isInt(column) && !isPlainObj(column)) {
+          throw new Error(
+            `A column must be an integer or an object, but it was '${column}'`
+          )
+        }
+      }, columns)
+    } else {
+      throw new Error(
+        `columns must be an integer or an array, but it was '${columns}'`
+      )
+    }
+  }
+
+  if (!isInt(rows)) {
+    if (isArray(rows)) {
+      rows.map((row) => {
+        if (!isInt(row) && !isPlainObj(row)) {
+          throw new Error(
+            `A row must be an integer or an object, but it was '${row}'`
+          )
+        }
+      }, rows)
+    } else {
+      throw new Error(
+        `rows must be an integer or an array, but it was '${rows}'`
+      )
+    }
   }
 }
 
@@ -144,20 +191,30 @@ export const validateGrid = (
   }
 
   if (!isUndefined(interpolationStrategy)) {
-    const possibleValues = Object.values(InterpolationStrategy)
-    if (!possibleValues.includes(interpolationStrategy)) {
-      throw new Error(
-        `Interpolation strategy '${interpolationStrategy}' is not recognised. Must be one of '${possibleValues}'`
-      )
+    if (isArray(interpolationStrategy)) {
+      validateFunction(interpolationStrategy[0], `interpolationStrategyU`)
+      validateFunction(interpolationStrategy[1], `interpolationStrategyV`)
+    } else {
+      const possibleValues = Object.values(InterpolationStrategy)
+      if (!possibleValues.includes(interpolationStrategy)) {
+        throw new Error(
+          `Interpolation strategy '${interpolationStrategy}' is not recognised. Must be one of '${possibleValues}'`
+        )
+      }
     }
   }
 
   if (!isUndefined(lineStrategy)) {
-    const possibleValues = Object.values(LineStrategy)
-    if (!possibleValues.includes(lineStrategy)) {
-      throw new Error(
-        `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
-      )
+    if (isArray(lineStrategy)) {
+      validateFunction(lineStrategy[0], `lineStrategyU`)
+      validateFunction(lineStrategy[1], `lineStrategyV`)
+    } else {
+      const possibleValues = Object.values(LineStrategy)
+      if (!possibleValues.includes(lineStrategy)) {
+        throw new Error(
+          `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
+        )
+      }
     }
   }
 
@@ -206,4 +263,17 @@ export const validateGetSquareArguments = (
       `Grid is '${rowCount}' rows high but coordinates are zero-based, and you passed y:'${y}'`
     )
   }
+}
+
+export const validateGetIntersectionsArguments = (
+  boundingCurves: BoundingCurves,
+  columns: UnprocessedSteps,
+  rows: UnprocessedSteps,
+  interpolatePointOnCurveU: InterpolatePointOnCurve,
+  interpolatePointOnCurveV: InterpolatePointOnCurve
+): void => {
+  validateBoundingCurves(boundingCurves)
+  validateColumnsAndRows(columns, rows)
+  validateFunction(interpolatePointOnCurveU, `interpolatePointOnCurveU`)
+  validateFunction(interpolatePointOnCurveV, `interpolatePointOnCurveV`)
 }

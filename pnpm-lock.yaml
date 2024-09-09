@@ -11,12 +11,18 @@ importers:
 
   .:
     dependencies:
+      bezier-easing:
+        specifier: ^2.1.0
+        version: 2.1.0
       coons-patch:
         specifier: ^1.8.3
-        version: 1.8.3
+        version: link:../coons-patch
       fast-memoize:
         specifier: ^2.5.2
         version: 2.5.2
+      matrix-js:
+        specifier: ^1.7.1
+        version: 1.7.1
     devDependencies:
       '@commitlint/config-conventional':
         specifier: ^19.2.2
@@ -1292,6 +1298,9 @@ packages:
   before-after-hook@3.0.2:
     resolution: {integrity: sha512-Nik3Sc0ncrMK4UUdXQmAnRtzmNQTAAXmXIopizwZ1W1t8QmfJj+zL4OA2I7XPTPW5z5TDqv4hRo/JzouDJnX3A==}
 
+  bezier-easing@2.1.0:
+    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
+
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -1503,9 +1512,6 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
-
-  coons-patch@1.8.3:
-    resolution: {integrity: sha512-zEJvLbhcNTIaThOdNffWCfiwRxqLWFaHkdVIEvA00u9mvloQ6mYRKXk1kpWFygffC4hJO3R+OPNaZZMVESX5RQ==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -5581,6 +5587,8 @@ snapshots:
 
   before-after-hook@3.0.2: {}
 
+  bezier-easing@2.1.0: {}
+
   binary-extensions@2.3.0: {}
 
   bottleneck@2.19.5: {}
@@ -5801,11 +5809,6 @@ snapshots:
   convert-hrtime@5.0.0: {}
 
   convert-source-map@2.0.0: {}
-
-  coons-patch@1.8.3:
-    dependencies:
-      fast-memoize: 2.5.2
-      matrix-js: 1.7.1
 
   core-util-is@1.0.3: {}
 

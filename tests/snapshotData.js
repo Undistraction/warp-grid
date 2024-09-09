@@ -18,8 +18,6 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
     return
   }
 
-  console.log(`@@input`, input)
-
   console.log(`-----------------------------`)
   console.log(`-----------------------------`)
   console.log(`Data for '${name}'`)
@@ -38,6 +36,16 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
   console.log(`-----------------------------`)
   const getIntersections = patch.getIntersections()
   print(getIntersections)
+
+  console.log(`-----------------------------`)
+  console.log(`api.getLinesXAxis`)
+  console.log(`-----------------------------`)
+  const getLinesXAxis = patch.getLinesXAxis()
+
+  console.log(`-----------------------------`)
+  console.log(`api.getLinesYAxis`)
+  console.log(`-----------------------------`)
+  const getLinesYAxis = patch.getLinesYAxis()
 
   console.log(`-----------------------------`)
   console.log(`api.getLines`)
@@ -63,6 +71,8 @@ fixtures.forEach(async ({ name, input, skipSnapshot }) => {
       getCellBounds,
       getIntersections,
       getPoint,
+      getLinesXAxis,
+      getLinesYAxis,
       getLines,
       getAllCellBounds,
     },

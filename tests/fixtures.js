@@ -39,7 +39,7 @@ export const boundingCurvesValid = {
 const allFixtures = [
   {
     name: `3x3 grid`,
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
       bounds: boundingCurvesValid,
@@ -89,7 +89,7 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with linear interpolationStrategy`,
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
       bounds: boundingCurvesValid,
@@ -106,7 +106,7 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with curves lineStrategy`,
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
       bounds: boundingCurvesValid,
@@ -123,7 +123,7 @@ const allFixtures = [
   },
   {
     name: `Variant columns and rows`,
-    skipSnapshot: true,
+    skipSnapshot: false,
     skipTest: false,
     input: {
       bounds: boundingCurvesValid,

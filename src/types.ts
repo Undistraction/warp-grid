@@ -55,9 +55,15 @@ export interface GridDefinition {
   columns: StepDefinition
   rows: StepDefinition
   gutter?: number | [number, number]
-  lineStrategy?: LineStrategy
-  interpolationStrategy?: InterpolationStrategy
+  interpolationStrategy?:
+    | InterpolationStrategy
+    | [InterpolatePointOnCurve, InterpolatePointOnCurve]
+  lineStrategy?: LineStrategy | [InterpolateLineU, InterpolateLineV]
   precision?: number
+  bezierEasing: {
+    u: [number, number]
+    v: [number, number]
+  }
 }
 
 export type GridDefinitionWithDefaults = Required<GridDefinition>
@@ -71,6 +77,8 @@ export interface GridModel {
 export interface GridApi {
   getPoint: (u: number, v: number) => Point
   getIntersections: () => Point[]
+  getLinesXAxis: () => StepCurves[]
+  getLinesYAxis: () => StepCurves[]
   getLines: () => Lines
   getCellBounds: (columns: number, rows: number) => BoundingCurves
   getAllCellBounds: () => BoundingCurves[]
@@ -113,7 +121,8 @@ export type InterpolateLineU = (
   vSize: number,
   vEnd: number,
   uStart: number,
-  interpolatePointOnCurve: InterpolatePointOnCurve
+  interpolatePointOnCurveU: InterpolatePointOnCurve,
+  interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
 export type InterpolateLineV = (
@@ -122,7 +131,8 @@ export type InterpolateLineV = (
   uSize: number,
   uEnd: number,
   vStart: number,
-  interpolatePointOnCurve: InterpolatePointOnCurve
+  interpolatePointOnCurveU: InterpolatePointOnCurve,
+  interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
 export type InterpolatePointOnCurve = (t: number, curve: Curve) => Point

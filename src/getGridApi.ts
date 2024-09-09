@@ -1,8 +1,4 @@
-import {
-  getSurfaceCurves,
-  getSurfaceIntersectionPoints,
-  getSurfacePoint,
-} from 'coons-patch'
+import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
 import memoize from 'fast-memoize'
 
 import {
@@ -14,8 +10,13 @@ import {
   Lines,
   Point,
   Step,
+  StepCurves,
 } from './types'
-import { validateGetSquareArguments } from './validation'
+import { getStepData, getTSize } from './utils/steps'
+import {
+  validateGetIntersectionsArguments,
+  validateGetSquareArguments,
+} from './validation'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -23,7 +24,8 @@ import { validateGetSquareArguments } from './validation'
 
 // Internal
 type GetAPiConfig = {
-  interpolatePointOnCurve: InterpolatePointOnCurve
+  interpolatePointOnCurveU: InterpolatePointOnCurve
+  interpolatePointOnCurveV: InterpolatePointOnCurve
   interpolateLineU: InterpolateLineU
   interpolateLineV: InterpolateLineV
 }
@@ -43,8 +45,14 @@ const getApi = (
   columns: Step[],
   rows: Step[],
   gutter: [number, number],
-  { interpolatePointOnCurve, interpolateLineU, interpolateLineV }: GetAPiConfig
+  {
+    interpolatePointOnCurveU,
+    interpolatePointOnCurveV,
+    interpolateLineU,
+    interpolateLineV,
+  }: GetAPiConfig
 ): GridApi => {
+  console.log(`@@`, interpolatePointOnCurveV)
   /**
    * Retrieves the point on the surface based on the given coordinates.
    * @param x - The x-coordinate of the point.
@@ -52,22 +60,131 @@ const getApi = (
    * @returns The point on the surface.
    */
   const getPoint = memoize((x: number, y: number): Point => {
-    return getSurfacePoint(boundingCurves, x, y, { interpolatePointOnCurve })
+    return coonsPatch(boundingCurves, x, y, {
+      interpolatePointOnCurveU,
+      interpolatePointOnCurveV,
+    })
   })
+
+  const getLinesXAxis = (): StepCurves[] => {
+    const {
+      processedColumns,
+      processedRows,
+      columnsTotalCount,
+      rowsTotalCount,
+      columnsTotalValue,
+      rowsTotalValue,
+    } = getStepData(columns, rows)
+
+    const curves = []
+    let vStart = 0
+
+    // Short circuit if we are only 1x1 and just return bounds
+    if (columnsTotalCount === 1 && rowsTotalCount === 1) {
+      return [[boundingCurves.top], [boundingCurves.bottom]]
+    }
+
+    for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
+      const lineSections = []
+      let uStart = 0
+
+      for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
+        const column = processedColumns[columnIdx]
+        const columnValue = column?.value
+        const uSize = columnValue / columnsTotalValue
+        const uEnd = uStart + uSize
+
+        if (!column.isGutter) {
+          const curve = interpolateLineU(
+            boundingCurves,
+            uStart,
+            uSize,
+            uEnd,
+            vStart,
+            interpolatePointOnCurveU,
+            interpolatePointOnCurveV
+          )
+
+          lineSections.push(curve)
+        }
+
+        uStart += uSize
+      }
+
+      curves.push(lineSections)
+
+      if (rowIdx !== rowsTotalCount) {
+        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+      }
+    }
+
+    return curves
+  }
+
+  const getLinesYAxis = (): StepCurves[] => {
+    const {
+      processedColumns,
+      processedRows,
+      columnsTotalCount,
+      rowsTotalCount,
+      columnsTotalValue,
+      rowsTotalValue,
+    } = getStepData(columns, rows)
+
+    const curves = []
+    let uStart = 0
+
+    // Short circuit if we are only 1x1 and just return the bounds
+    if (columnsTotalCount === 1 && rowsTotalCount === 1) {
+      return [[boundingCurves.left], [boundingCurves.right]]
+    }
+
+    for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
+      const lineSections = []
+      let vStart = 0
+
+      for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
+        const row = processedRows[rowIdx]
+        const rowValue = row?.value
+        const vSize = rowValue / rowsTotalValue
+        const vEnd = vStart + vSize
+
+        if (!row.isGutter) {
+          const curve = interpolateLineV(
+            boundingCurves,
+            vStart,
+            vSize,
+            vEnd,
+            uStart,
+            interpolatePointOnCurveU,
+            interpolatePointOnCurveV
+          )
+
+          lineSections.push(curve)
+        }
+
+        vStart += vSize
+      }
+
+      curves.push(lineSections)
+
+      // Calculate the position of the next column
+      if (columnIdx !== columnsTotalCount) {
+        uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+      }
+    }
+
+    return curves
+  }
 
   /**
    * Retrieves the lines for the grid axes.
    * @returns An object containing the lines for the x-axis and y-axis.
    */
   const getLines = memoize((): Lines => {
-    const { u, v } = getSurfaceCurves(boundingCurves, columns, rows, {
-      interpolatePointOnCurve,
-      interpolateLineU,
-      interpolateLineV,
-    })
     return {
-      xAxis: u,
-      yAxis: v,
+      xAxis: getLinesXAxis(),
+      yAxis: getLinesYAxis(),
     }
   })
 
@@ -77,9 +194,51 @@ const getApi = (
    * @returns An array of Point objects representing the intersection points.
    */
   const getIntersections = memoize((): Point[] => {
-    return getSurfaceIntersectionPoints(boundingCurves, columns, rows, {
-      interpolatePointOnCurve,
-    })
+    validateGetIntersectionsArguments(
+      boundingCurves,
+      columns,
+      rows,
+      interpolatePointOnCurveU,
+      interpolatePointOnCurveV
+    )
+
+    const {
+      processedColumns,
+      processedRows,
+      columnsTotalCount,
+      rowsTotalCount,
+      columnsTotalValue,
+      rowsTotalValue,
+    } = getStepData(columns, rows)
+
+    const intersections = []
+    let vStart = 0
+
+    for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
+      let uStart = 0
+
+      for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
+        const point = interpolatePointOnSurfaceBilinear(
+          boundingCurves,
+          uStart,
+          vStart,
+          interpolatePointOnCurveU,
+          interpolatePointOnCurveV
+        )
+
+        intersections.push(point)
+
+        if (columnIdx !== columnsTotalCount) {
+          uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+        }
+      }
+
+      if (rowIdx !== rowsTotalCount) {
+        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+      }
+    }
+
+    return intersections
   })
 
   /**
@@ -138,6 +297,8 @@ const getApi = (
 
   return {
     getPoint,
+    getLinesXAxis,
+    getLinesYAxis,
     getLines,
     getIntersections,
     getCellBounds,

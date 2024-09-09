@@ -188,6 +188,7 @@ describe(`getGrid`, () => {
             }).toThrow(`v value must be between 0 and 1, but was '2'`)
           })
         })
+
         describe(`getCellBounds`, () => {
           it(`throws if gridCell x coordinate is greater than number of columns -1`, () => {
             const grid = getGrid(boundingCurvesValid, {
@@ -258,7 +259,7 @@ describe(`getGrid`, () => {
         })
       })
 
-      describe(`aPI`, () => {
+      describe(`api`, () => {
         describe(`getPoint`, () => {
           it(`returns point at supplied coordinates`, () => {
             const point = grid.getPoint(...input.api.getPoint.args)
@@ -271,6 +272,20 @@ describe(`getGrid`, () => {
           it(`returns all intersections between curves`, () => {
             const intersectons = grid.getIntersections()
             expect(intersectons).toEqual(output.getIntersections)
+          })
+        })
+
+        describe(`getLinesXAxis`, () => {
+          it(`returns curves along x axis`, () => {
+            const curves = grid.getLinesXAxis()
+            expect(curves).toEqual(output.getLinesXAxis)
+          })
+        })
+
+        describe(`getLinesYAxis`, () => {
+          it(`returns curves along y axis`, () => {
+            const curves = grid.getLinesYAxis()
+            expect(curves).toEqual(output.getLinesYAxis)
           })
         })
 
