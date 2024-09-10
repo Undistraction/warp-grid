@@ -2,13 +2,11 @@
 
 This package allows you to create a grid and distort it in 2D space, then access information about its metrics - its bounds, rows, columns, gutters and cells.
 
-It provides a lot of flexiblity and allows for some complex grids that are very hard to generate using traditional graphics software, and to do so with fine programatic control.
+It provides a lot of flexiblity and allows for some complex grids that are very hard to generate using traditional graphics software, and allows you to do so with fine programatic control.
 
-There is an [interactive demo](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, and save it to you browser's local storage. .
+There is an [interactive demo](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, giving access to all the configuration available.
 
 This package does not handle any rendering itself, but provides you with all the data you need to render the grid using SVG, Canvas or anything else you like.
-
-This package makes use of [coons-patch](https://coons-patch.undistraction.com) to model the grid, and rather than duplicate information about the underlying architecture here you can see the project's README.
 
 ## Install package
 
@@ -26,9 +24,9 @@ This package is written in TypeScript and exports its types.
 
 ## Quick-start
 
-The basic workflow is that you pass bounds representing the edges of a square, and a grid configuration object describing the grid you'd like to map onto the square, and in return you receive an object with information about the coons patch, and a small API to allow you to get metrics describing the patch. This means no expensive calculations are done up front, but all the API functions are memoized to ensure expensive calculations only happen when needed.
+The basic workflow is that you pass bounds representing the edges of your grid, and a grid configuration object describing the grid you'd like to map onto the square, and receive an object with information about the coons patch, and an API to allow you to get metrics describing the patch. This means no expensive calculations are done up front, and are only performed when you need them.Expensive calculations are memoized.
 
-```javaScript
+```typeScript
 import warpGrid from 'warp-grid'
 
 // Define bounding curves for the patch
@@ -59,38 +57,39 @@ const boundingCurves = {
   },
 }
 
-const gridConfig = {
-  rows: 5,
+// Define a 10 x 5 grid
+const gridDefinition = {
   columns: 10
+  rows: 5,
 }
 
-const coonsPatch = getGrid(
+const grid = warpGrid(
   boundingCurves,
-  grid
+  gridDefinition
 )
 
 // Get a point on the patch at the provided horizontal and vertical ratios (0–1)
-const point = coonsPatch.getPoint(0.5, 0.75)
+const point = warpGrid.getPoint(0.5, 0.75)
 
 // Get an object with `u` and `v` keys. Each key contains an Array containing data representing all the sub-curves that make up each curve along that axis.
-const curves = coonsPatch.getLines()
+const curves = warpGrid.getLines()
 
 // Get an array of points representing every grid intersection
-const intersections = coonsPatch.getIntersections()
+const intersections = warpGrid.getIntersections()
 
 // Get the bounds for the grid-square at the supplied coordinates
-const bounds = coonsPatch.getCellBounds(3, 8)
+const bounds = warpGrid.getCellBounds(3, 8)
 ```
 
 There are a large number of validations that ensure that if you supply invalid data you will receive a helpful error message.
 
-# Discussion
+## Primatives
 
 There are a number of data types that are used by the package to describe aspects of the grid:
 
 Points look like this:
 
-```javaScript
+```typeScript
 {
   x: 34,
   y: 44
@@ -99,7 +98,7 @@ Points look like this:
 
 All curves are represented by cubic Bezier curves:
 
-```javaScript
+```typeScript
 {
   startPoint: { x: 0, y: 0},
   controlPoint1: { x: 0, y: 33},
@@ -110,7 +109,7 @@ All curves are represented by cubic Bezier curves:
 
 Bounding curves look like this, where each item is curve.
 
-```javaScript
+```typeScript
 {
   top,
   bottom,
@@ -119,39 +118,70 @@ Bounding curves look like this, where each item is curve.
 }
 ```
 
-## The grid
+## Bounds
 
-The easiest way to think about the grid is as a series of ratios. The bounds use absolute values, but the columns, rows and gutters describe ratios of the width and height. The package will model the grid based on whateve you provide.
+## Grid definition
+
+The grid definition describes the grid to model, allowing access to a number of powerful options.
 
 ### Columns and Rows
 
-The grid object describes the grid that will be interpolated onto the bounds. It has two main fields, `colums` and `rows`. Columns is made up of one or more columns, and rows is made up of one or more rows. The generic name for columns and rows is 'steps'.
+The grid definition describes the grid that will be interpolated onto the bounds. It has two main fields, `colums` and `rows`. A grid has a minimum of one row and one column. The generic name for columns and rows is 'steps'.
 
 These fields can be one of the following:
 
 1. An integer, in which case that integer will represent the number of columns or rows (steps). For example `columns: 2`, will result in a grid with two columns.
-2. An array of integers, in which case the number of steps will equal the number of items in the array, with the size of each step consiting of the value of that array item as an integer of the total of all the values. For example, `columns: [3, 5, 1, 1] will result in a total of 10 (3 + 5 + 1 + 1), meaning that the first column will be 30% of the grid width, the second column 50%, and the remaining two columns 10% each.
-3. An array of objects, each with a `value` key: (`{ value: 2}`). This will work the same as the previous example, with the combined value of all the `value` keys dictating the total value, and the `value` key dictating the size of each step
+2. An array of integers, in which case the number of steps will equal the number of items in the array, with the size of each step consiting of the value of that array item as an integer of the total of all the values. For example, `columns: [3, 5, 1, 1] will result in a total of 10 (3 + 5 + 1 + 1), meaning that the first column will be 3/10 (30%) of the grid width, the second column 5/10 (50%), and the remaining two columns 1/10 (10%) each.
+3. An array of objects, each with a `value` key: (`{ value: 2}`). This will work the same as the previous example, with the combined value of all the `value` keys dictating the total value, and the `value` key dictating the size of each step.
 
 ### Gutters
 
-If supplied, `gutter` will describe the width of horizontal gutters and the height of vertical gutters (the spaces between the grid cells). If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters are also a ratio of the total value, for example, if columns are `[1,4,3]` and gutters are `1`, There will be three rows of 10%, 40% and 30% percent with two gutters of `10%` between them.
+If supplied, `gutter` will describe the width of horizontal gutters and the height of vertical gutters (the spaces between the grid cells). If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters are also a ratio of the total value, for example, if columns are `[1,4,3]` and gutters are `1` then the total will be 10 (1 + 4 + 3 + (2 \* 1)). There will be three rows of 1/10 (10%), 4/10 (40%) and 3/10 (30%) with two gutters of 1/10 (10%) between them.
 
 There is an additional way to add gutters without using the gutters property. You can add them to the rows or columns arrays, using an object with a `value` property, but also adding and `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
 
 ### Interpolations
 
-The grid also allows configuration params that change how it calculates the grid-elements.
+The grid also supports configuration params that change how it calculates the grid-elements.
 
-- `interpolationStrategy` can be either `even` (the default) or `linear`. This changes the algorythm used to interplate the position of a point along a curve. If `linear` interplation is used, the effect is to exagerate the effect of curvature on the distance between rows and columns. `even` uses a more complex approach and usually results in more pleasing results. However it is significantly more memory intensive.
+#### interpolationStrategy
 
-- `lineStrategy` can be either `straightLines` or `curves`. The lines returned from `getCurves` and the bounds returned from `getCellBounds` and `getAllCellBounds` are always cubic Bezier curves, however if the `lineStrategy` is `straightLines`, the calculations are significantly simplified and all lines will be straight. For more accurate calcualtions choose `curves` which will draw curved cubic Bezier curves. The default is `straightLines`.
+`interpolationStrategy` changes the algorythm used to interpolate the position of points along a curve. This value can be either a string, a function, or a tupple of two functions.
 
-- `precision` If you choose to use `even`, this parameter control how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`. With `linear` this will have no effect.
+If it's a string it can be either `even` (the default) or `linear`. If `linear` interplation is used, the effect is to exagerate the effect of curvature on the distance between rows and columns. `even` uses a more complex approach and usually results in more pleasing (and expected) results. However it is significantly more memory intensive.
+
+Alternatively a single function, or a tupple of two functions (one for the u-axis and one for the v-axis) can be supplied.
+
+Functions should have the signture:
+
+```typeScript
+(config: {precision: number, bezierEasing: BezierEasing}) => (t: number, curve: Curve): Point
+```
+
+#### lineStrategy
+
+`lineStrategy` controls how lines are interpolated and can either be `straightLines` or `curves`. The lines returned from `getCurves` and the bounds returned from `getCellBounds` and `getAllCellBounds` are always represented by cubic Bezier curves, however if the `lineStrategy` is `straightLines`, the calculations are significantly simplified and all lines will be straight (`controlPoint1` will be the same as the `startPoint`, and `controlPoint2` will be the same as `endPoint`) For more accurate calcualtions choose `curves` which will draw curved cubic Bezier curves. The default is `straightLines`.
+
+#### precision
+
+If you choose to use a line strategy of `even`, this parameter controls how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`. With `linear` this will have no effect.
+
+### bezierEasing
+
+The grid provides a very powerful way of controlling the distribution of lines along each access using bezierEasing. Bezier easing is widely used for animation as a way of providing easing to a sequence of values. Instead of applying easing to an animation, here it is applied to the interpolation of points along an axis. `bezierEasing` is implemented by first creating an easing function, and then passing a value (in the range of 0–1) to it. The easing function requires four values (each from 0–1), so the value for `bezierEasing` will look like this:
+
+```typeScript
+{
+  u: [0, 0, 1, 1]
+  v: [0, 0, 1, 1]
+}
+```
+
+The easiest way to understand the different values is to play with the [demo](https://warp-grid.undistraction.com).
 
 Here is an example of a grid definition:
 
-```javaScript
+```typeScript
 {
   columns: 8,
   rows: [10, 5, 20, 5, 10],
@@ -159,21 +189,27 @@ Here is an example of a grid definition:
   interpolationStategy: `even`,
   lineStrategy: 'curves',
   precision: 30,
+  bezierEasing: {
+    u: [0, 0, 1, 1]
+    v: [0, 0, 1, 1]
+  }
 }
-
 ```
 
 #### Return value
 
 The return value is a `warp grid` object representing the patch and providing an API to interrogate it.
 
-```javaScript
+```typeScript
 {
   config: {
     columns,
     rows,
     boundingCurves
-  }
+  },
+  getPoint,
+  getLinesXAxis,
+  getLinesYAxis,
   getLines,
   getIntersections,
   getCurves,
@@ -194,13 +230,17 @@ The return value is a `warp grid` object representing the patch and providing an
 
 - `getPoint(x, y)` return the point on the grid at the supplied x and y ratios, for example, an x of 0 and a y of 0 would return a point in the top left corner. An x of 1 and a y of 1 would return a point the top right corner.
 
-- `getLines()` returns an object with `xAxis` and `yAxis` keys, each of which contains a 2D array of all the curves for each step along that axis. This includes curves for all four edges.
+- `getLinesXAxis()` returns a 2D array of all the curves for each step along the x-axis. This includes curves for all left and right edges.
 
-- `getIntersections()` returns an array of points, one for every point that a column and a row intersect.
+- `getLinesYAxis()` returns a 2D array of all the curves for each step along the y-axis. This includes curves for all top and bottom edges.
+
+- `getLines()` returns an object with `xAxis` and `yAxis` keys, each of which contains a 2D array of all the curves for each step along that axis.
+
+- `getIntersections()` returns an array of points, one for every point at which a column and a row intersect.
 
 - `getCellBounds(row, column)` returns a set of bounding curves for the cell at the supplied row and colunn.
 
-- `getAllCellBounds()` returns an array of bounding curves for all the cells in the grid.
+- `getAllCellBounds()` returns an array of bounding curves for all the cells in the grid. Important note: Due to the underlying architecture (which uses coons patches), and because cells can be used a bounds for nested grids, the order of the curves and their directions are the same as the those you supply for the grid bounds.
 
 ### Dependencies
 
@@ -249,6 +289,7 @@ Tests are written using Jest.
 ```bash
 pnpm run test # Run tests once
 pnpm run test-watch # Run tests and watch for changes
+pnpm run test-coverage # Run tests and output a coverage report
 ```
 
 Due to the volume and complexity of the data returned from the API, the tests use snapshots of the data as test fixtures. These snapshots ar generated using:

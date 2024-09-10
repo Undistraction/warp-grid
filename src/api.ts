@@ -1,5 +1,3 @@
-import { interpolatePointOnCurveLinear } from 'coons-patch'
-
 import getApi from './getGridApi'
 import {
   interpolateCurveU,
@@ -10,24 +8,41 @@ import {
   interpolateStraightLineV,
 } from './interpolate/curves/straight'
 import interpolatePointOnCurveEvenlySpacedEased from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEased'
+import interpolatePointOnCurveLinearEased from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEased'
 import {
+  BezierEasing,
   BoundingCurves,
   GridDefinition,
   GridDefinitionWithDefaults,
   InterpolateLineU,
   InterpolateLineV,
   InterpolatePointOnCurve,
+  InterpolatePointOnCurveFactory,
   InterpolationStrategy,
   LineStrategy,
   WarpGrid,
 } from './types'
-import { isArray, isNumber } from './utils/is'
+import { isArray, isFunction, isNumber } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
+
+const interpolatePointOnCurveFactory = (
+  [interpolatePointOnCurveU, interpolatePointOnCurveV]: [
+    InterpolatePointOnCurveFactory,
+    InterpolatePointOnCurveFactory,
+  ],
+  bezierEasing: BezierEasing,
+  precision: number
+): [InterpolatePointOnCurve, InterpolatePointOnCurve] => {
+  return [
+    interpolatePointOnCurveU({ precision, bezierEasing: bezierEasing.xAxis }),
+    interpolatePointOnCurveV({ precision, bezierEasing: bezierEasing.yAxis }),
+  ]
+}
 
 const getInterpolationStrategy = ({
   interpolationStrategy = InterpolationStrategy.EVEN,
@@ -37,25 +52,39 @@ const getInterpolationStrategy = ({
   InterpolatePointOnCurve,
   InterpolatePointOnCurve,
 ] => {
+  if (isFunction(interpolationStrategy)) {
+    return interpolatePointOnCurveFactory(
+      [interpolationStrategy, interpolationStrategy],
+      bezierEasing,
+      precision
+    )
+  }
+
   if (isArray(interpolationStrategy)) {
-    return interpolationStrategy
+    return interpolatePointOnCurveFactory(
+      interpolationStrategy,
+      bezierEasing,
+      precision
+    )
   }
 
   if (interpolationStrategy === InterpolationStrategy.EVEN) {
-    const interpolatePointOnCurveU = interpolatePointOnCurveEvenlySpacedEased({
-      precision,
-      bezierEasing: bezierEasing.u,
-    })
-
-    const interpolatePointOnCurveV = interpolatePointOnCurveEvenlySpacedEased({
-      precision,
-      bezierEasing: bezierEasing.v,
-    })
-    return [interpolatePointOnCurveU, interpolatePointOnCurveV]
+    return interpolatePointOnCurveFactory(
+      [
+        interpolatePointOnCurveEvenlySpacedEased,
+        interpolatePointOnCurveEvenlySpacedEased,
+      ],
+      bezierEasing,
+      precision
+    )
   }
 
   if (interpolationStrategy === InterpolationStrategy.LINEAR) {
-    return [interpolatePointOnCurveLinear, interpolatePointOnCurveLinear]
+    return interpolatePointOnCurveFactory(
+      [interpolatePointOnCurveLinearEased, interpolatePointOnCurveLinearEased],
+      bezierEasing,
+      precision
+    )
   }
 
   throw new Error(`Unknown interpolation strategy: '${interpolationStrategy}'`)
@@ -64,10 +93,6 @@ const getInterpolationStrategy = ({
 const getLineStrategy = ({
   lineStrategy,
 }: GridDefinitionWithDefaults): [InterpolateLineU, InterpolateLineV] => {
-  if (isArray(lineStrategy)) {
-    return lineStrategy
-  }
-
   const interpolateLineU =
     lineStrategy === LineStrategy.CURVES
       ? interpolateCurveV
@@ -90,8 +115,8 @@ const mergeWithDefaults = (
       precision: 20,
       lineStrategy: LineStrategy.STRAIGHT_LINES,
       bezierEasing: {
-        u: [0, 0, 1, 1],
-        v: [0, 0, 1, 1],
+        xAxis: [0, 0, 1, 1],
+        yAxis: [0, 0, 1, 1],
       },
     },
     ...definition,

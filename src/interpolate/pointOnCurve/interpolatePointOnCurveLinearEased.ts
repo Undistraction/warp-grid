@@ -1,4 +1,4 @@
-import { interpolatePointOnCurveEvenlySpaced } from 'coons-patch'
+import { interpolatePointOnCurveLinear } from 'coons-patch'
 
 import wrapInterpolatePointOnCurveWithEasing from '../../utils/easing'
 
@@ -6,7 +6,7 @@ import wrapInterpolatePointOnCurveWithEasing from '../../utils/easing'
 // Exports
 // -----------------------------------------------------------------------------
 
-const interpolatePointOnCurveEvenlySpacedEased =
-  wrapInterpolatePointOnCurveWithEasing(interpolatePointOnCurveEvenlySpaced)
+const interpolatePointOnCurveLinearEased =
+  wrapInterpolatePointOnCurveWithEasing(interpolatePointOnCurveLinear)
 
-export default interpolatePointOnCurveEvenlySpacedEased
+export default interpolatePointOnCurveLinearEased

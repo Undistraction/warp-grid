@@ -191,7 +191,9 @@ export const validateGrid = (
   }
 
   if (!isUndefined(interpolationStrategy)) {
-    if (isArray(interpolationStrategy)) {
+    if (isFunction(interpolationStrategy)) {
+      validateFunction(interpolationStrategy, `interpolationStrategy`)
+    } else if (isArray(interpolationStrategy)) {
       validateFunction(interpolationStrategy[0], `interpolationStrategyU`)
       validateFunction(interpolationStrategy[1], `interpolationStrategyV`)
     } else {

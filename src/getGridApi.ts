@@ -52,7 +52,6 @@ const getApi = (
     interpolateLineV,
   }: GetAPiConfig
 ): GridApi => {
-  console.log(`@@`, interpolatePointOnCurveV)
   /**
    * Retrieves the point on the surface based on the given coordinates.
    * @param x - The x-coordinate of the point.

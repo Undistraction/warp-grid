@@ -57,13 +57,11 @@ export interface GridDefinition {
   gutter?: number | [number, number]
   interpolationStrategy?:
     | InterpolationStrategy
-    | [InterpolatePointOnCurve, InterpolatePointOnCurve]
-  lineStrategy?: LineStrategy | [InterpolateLineU, InterpolateLineV]
+    | InterpolatePointOnCurveFactory
+    | [InterpolatePointOnCurveFactory, InterpolatePointOnCurveFactory]
+  lineStrategy?: LineStrategy
   precision?: number
-  bezierEasing: {
-    u: [number, number]
-    v: [number, number]
-  }
+  bezierEasing: BezierEasing
 }
 
 export type GridDefinitionWithDefaults = Required<GridDefinition>
@@ -111,6 +109,13 @@ export type Steps = Step[]
 
 export type StepDefinition = number | number[] | Step[]
 
+export type BezierEasing = {
+  xAxis: BezierEasingParams
+  yAxis: BezierEasingParams
+}
+
+export type BezierEasingParams = [number, number, number, number]
+
 // -----------------------------------------------------------------------------
 // Types: Function signatures
 // -----------------------------------------------------------------------------
@@ -134,5 +139,10 @@ export type InterpolateLineV = (
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
+
+export type InterpolatePointOnCurveFactory = (config: {
+  precision: number
+  bezierEasing: BezierEasingParams
+}) => InterpolatePointOnCurve
 
 export type InterpolatePointOnCurve = (t: number, curve: Curve) => Point
