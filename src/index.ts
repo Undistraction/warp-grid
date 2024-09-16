@@ -16,11 +16,11 @@ export {
   interpolateStraightLineU,
   interpolateStraightLineV,
 } from './interpolate/curves/straight'
-export { default as interpolatePointOnCurveEvenlySpacedEased } from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEased'
-export { default as interpolatePointOnCurveLinearEased } from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEased'
+export { default as interpolatePointOnCurveEvenlySpacedEasedFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEasedFactory'
+export { default as interpolatePointOnCurveLinearEasedFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
 export {
-  interpolatePointOnCurveEvenlySpaced,
-  interpolatePointOnCurveLinear,
+  interpolatePointOnCurveEvenlySpacedFactory,
+  interpolatePointOnCurveLinearFactory,
 } from 'coons-patch'
 
 // -----------------------------------------------------------------------------

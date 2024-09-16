@@ -7,8 +7,8 @@ import {
   interpolateStraightLineU,
   interpolateStraightLineV,
 } from './interpolate/curves/straight'
-import interpolatePointOnCurveEvenlySpacedEased from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEased'
-import interpolatePointOnCurveLinearEased from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEased'
+import interpolatePointOnCurveEvenlySpacedEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEasedFactory'
+import interpolatePointOnCurveLinearEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
 import {
   BezierEasing,
   BoundingCurves,
@@ -31,7 +31,7 @@ import { validateBoundingCurves, validateGrid } from './validation'
 // -----------------------------------------------------------------------------
 
 const interpolatePointOnCurveFactory = (
-  [interpolatePointOnCurveU, interpolatePointOnCurveV]: [
+  [interpolatePointOnCurveUFactory, interpolatePointOnCurveVFactory]: [
     InterpolatePointOnCurveFactory,
     InterpolatePointOnCurveFactory,
   ],
@@ -39,8 +39,14 @@ const interpolatePointOnCurveFactory = (
   precision: number
 ): [InterpolatePointOnCurve, InterpolatePointOnCurve] => {
   return [
-    interpolatePointOnCurveU({ precision, bezierEasing: bezierEasing.xAxis }),
-    interpolatePointOnCurveV({ precision, bezierEasing: bezierEasing.yAxis }),
+    interpolatePointOnCurveUFactory({
+      precision,
+      bezierEasing: bezierEasing.xAxis,
+    }),
+    interpolatePointOnCurveVFactory({
+      precision,
+      bezierEasing: bezierEasing.yAxis,
+    }),
   ]
 }
 
@@ -71,8 +77,8 @@ const getInterpolationStrategy = ({
   if (interpolationStrategy === InterpolationStrategy.EVEN) {
     return interpolatePointOnCurveFactory(
       [
-        interpolatePointOnCurveEvenlySpacedEased,
-        interpolatePointOnCurveEvenlySpacedEased,
+        interpolatePointOnCurveEvenlySpacedEasedFactory,
+        interpolatePointOnCurveEvenlySpacedEasedFactory,
       ],
       bezierEasing,
       precision
@@ -81,7 +87,10 @@ const getInterpolationStrategy = ({
 
   if (interpolationStrategy === InterpolationStrategy.LINEAR) {
     return interpolatePointOnCurveFactory(
-      [interpolatePointOnCurveLinearEased, interpolatePointOnCurveLinearEased],
+      [
+        interpolatePointOnCurveLinearEasedFactory,
+        interpolatePointOnCurveLinearEasedFactory,
+      ],
       bezierEasing,
       precision
     )
