@@ -99,7 +99,7 @@
   },
   "dependencies": {
     "bezier-easing": "^2.1.0",
-    "coons-patch": "^2.0.1",
+    "coons-patch": "^2.0.2",
     "fast-memoize": "^2.5.2",
     "matrix-js": "^1.7.1"
   },

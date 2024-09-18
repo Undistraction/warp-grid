@@ -1,3 +1,10 @@
+import {
+  BoundingCurves,
+  Curve,
+  InterpolatePointOnCurve,
+  Point,
+} from 'coons-patch'
+
 // -----------------------------------------------------------------------------
 // Enums
 // -----------------------------------------------------------------------------
@@ -20,26 +27,6 @@ export enum LineStrategy {
 // -----------------------------------------------------------------------------
 // Interfaces
 // -----------------------------------------------------------------------------
-
-export interface Point {
-  x: number
-  y: number
-  t?: number
-}
-
-export interface Curve {
-  startPoint: Point
-  endPoint: Point
-  controlPoint1: Point
-  controlPoint2: Point
-}
-
-export interface BoundingCurves {
-  top: Curve
-  bottom: Curve
-  left: Curve
-  right: Curve
-}
 
 export interface Step {
   value: number
@@ -95,8 +82,6 @@ export interface ObjectWithStringKeys {
 // Types
 // -----------------------------------------------------------------------------
 
-export type Points = Point[]
-
 export type StepCurves = Curve[]
 
 export type UnprocessedStep = number | Step
@@ -140,9 +125,8 @@ export type InterpolateLineV = (
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
+// Redefine as we have additional config keys
 export type InterpolatePointOnCurveFactory = (config: {
   precision: number
   bezierEasing: BezierEasingParams
 }) => InterpolatePointOnCurve
-
-export type InterpolatePointOnCurve = (t: number, curve: Curve) => Point

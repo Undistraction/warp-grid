@@ -5,9 +5,9 @@
  * That work can be found here: https://pomax.github.io/bezierinfo/#curvefitting
  * ---------------------------------------------------------------------------*/
 
+import { Curve, Points } from 'coons-patch'
 import matrix from 'matrix-js'
 
-import { Curve, Points } from '../types'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
 
 // -----------------------------------------------------------------------------

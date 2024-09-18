@@ -1,3 +1,5 @@
+import { BoundingCurves, InterpolatePointOnCurve } from 'coons-patch'
+
 import getApi from './getGridApi'
 import {
   interpolateCurveU,
@@ -11,12 +13,10 @@ import interpolatePointOnCurveEvenlySpacedEasedFactory from './interpolate/point
 import interpolatePointOnCurveLinearEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
 import {
   BezierEasing,
-  BoundingCurves,
   GridDefinition,
   GridDefinitionWithDefaults,
   InterpolateLineU,
   InterpolateLineV,
-  InterpolatePointOnCurve,
   InterpolatePointOnCurveFactory,
   InterpolationStrategy,
   LineStrategy,
@@ -25,7 +25,6 @@ import {
 import { isArray, isFunction, isNumber } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'
-
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
