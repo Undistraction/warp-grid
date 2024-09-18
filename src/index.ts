@@ -8,20 +8,8 @@ export * from './types'
 // Re-export Interpolation functions
 // -----------------------------------------------------------------------------
 
-export {
-  interpolateCurveU,
-  interpolateCurveV,
-} from './interpolate/curves/curved'
-export {
-  interpolateStraightLineU,
-  interpolateStraightLineV,
-} from './interpolate/curves/straight'
-export { default as interpolatePointOnCurveEvenlySpacedEasedFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEasedFactory'
-export { default as interpolatePointOnCurveLinearEasedFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
-export {
-  interpolatePointOnCurveEvenlySpacedFactory,
-  interpolatePointOnCurveLinearFactory,
-} from 'coons-patch'
+export { default as interpolatePointOnCurveEvenlySpacedFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEasedFactory'
+export { default as interpolatePointOnCurveLinearFactory } from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
 
 // -----------------------------------------------------------------------------
 // Re-export API
