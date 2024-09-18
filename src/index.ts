@@ -2,7 +2,18 @@
 // Re-export Types
 // -----------------------------------------------------------------------------
 
-export * from './types'
+export type {
+  BezierEasing,
+  BezierEasingParams,
+  GridApi,
+  GridDefinition,
+  GridModel,
+  InterpolatePointOnCurveFactory,
+  InterpolationStrategy,
+  Lines,
+  LineStrategy,
+  WarpGrid,
+} from './types'
 
 // Re-export types we are using from coons-patch
 export type {
