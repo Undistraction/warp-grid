@@ -1,8 +1,24 @@
+## [2.0.0](https://github.com/undistraction/warp-grid/compare/v1.6.0...v2.0.0) (2024-09-18)
+
+### ⚠ BREAKING CHANGES
+
+* Major changes to the API
+* CHANGE
+
+### Features
+
+* Implement support for easing ([7da6f8d](https://github.com/undistraction/warp-grid/commit/7da6f8dd6a378612d3dee47b4c7bcca6c4094e39))
+* Transfer API from coons-patch ([d108c3f](https://github.com/undistraction/warp-grid/commit/d108c3f49e141622d390403dfcafe745675839a9))
+
+### Miscellaneous Chores
+
+* Trigger major release ([adfb205](https://github.com/undistraction/warp-grid/commit/adfb205b96b8a8a586089bd5c2861cf40697e8be))
+
 ## [1.6.0](https://github.com/undistraction/warp-grid/compare/v1.5.1...v1.6.0) (2024-08-20)
 
 ### Features
 
-* Add support for separate u and v gutters ([fb48f7b](https://github.com/undistraction/warp-grid/commit/fb48f7b614fb66c352f5e7abc23ba1aa7c7aa5a5))
+- Add support for separate u and v gutters ([fb48f7b](https://github.com/undistraction/warp-grid/commit/fb48f7b614fb66c352f5e7abc23ba1aa7c7aa5a5))
 
 ## [1.5.1](https://github.com/undistraction/warp-grid/compare/v1.5.0...v1.5.1) (2024-08-05)
 
