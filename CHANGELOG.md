@@ -1,18 +1,25 @@
+## [2.0.1](https://github.com/undistraction/warp-grid/compare/v2.0.0...v2.0.1) (2024-09-18)
+
+### Bug Fixes
+
+* Only export public types ([21ec420](https://github.com/undistraction/warp-grid/commit/21ec420393ad546021253e313e12cf6e69a16020))
+* Re-export types from coons-patch ([12f0934](https://github.com/undistraction/warp-grid/commit/12f09345270208902c7373633b382d8b69571771))
+
 ## [2.0.0](https://github.com/undistraction/warp-grid/compare/v1.6.0...v2.0.0) (2024-09-18)
 
 ### ⚠ BREAKING CHANGES
 
-* Major changes to the API
-* CHANGE
+- Major changes to the API
+- CHANGE
 
 ### Features
 
-* Implement support for easing ([7da6f8d](https://github.com/undistraction/warp-grid/commit/7da6f8dd6a378612d3dee47b4c7bcca6c4094e39))
-* Transfer API from coons-patch ([d108c3f](https://github.com/undistraction/warp-grid/commit/d108c3f49e141622d390403dfcafe745675839a9))
+- Implement support for easing ([7da6f8d](https://github.com/undistraction/warp-grid/commit/7da6f8dd6a378612d3dee47b4c7bcca6c4094e39))
+- Transfer API from coons-patch ([d108c3f](https://github.com/undistraction/warp-grid/commit/d108c3f49e141622d390403dfcafe745675839a9))
 
 ### Miscellaneous Chores
 
-* Trigger major release ([adfb205](https://github.com/undistraction/warp-grid/commit/adfb205b96b8a8a586089bd5c2861cf40697e8be))
+- Trigger major release ([adfb205](https://github.com/undistraction/warp-grid/commit/adfb205b96b8a8a586089bd5c2861cf40697e8be))
 
 ## [1.6.0](https://github.com/undistraction/warp-grid/compare/v1.5.1...v1.6.0) (2024-08-20)
 
