@@ -236,7 +236,14 @@ Alternatively a single factory function, or a tupple of two factory functions (o
 }
 ```
 
-These functions should accept a configuration object and return an interpolation function:
+These functions comprise of a factory function that accepts a configuration object and returns an interpolation function. The factory function is called internally using config from the grid definition object.
+
+Factory functions for both linear and even interpolation are exported by this package:
+
+- `interpolatePointOnCurveEvenlySpacedFactory`
+- `interpolatePointOnCurveLinearFactory`
+
+If you use your own interpolation factory function it should have the following signature.
 
 ```typeScript
 (config: {precision: number, bezierEasing: BezierEasing}) => (t: number, curve: Curve): Point
