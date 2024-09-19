@@ -12,6 +12,10 @@ export type {
   InterpolationStrategy,
   Lines,
   LineStrategy,
+  Step,
+  StepCurves,
+  StepDefinition,
+  Steps,
   WarpGrid,
 } from './types'
 
