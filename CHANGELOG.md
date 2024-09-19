@@ -1,9 +1,15 @@
+## [2.0.2](https://github.com/undistraction/warp-grid/compare/v2.0.1...v2.0.2) (2024-09-19)
+
+### Bug Fixes
+
+* Export additional typings used in docs ([cfedabe](https://github.com/undistraction/warp-grid/commit/cfedabefe87d5471d5fe8c98a1baa991ead3d066))
+
 ## [2.0.1](https://github.com/undistraction/warp-grid/compare/v2.0.0...v2.0.1) (2024-09-18)
 
 ### Bug Fixes
 
-* Only export public types ([21ec420](https://github.com/undistraction/warp-grid/commit/21ec420393ad546021253e313e12cf6e69a16020))
-* Re-export types from coons-patch ([12f0934](https://github.com/undistraction/warp-grid/commit/12f09345270208902c7373633b382d8b69571771))
+- Only export public types ([21ec420](https://github.com/undistraction/warp-grid/commit/21ec420393ad546021253e313e12cf6e69a16020))
+- Re-export types from coons-patch ([12f0934](https://github.com/undistraction/warp-grid/commit/12f09345270208902c7373633b382d8b69571771))
 
 ## [2.0.0](https://github.com/undistraction/warp-grid/compare/v1.6.0...v2.0.0) (2024-09-18)
 
