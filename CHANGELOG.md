@@ -1,8 +1,14 @@
+## [2.1.0](https://github.com/undistraction/warp-grid/compare/v2.0.2...v2.1.0) (2024-09-22)
+
+### Features
+
+* Force new package version ([fe6b539](https://github.com/undistraction/warp-grid/commit/fe6b539b9ead2f58a591dc7ec49590b46dd57d1b))
+
 ## [2.0.2](https://github.com/undistraction/warp-grid/compare/v2.0.1...v2.0.2) (2024-09-19)
 
 ### Bug Fixes
 
-* Export additional typings used in docs ([cfedabe](https://github.com/undistraction/warp-grid/commit/cfedabefe87d5471d5fe8c98a1baa991ead3d066))
+- Export additional typings used in docs ([cfedabe](https://github.com/undistraction/warp-grid/commit/cfedabefe87d5471d5fe8c98a1baa991ead3d066))
 
 ## [2.0.1](https://github.com/undistraction/warp-grid/compare/v2.0.0...v2.0.1) (2024-09-18)
 
