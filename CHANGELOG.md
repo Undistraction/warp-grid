@@ -1,8 +1,14 @@
+## [2.1.1](https://github.com/undistraction/warp-grid/compare/v2.1.0...v2.1.1) (2024-09-22)
+
+### Bug Fixes
+
+* Bad import ([a1875be](https://github.com/undistraction/warp-grid/commit/a1875be86fba676da1b0eab6cd3c5e38f3e71cbc))
+
 ## [2.1.0](https://github.com/undistraction/warp-grid/compare/v2.0.2...v2.1.0) (2024-09-22)
 
 ### Features
 
-* Force new package version ([fe6b539](https://github.com/undistraction/warp-grid/commit/fe6b539b9ead2f58a591dc7ec49590b46dd57d1b))
+- Force new package version ([fe6b539](https://github.com/undistraction/warp-grid/commit/fe6b539b9ead2f58a591dc7ec49590b46dd57d1b))
 
 ## [2.0.2](https://github.com/undistraction/warp-grid/compare/v2.0.1...v2.0.2) (2024-09-19)
 
