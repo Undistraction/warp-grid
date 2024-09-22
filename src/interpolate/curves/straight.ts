@@ -1,9 +1,6 @@
-import {
-  BoundingCurves,
-  Curve,
-  InterpolatePointOnCurve,
-  interpolatePointOnSurfaceBilinear,
-} from 'coons-patch'
+import { interpolatePointOnSurfaceBilinear } from 'coons-patch'
+
+import { BoundingCurves, Curve, InterpolatePointOnCurve } from '../../types'
 
 // -----------------------------------------------------------------------------
 // Exports

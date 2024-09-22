@@ -97,7 +97,7 @@
   },
   "dependencies": {
     "bezier-easing": "^2.1.0",
-    "coons-patch": "^2.0.2",
+    "coons-patch": "^2.0.4",
     "fast-memoize": "^2.5.2",
     "matrix-js": "^1.7.1"
   },

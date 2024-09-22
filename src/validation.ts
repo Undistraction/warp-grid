@@ -1,9 +1,10 @@
-import { BoundingCurves, InterpolatePointOnCurve, Point } from 'coons-patch'
-
 import {
+  BoundingCurves,
   GridDefinitionWithDefaults,
+  InterpolatePointOnCurve,
   InterpolationStrategy,
   LineStrategy,
+  Point,
   Steps,
   UnprocessedSteps,
 } from './types'

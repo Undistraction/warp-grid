@@ -1,4 +1,4 @@
-import { BoundingCurves, InterpolatePointOnCurve } from 'coons-patch'
+import { InterpolatePointOnCurve } from 'coons-patch'
 
 import getApi from './getGridApi'
 import {
@@ -13,6 +13,7 @@ import interpolatePointOnCurveEvenlySpacedEasedFactory from './interpolate/point
 import interpolatePointOnCurveLinearEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
 import {
   BezierEasing,
+  BoundingCurves,
   GridDefinition,
   GridDefinitionWithDefaults,
   InterpolateLineU,

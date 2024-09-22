@@ -1,16 +1,14 @@
-import coonsPatch, {
-  BoundingCurves,
-  InterpolatePointOnCurve,
-  interpolatePointOnSurfaceBilinear,
-  Point,
-} from 'coons-patch'
+import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
 import memoize from 'fast-memoize'
 
 import {
+  BoundingCurves,
   GridApi,
   InterpolateLineU,
   InterpolateLineV,
+  InterpolatePointOnCurve,
   Lines,
+  Point,
   Step,
   StepCurves,
 } from './types'

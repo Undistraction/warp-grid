@@ -130,3 +130,15 @@ export type InterpolatePointOnCurveFactory = (config: {
   precision: number
   bezierEasing: BezierEasingParams
 }) => InterpolatePointOnCurve
+
+// -----------------------------------------------------------------------------
+// Re-export types we are using from coons-patch
+// -----------------------------------------------------------------------------
+
+export type {
+  BoundingCurves,
+  Curve,
+  InterpolatePointOnCurve,
+  Point,
+  Points,
+} from 'coons-patch'

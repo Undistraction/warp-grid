@@ -5,28 +5,24 @@
 export type {
   BezierEasing,
   BezierEasingParams,
+  BoundingCurves,
+  Curve,
   GridApi,
   GridDefinition,
   GridModel,
+  InterpolatePointOnCurve,
   InterpolatePointOnCurveFactory,
   InterpolationStrategy,
   Lines,
   LineStrategy,
+  Point,
+  Points,
   Step,
   StepCurves,
   StepDefinition,
   Steps,
   WarpGrid,
 } from './types'
-
-// Re-export types we are using from coons-patch
-export type {
-  BoundingCurves,
-  Curve,
-  InterpolatePointOnCurve,
-  Point,
-  Points,
-} from 'coons-patch'
 
 // -----------------------------------------------------------------------------
 // Re-export Interpolation functions
