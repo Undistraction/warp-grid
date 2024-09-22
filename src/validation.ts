@@ -1,3 +1,4 @@
+import { InterpolationStrategy, LineStrategy } from './enums'
 import type {
   BoundingCurves,
   GridDefinitionWithDefaults,
@@ -6,7 +7,6 @@ import type {
   Steps,
   UnprocessedSteps,
 } from './types'
-import { InterpolationStrategy, LineStrategy } from './types'
 import { mapObj } from './utils/functional'
 import {
   isArray,

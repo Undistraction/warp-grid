@@ -1,5 +1,6 @@
 import { InterpolatePointOnCurve } from 'coons-patch'
 
+import { InterpolationStrategy, LineStrategy } from './enums'
 import getApi from './getGridApi'
 import {
   interpolateCurveU,
@@ -21,7 +22,6 @@ import type {
   InterpolatePointOnCurveFactory,
   WarpGrid,
 } from './types'
-import { InterpolationStrategy, LineStrategy } from './types'
 import { isArray, isFunction, isNumber } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'

@@ -6,25 +6,6 @@ import type {
 } from 'coons-patch'
 
 // -----------------------------------------------------------------------------
-// Enums
-// -----------------------------------------------------------------------------
-
-export enum Coordinate {
-  X = `x`,
-  Y = `y`,
-}
-
-export enum InterpolationStrategy {
-  LINEAR = `linear`,
-  EVEN = `even`,
-}
-
-export enum LineStrategy {
-  STRAIGHT_LINES = `straightLines`,
-  CURVES = `curves`,
-}
-
-// -----------------------------------------------------------------------------
 // Interfaces
 // -----------------------------------------------------------------------------
 

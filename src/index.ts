@@ -2,6 +2,7 @@
 // Re-export Types
 // -----------------------------------------------------------------------------
 
+export { InterpolationStrategy, LineStrategy } from './enums'
 export type {
   BezierEasing,
   BezierEasingParams,
@@ -12,9 +13,7 @@ export type {
   GridModel,
   InterpolatePointOnCurve,
   InterpolatePointOnCurveFactory,
-  InterpolationStrategy,
   Lines,
-  LineStrategy,
   Point,
   Points,
   Step,
