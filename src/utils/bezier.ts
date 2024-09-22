@@ -7,7 +7,7 @@
 
 import matrix from 'matrix-js'
 
-import { Curve, Points } from '../types'
+import type { Curve, Points } from '../types'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
 
 // -----------------------------------------------------------------------------

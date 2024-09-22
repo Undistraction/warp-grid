@@ -1,7 +1,7 @@
 import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
 import memoize from 'fast-memoize'
 
-import {
+import type {
   BoundingCurves,
   GridApi,
   InterpolateLineU,

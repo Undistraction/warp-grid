@@ -11,7 +11,7 @@ import {
 } from './interpolate/curves/straight'
 import interpolatePointOnCurveEvenlySpacedEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveEvenlySpacedEasedFactory'
 import interpolatePointOnCurveLinearEasedFactory from './interpolate/pointOnCurve/interpolatePointOnCurveLinearEasedFactory'
-import {
+import type {
   BezierEasing,
   BoundingCurves,
   GridDefinition,
@@ -19,10 +19,9 @@ import {
   InterpolateLineU,
   InterpolateLineV,
   InterpolatePointOnCurveFactory,
-  InterpolationStrategy,
-  LineStrategy,
   WarpGrid,
 } from './types'
+import { InterpolationStrategy, LineStrategy } from './types'
 import { isArray, isFunction, isNumber } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'

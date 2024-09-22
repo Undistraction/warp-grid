@@ -1,7 +1,10 @@
 import BezierEasing from 'bezier-easing'
 import { Curve } from 'coons-patch'
 
-import { BezierEasingParams, InterpolatePointOnCurveFactory } from '../types'
+import type {
+  BezierEasingParams,
+  InterpolatePointOnCurveFactory,
+} from '../types'
 
 // -----------------------------------------------------------------------------
 // Exports
