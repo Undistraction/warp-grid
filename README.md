@@ -1,5 +1,15 @@
 # README
 
+<h1 align="center">
+ Warp Grid
+</h1>
+<p align="center">
+![NPM Version](https://img.shields.io/npm/v/warp-grid)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/undistraction/warp-grid/release.yml)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
+</p>
+
 This package allows you to create a complex grid and distort it, taking the concept of a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) and applying it to a grid system, meaning the grid is not bounded by four straight lines, but by four cubic Bezier curves. This allows you to create some very strange an interesting grids that would be very difficult to generate with traditional graphics software.
 
 There is an [editor](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, giving access to all the configuration available.
