@@ -5,6 +5,8 @@ import type {
   Point,
 } from 'coons-patch'
 
+import { InterpolationStrategy, LineStrategy } from './enums'
+
 // -----------------------------------------------------------------------------
 // Interfaces
 // -----------------------------------------------------------------------------
