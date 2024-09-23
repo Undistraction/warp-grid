@@ -1,5 +1,3 @@
-import { InterpolatePointOnCurve } from 'coons-patch'
-
 import { InterpolationStrategy, LineStrategy } from './enums'
 import getApi from './getGridApi'
 import {
@@ -19,6 +17,7 @@ import type {
   GridDefinitionWithDefaults,
   InterpolateLineU,
   InterpolateLineV,
+  InterpolatePointOnCurve,
   InterpolatePointOnCurveFactory,
   WarpGrid,
 } from './types'
