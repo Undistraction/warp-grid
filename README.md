@@ -1,8 +1,9 @@
-# README
+![Screenshot of warp-grid](readme/warp-grid-title-image.png)
 
 <h1 align="center">
  Warp Grid
 </h1>
+
 <p align="center">
 ![NPM Version](https://img.shields.io/npm/v/warp-grid)
 ![License](https://img.shields.io/badge/license-MIT-blue)
