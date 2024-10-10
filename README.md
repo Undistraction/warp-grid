@@ -13,11 +13,11 @@
 
 </p>
 
-This package allows you to create a complex grid and distort it, taking the concept of a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) and applying it to a grid system, meaning the grid is not bounded by four straight lines, but by four cubic Bezier curves. This allows you to create some very strange an interesting grids that would be very difficult to generate with traditional graphics software.
+This package allows you to create a complex grid and distort it, taking the concept of a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) and applying it to a grid system, meaning the grid is not bounded by four straight lines, but by four cubic Bézier curves. This allows you to create some very strange an interesting grids that would be very difficult to generate with traditional graphics software.
 
 There is an [editor](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, giving access to all the configuration available.
 
-The package provides a set of powerful configuration options to define the grid including variable width columns and gutters, control over distribution of rows and column distribution using Bezier easing, and access to different types of interpolation, as well as the option to provide your own interpolation.
+The package provides a set of powerful configuration options to define the grid including variable width columns and gutters, control over distribution of rows and column distribution using Bézier easing, and access to different types of interpolation, as well as the option to provide your own interpolation.
 
 Its API gives you access to information about the grid's metrics: its bounds, rows, columns, gutters and cells. It is designed so that the metrics for an individual grid-cell can be used as bounds for another grid, allowing nested grids.
 
@@ -35,7 +35,7 @@ npm add warp-grid
 yarn add warp-grid
 ```
 
-[Package Documenation](http://warp-grid-docs.undistraction.com/) (TSDoc generated).
+[Package Documentation](http://warp-grid-docs.undistraction.com/) (TSDoc generated).
 
 This package is written in TypeScript and exports its types.
 
@@ -46,7 +46,7 @@ The basic workflow is that you supply bounds representing the edges of your grid
 ```typeScript
 import warpGrid from 'warp-grid'
 
-// Define bounding (cubic Bezier) curves for the patch
+// Define bounding (cubic Bézier) curves for the patch
 const boundingCurves = {
   top: {
     startPoint: { x: 0, y: 0 },
@@ -104,13 +104,13 @@ const intersections = warpGrid.getIntersections()
 // Get the bounds for the grid-square at the supplied coordinates
 const bounds = warpGrid.getCellBounds(3, 8)
 
-// Get an array containing the bounds for every grid-squre
+// Get an array containing the bounds for every grid-square
 const allBounds = getAllCellBounds()
 ```
 
 ## Usage
 
-### Primatives
+### Primitives
 
 There are a number of data types that are used by the package to describe aspects of the grid:
 
@@ -123,7 +123,7 @@ const point = {
 }
 ```
 
-All curves are represented by cubic Bezier curves:
+All curves are represented by cubic Bézier curves:
 
 ```typeScript
 const curve = {
@@ -159,15 +159,15 @@ const boundingCurves = {
 
 ### Bounding curves
 
-To generate a grid you must provide a set of four **bounding curves** (`top`, `left`, `bottom` and `right`) in the form of four cubic Bezier curves. A cubic Bezier curve describes a straight-line or curve using a start point (`startPoint`), an end point (`endPoint`) and two other control points(`controlPoint1` and `controlPoint2`). Each point has an `x` and `y` coordinate.
+To generate a grid you must provide a set of four **bounding curves** (`top`, `left`, `bottom` and `right`) in the form of four cubic Bézier curves. A cubic Bézier curve describes a straight-line or curve using a start point (`startPoint`), an end point (`endPoint`) and two other control points(`controlPoint1` and `controlPoint2`). Each point has an `x` and `y` coordinate.
 
-At minimum you must supply start and end points for each curve. If you do not supply `controlPoint1` it will be set to the same cooridinates as the start point, and if you do not supply `controlPoint2` it will be set to the same coordindates as the end point. Setting both control points to the same values as the start and end point will result in a straight line.
+At minimum you must supply start and end points for each curve. If you do not supply `controlPoint1` it will be set to the same coordinates as the start point, and if you do not supply `controlPoint2` it will be set to the same coordinates as the end point. Setting both control points to the same values as the start and end point will result in a straight line.
 
 You also need to ensure that the four curves meet at the corners. You will probably be expecting the end of each curve to be the start of the next, however in keeping with the math involved in generating a coons-patch this is not the case. The `top` and `bottom` curves run left to right, and `left` and `right` curves run top to bottom, so this means that:
 
 - the `startPoint` of the `top` curve must share the same coordinates with the `startPoint` of the `left` curve.
 - the `endPoint` of the `top` curve must share the same coordinates with the `startPoint` of the `right` curve.
-- the `startPoint` of the `bottom` curve must share the same cooridinates with the end point of the `left` curve.
+- the `startPoint` of the `bottom` curve must share the same coordinates with the end point of the `left` curve.
 - the `endPoint` of the `bottom` curve must share the same coordinates with the `endPoint` of the `right` curve.
 
 ```
@@ -184,13 +184,13 @@ The grid definition is an object describing the grid you are modelling. It will 
 
 ### Columns and Rows
 
-`colums` and `rows` define the number of columns and rows in the grid. A grid has a minimum of one row and one column. The generic name for columns and rows used in the following docs is _steps_.
+`columns` and `rows` define the number of columns and rows in the grid. A grid has a minimum of one row and one column. The generic name for columns and rows used in the following docs is _steps_.
 
 These fields can be one of the following:
 
 1. **An integer**, in which case that integer will represent the number of columns or rows. For example `columns: 2`, will result in a grid with two columns.
 
-2. **An array of integers**, in which case the number of steps will equal the number of items in the array, with the size of each step consiting of the value of that array item as an integer of the total of all the values. For example, `columns: [3, 5, 1, 1]` will result in a total of `10` `(3 + 5 + 1 + 1)`, meaning that the first column will be 3/10 (30%) of the grid width, the second column 5/10 (50%), and the remaining two columns 1/10 (10%) each.
+2. **An array of integers**, in which case the number of steps will equal the number of items in the array, with the size of each step consisting of the value of that array item as an integer of the total of all the values. For example, `columns: [3, 5, 1, 1]` will result in a total of `10` `(3 + 5 + 1 + 1)`, meaning that the first column will be 3/10 (30%) of the grid width, the second column 5/10 (50%), and the remaining two columns 1/10 (10%) each.
 
 3. **An array of objects**, each with a `value` key: (`{ value: 2}`). This will work the same as the previous example, with the combined value of all the `value` keys dictating the total value, and the `value` key dictating the size of each step.
 
@@ -232,15 +232,15 @@ There is an additional way to add gutters without using the gutters property. Yo
 
 ### Interpolations
 
-A lot of the work done by the package involves interplolation. The grid also supports configuration params that change how it performs these interpolations.
+A lot of the work done by the package involves interpolation. The grid also supports configuration params that change how it performs these interpolations.
 
 #### interpolationStrategy
 
-`interpolationStrategy` changes the algorithm used to interpolate the position of points along a curve. These algorithms are used in calculating the location of points within the bounds. This value can be either a string, a function, or a tupple of two functions.
+`interpolationStrategy` changes the algorithm used to interpolate the position of points along a curve. These algorithms are used in calculating the location of points within the bounds. This value can be either a string, a function, or a tuple of two functions.
 
-If it's a string it can be either `even` (the default) or `linear`. `linear` is a simple form of interplation that results in a distribution that is affected by the amount of curvature of the bounds. `even` uses a more complex approach and usually results in more evenly distributed results. However this comes at the cost of performance.
+If it's a string it can be either `even` (the default) or `linear`. `linear` is a simple form of interpolation that results in a distribution that is affected by the amount of curvature of the bounds. `even` uses a more complex approach and usually results in more evenly distributed results. However this comes at the cost of performance.
 
-Alternatively a single factory function, or a tupple of two factory functions (one for each axis) can be supplied.
+Alternatively a single factory function, or a tuple of two factory functions (one for each axis) can be supplied.
 
 ```typeScript
 {
@@ -259,7 +259,7 @@ Factory functions for both linear and even interpolation are exported by this pa
 If you use your own interpolation factory function it should have the following signature.
 
 ```typeScript
-(config: {precision: number, bezierEasing: BezierEasing}) => (t: number, curve: Curve): Point
+(config: {precision: number, bezierEasing: BézierEasing}) => (t: number, curve: Curve): Point
 ```
 
 ##### Factory
@@ -269,11 +269,11 @@ If you use your own interpolation factory function it should have the following 
 ##### Interpolation function
 
 - `t` is the ratio along the axis (0–1 inclusive).
-- `curve` is a cubic Bezier curve along which the interpolation will be used.
+- `curve` is a cubic Bézier curve along which the interpolation will be used.
 
 #### lineStrategy
 
-`lineStrategy` controls how the grid lines are interpolated and can either be `straightLines` or `curves`. The lines returned from `getCurves`, `getCurvesXAxis` and `getCurvesYAxis`, and the bounds returned from `getCellBounds` and `getAllCellBounds` are always represented by cubic Bezier curves, however if the `lineStrategy` is `straightLines` (the default), the calculations are significantly simplified and all lines will be straight (`controlPoint1` will be the same as the `startPoint`, and `controlPoint2` will be the same as `endPoint`) For more accurate calcualtions choose `curves` which will draw curved cubic Bezier curves at the expense of performance.
+`lineStrategy` controls how the grid lines are interpolated and can either be `straightLines` or `curves`. The lines returned from `getCurves`, `getCurvesXAxis` and `getCurvesYAxis`, and the bounds returned from `getCellBounds` and `getAllCellBounds` are always represented by cubic Bézier curves, however if the `lineStrategy` is `straightLines` (the default), the calculations are significantly simplified and all lines will be straight (`controlPoint1` will be the same as the `startPoint`, and `controlPoint2` will be the same as `endPoint`) For more accurate calculations choose `curves` which will draw curved cubic Bézier curves at the expense of performance.
 
 ```typeScript
 {
@@ -296,7 +296,7 @@ If you choose to use a line strategy of `even`, this parameter controls how prec
 
 ### bezierEasing
 
-The grid provides a very powerful way of controlling the distribution of lines along each access using bezierEasing. Bezier easing is widely used for animation as a way of providing easing to a changing value. Instead of applying easing to an animation, here it is applied to the interpolation of points along an axis. `bezierEasing` is implemented internally by first creating an easing function, and then passing a value (in the range of 0–1) to it. The easing function requires four values (each from 0–1). The first two values represent the position of the first control point (x, y) and the last two values represent the position of the second control point. So the value for `bezierEasing` will look like this:
+The grid provides a very powerful way of controlling the distribution of lines along each access using bezierEasing. Bézier easing is widely used for animation as a way of providing easing to a changing value. Instead of applying easing to an animation, here it is applied to the interpolation of points along an axis. `bezierEasing` is implemented internally by first creating an easing function, and then passing a value (in the range of 0–1) to it. The easing function requires four values (each from 0–1). The first two values represent the position of the first control point (x, y) and the last two values represent the position of the second control point. So the value for `bezierEasing` will look like this:
 
 ```typeScript
 {
@@ -318,7 +318,7 @@ Here is a full example of a grid definition:
   columns: 8,
   rows: [10, 5, 20, 5, 10],
   gutters: [5, 3],
-  interpolationStategy: `even`,
+  interpolationStrategy: `even`,
   lineStrategy: 'curves',
   precision: 30,
   bezierEasing: {
@@ -368,9 +368,9 @@ One of the powerful features of this package is that a grid cell can itself be u
 
 - `getLinesXAxis()` returns an array representing all the curves for each step along the x-axis. This includes curves for all left and right edges.
 
-- `getLinesYAxis()` returns an array represnting all the curves for each step along the y-axis. This includes curves for all top and bottom edges.
+- `getLinesYAxis()` returns an array representing all the curves for each step along the y-axis. This includes curves for all top and bottom edges.
 
-- `getLines()` returns an object with `xAxis` and `yAxis` keys, each of which contains an array represnting all the curves for each step along that axis.
+- `getLines()` returns an object with `xAxis` and `yAxis` keys, each of which contains an array representing all the curves for each step along that axis.
 
 - `getIntersections()` returns an array of points, one for every point at which an x-axis line intersects with a y-axis line.
 
@@ -382,9 +382,9 @@ One of the powerful features of this package is that a grid cell can itself be u
 
 This project has four dependencies:
 
-- [coons-patch](https://www.npmjs.com/package/coons-patch) to calculate points on a surface defined by Bezier curves.
+- [coons-patch](https://www.npmjs.com/package/coons-patch) to calculate points on a surface defined by Bézier curves.
 - [fast-memoize](https://www.npmjs.com/package/fast-memoize) for memoization.
-- [bezier-easing](https://www.npmjs.com/package/bezier-easing) for creating Bezier-easing functions.
+- [bezier-easing](https://www.npmjs.com/package/bezier-easing) for creating Bézier-easing functions.
 - [matrix-js](https://www.npmjs.com/package/matrix-js) for matrix math
 
 ## Thanks
@@ -440,7 +440,7 @@ The tests use snapshots of the data as test fixtures. These snapshots are genera
 pnpm run test-snapshot
 ```
 
-This will generate data for all of the fixure definitions that are defined in `./tests/fixtures.js`. This command should only be run when absolutely necessary as the current snapshots capture the verified working state of the data.
+This will generate data for all of the fixture definitions that are defined in `./tests/fixtures.js`. This command should only be run when absolutely necessary as the current snapshots capture the verified working state of the data.
 
 To add new fixtures, add new definitions to `./tests/fixtures.js`.
 
