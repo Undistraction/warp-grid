@@ -31,7 +31,7 @@ export interface GridDefinition {
     | [InterpolatePointOnCurveFactory, InterpolatePointOnCurveFactory]
   lineStrategy?: LineStrategy
   precision?: number
-  bezierEasing: BezierEasing
+  bezierEasing?: BezierEasing
 }
 
 export type GridDefinitionWithDefaults = Required<GridDefinition>
