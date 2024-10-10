@@ -1,8 +1,14 @@
+## [2.1.2](https://github.com/undistraction/warp-grid/compare/v2.1.1...v2.1.2) (2024-10-10)
+
+### Bug Fixes
+
+* Make bezierEasing optional ([930486a](https://github.com/undistraction/warp-grid/commit/930486a186017b0b72142ee7acaca3317df64ad3))
+
 ## [2.1.1](https://github.com/undistraction/warp-grid/compare/v2.1.0...v2.1.1) (2024-09-22)
 
 ### Bug Fixes
 
-* Bad import ([a1875be](https://github.com/undistraction/warp-grid/commit/a1875be86fba676da1b0eab6cd3c5e38f3e71cbc))
+- Bad import ([a1875be](https://github.com/undistraction/warp-grid/commit/a1875be86fba676da1b0eab6cd3c5e38f3e71cbc))
 
 ## [2.1.0](https://github.com/undistraction/warp-grid/compare/v2.0.2...v2.1.0) (2024-09-22)
 
