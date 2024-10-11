@@ -39,8 +39,6 @@ export const boundingCurvesValid = {
 const allFixtures = [
   {
     name: `3x3 grid`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -55,8 +53,6 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with gutter as number`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -72,8 +68,6 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with gutter as array`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -89,8 +83,6 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with linear interpolationStrategy`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -106,8 +98,6 @@ const allFixtures = [
   },
   {
     name: `3x3 grid with curves lineStrategy`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -123,8 +113,6 @@ const allFixtures = [
   },
   {
     name: `Variant columns and rows`,
-    skipSnapshot: false,
-    skipTest: false,
     input: {
       bounds: boundingCurvesValid,
       grid: {

@@ -275,17 +275,17 @@ const getApi = (
   const getAllCellBounds = memoize((): BoundingCurves[] => {
     // We only want to run through steps that are not gutters so we filter both
     // rows and columns first
-    return columns
+    return rows
       .filter(stepIsNotGutter)
       .reduce(
         (
           acc: BoundingCurves[],
-          column: Step,
-          columnIdx: number
+          row: Step,
+          rowIdx: number
         ): BoundingCurves[] => {
-          const cellBounds = rows
+          const cellBounds = columns
             .filter(stepIsNotGutter)
-            .map((row: Step, rowIdx: number) => {
+            .map((column: Step, columnIdx: number) => {
               return getCellBounds(columnIdx, rowIdx)
             })
           return [...acc, ...cellBounds]

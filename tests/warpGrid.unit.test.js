@@ -1,6 +1,5 @@
 import getGrid from '../src/'
 import fixtures, { boundingCurvesValid } from './fixtures.js'
-import { loadFixtureData } from './helpers.js'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -236,82 +235,73 @@ describe(`getGrid`, () => {
   })
 
   // Loop through different types of grid
-  describe.each(fixtures)(
-    `for fixture: '$name' supplies …`,
-    ({ name, input }) => {
-      const grid = getGrid(input.bounds, input.grid)
-      let output
+  describe.each(fixtures)(`for fixture: '$name' supplies …`, ({ input }) => {
+    const grid = getGrid(input.bounds, input.grid)
 
-      beforeAll(async () => {
-        output = await loadFixtureData(name)
+    describe(`model`, () => {
+      const { model } = grid
+      it(`with original boundingCurves`, () => {
+        expect(model.boundingCurves).toEqual(boundingCurvesValid)
       })
 
-      describe(`model`, () => {
-        const { model } = grid
+      it(`with arrays of column and row values`, () => {
+        expect(model.columns).toMatchSnapshot()
+        expect(model.rows).toMatchSnapshot()
+      })
+    })
 
-        it(`with original boundingCurves`, () => {
-          expect(model.boundingCurves).toEqual(boundingCurvesValid)
-        })
+    describe(`api`, () => {
+      describe(`getPoint`, () => {
+        it(`returns point at supplied coordinates`, () => {
+          const point = grid.getPoint(...input.api.getPoint.args)
 
-        it(`with arrays of column and row values`, () => {
-          expect(model.columns).toEqual(output.model.columns)
-          expect(model.rows).toEqual(output.model.rows)
+          expect(point).toMatchSnapshot()
         })
       })
 
-      describe(`api`, () => {
-        describe(`getPoint`, () => {
-          it(`returns point at supplied coordinates`, () => {
-            const point = grid.getPoint(...input.api.getPoint.args)
-
-            expect(point).toEqual(output.getPoint)
-          })
-        })
-
-        describe(`getIntersections`, () => {
-          it(`returns all intersections between curves`, () => {
-            const intersectons = grid.getIntersections()
-            expect(intersectons).toEqual(output.getIntersections)
-          })
-        })
-
-        describe(`getLinesXAxis`, () => {
-          it(`returns curves along x axis`, () => {
-            const curves = grid.getLinesXAxis()
-            expect(curves).toEqual(output.getLinesXAxis)
-          })
-        })
-
-        describe(`getLinesYAxis`, () => {
-          it(`returns curves along y axis`, () => {
-            const curves = grid.getLinesYAxis()
-            expect(curves).toEqual(output.getLinesYAxis)
-          })
-        })
-
-        describe(`getLines`, () => {
-          it(`returns curves along x and y axes`, () => {
-            const curves = grid.getLines()
-            expect(curves).toEqual(output.getLines)
-          })
-        })
-
-        describe(`getCellBounds`, () => {
-          it(`provides bounds for the grid square at the supplied coordinates`, () => {
-            const gridSquareBounds = grid.getCellBounds(
-              ...input.api.getCellBounds.args
-            )
-            expect(gridSquareBounds).toEqual(output.getCellBounds)
-          })
-        })
-
-        describe(`getAllCellBounds`, () => {
-          it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
-            const gridCellBounds = grid.getAllCellBounds()
-            expect(gridCellBounds).toEqual(output.getAllCellBounds)
-          })
+      describe(`getIntersections`, () => {
+        it(`returns all intersections between curves`, () => {
+          const intersections = grid.getIntersections()
+          expect(intersections).toMatchSnapshot()
         })
       })
-    }
-  )
+
+      describe(`getLinesXAxis`, () => {
+        it(`returns curves along x axis`, () => {
+          const curves = grid.getLinesXAxis()
+          expect(curves).toMatchSnapshot()
+        })
+      })
+
+      describe(`getLinesYAxis`, () => {
+        it(`returns curves along y axis`, () => {
+          const curves = grid.getLinesYAxis()
+          expect(curves).toMatchSnapshot()
+        })
+      })
+
+      describe(`getLines`, () => {
+        it(`returns curves along x and y axes`, () => {
+          const curves = grid.getLines()
+          expect(curves).toMatchSnapshot()
+        })
+      })
+
+      describe(`getCellBounds`, () => {
+        it(`provides bounds for the grid square at the supplied coordinates`, () => {
+          const gridSquareBounds = grid.getCellBounds(
+            ...input.api.getCellBounds.args
+          )
+          expect(gridSquareBounds).toMatchSnapshot()
+        })
+      })
+
+      describe(`getAllCellBounds`, () => {
+        it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
+          const gridCellBounds = grid.getAllCellBounds()
+          expect(gridCellBounds).toMatchSnapshot()
+        })
+      })
+    })
+  })
 })
