@@ -245,8 +245,8 @@ const getApi = (
    *
    * @param column - The column index of the cell.
    * @param row - The row index of the cell.
-   * @returns The bounding curves of the cell, including a meta object containing the
-   * row and column indices of that cell.
+   * @returns The bounding curves of the cell, including a meta object
+   * containing the row and column indices of that cell.
    */
   const getCellBounds = memoize(
     (column: number, row: number): BoundingCurves => {
