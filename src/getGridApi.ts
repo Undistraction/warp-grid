@@ -3,6 +3,7 @@ import memoize from 'fast-memoize'
 
 import type {
   BoundingCurves,
+  BoundingCurvesWithMeta,
   GridApi,
   InterpolateLineU,
   InterpolateLineV,
@@ -249,7 +250,7 @@ const getApi = (
    * containing the row and column indices of that cell.
    */
   const getCellBounds = memoize(
-    (column: number, row: number): BoundingCurves => {
+    (column: number, row: number): BoundingCurvesWithMeta => {
       validateGetSquareArguments(column, row, columns, rows)
 
       const { xAxis, yAxis } = getLines()
@@ -277,17 +278,17 @@ const getApi = (
    *
    * @returns {BoundingCurves[]} An array of bounding curves for each cell.
    */
-  const getAllCellBounds = memoize((): BoundingCurves[] => {
+  const getAllCellBounds = memoize((): BoundingCurvesWithMeta[] => {
     // We only want to run through steps that are not gutters so we filter both
     // rows and columns first
     return rows
       .filter(stepIsNotGutter)
       .reduce(
         (
-          acc: BoundingCurves[],
+          acc: BoundingCurvesWithMeta[],
           row: Step,
           rowIdx: number
-        ): BoundingCurves[] => {
+        ): BoundingCurvesWithMeta[] => {
           const cellBounds = columns
             .filter(stepIsNotGutter)
             .map((column: Step, columnIdx: number) => {

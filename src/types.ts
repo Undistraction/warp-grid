@@ -84,6 +84,13 @@ export type BezierEasing = {
 
 export type BezierEasingParams = [number, number, number, number]
 
+export interface BoundingCurvesWithMeta extends BoundingCurves {
+  meta: {
+    row: number
+    column: number
+  }
+}
+
 // -----------------------------------------------------------------------------
 // Types: Function signatures
 // -----------------------------------------------------------------------------
