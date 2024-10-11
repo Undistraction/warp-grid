@@ -39,6 +39,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "y": -1.3064508551087131e-12,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.0900348913065,
@@ -112,6 +116,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "x": 32.93531070818701,
         "y": -7.00377450435465,
       },
+    },
+    "meta": {
+      "column": 1,
+      "row": 0,
     },
     "right": {
       "controlPoint1": {
@@ -187,6 +195,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "y": -7.003774504354654,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 108.31309659040758,
@@ -260,6 +272,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "x": -7.1400077554543,
         "y": 32.26711812749022,
       },
+    },
+    "meta": {
+      "column": 0,
+      "row": 1,
     },
     "right": {
       "controlPoint1": {
@@ -335,6 +351,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "y": 29.977937709739372,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 69.90326117371745,
@@ -408,6 +428,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "x": 69.66742273719156,
         "y": 29.977937709739347,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 1,
     },
     "right": {
       "controlPoint1": {
@@ -483,6 +507,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "y": 67.73288187250229,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.469363135371154,
@@ -557,6 +585,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "y": 70.1582955413539,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 69.53063686462568,
@@ -630,6 +662,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
         "x": 69.89015359742339,
         "y": 70.15829554135388,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 2,
     },
     "right": {
       "controlPoint1": {
@@ -708,6 +744,10 @@ exports[`getGrid > for fixture: ''3x3 grid with curves lineStrategy'' supplies �
       "x": 69.89015359742339,
       "y": 70.15829554135388,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {
@@ -1806,6 +1846,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 0,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.82898563886186,
@@ -1880,6 +1924,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": -7.065646696251983,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 66.0001650520183,
@@ -1954,6 +2002,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": -6.867675202594004,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 100,
@@ -2028,6 +2080,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 34.37232954746258,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 27.839272748401612,
@@ -2102,6 +2158,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 32.33668115749533,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.46965893806674,
@@ -2176,6 +2236,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 32.41273741633307,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 107.22287348544413,
@@ -2250,6 +2314,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 71.90581827751869,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 27.66473884206569,
@@ -2324,6 +2392,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "y": 74.90016819383617,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.59317033734487,
@@ -2397,6 +2469,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
         "x": 72.33526115793433,
         "y": 74.85430921785365,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 2,
     },
     "right": {
       "controlPoint1": {
@@ -2475,6 +2551,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as array'' supplies … >
       "x": 72.33526115793433,
       "y": 74.85430921785365,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {
@@ -4117,6 +4197,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 0,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.82898563886186,
@@ -4191,6 +4275,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": -7.065646696251983,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 66.0001650520183,
@@ -4265,6 +4353,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": -6.867675202594004,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 100,
@@ -4339,6 +4431,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 33.39818816941482,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 27.860415848751224,
@@ -4413,6 +4509,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 31.231550240221395,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.45261087326153,
@@ -4487,6 +4587,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 31.310781374965927,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 107.18601517155474,
@@ -4561,6 +4665,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 69.96756447249118,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 27.641897374848377,
@@ -4635,6 +4743,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "y": 72.6999353103563,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.61334726433162,
@@ -4708,6 +4820,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
         "x": 72.35810262515162,
         "y": 72.66042608618739,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 2,
     },
     "right": {
       "controlPoint1": {
@@ -4786,6 +4902,10 @@ exports[`getGrid > for fixture: ''3x3 grid with gutter as number'' supplies … 
       "x": 72.35810262515162,
       "y": 72.66042608618739,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {
@@ -6428,6 +6548,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 0,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 28.148148148148152,
@@ -6502,6 +6626,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": -6.666666666666667,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 71.85185185185185,
@@ -6575,6 +6703,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "x": 71.85185185185185,
         "y": -6.666666666666668,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 0,
     },
     "right": {
       "controlPoint1": {
@@ -6650,6 +6782,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 23.703703703703702,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 24.444444444444446,
@@ -6724,6 +6860,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 21.481481481481485,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 75.55555555555554,
@@ -6798,6 +6938,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 21.481481481481474,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 106.66666666666667,
@@ -6872,6 +7016,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 76.2962962962963,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 22.962962962962955,
@@ -6946,6 +7094,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "y": 78.5185185185185,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 77.03703703703702,
@@ -7019,6 +7171,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
         "x": 77.03703703703702,
         "y": 78.51851851851849,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 2,
     },
     "right": {
       "controlPoint1": {
@@ -7097,6 +7253,10 @@ exports[`getGrid > for fixture: ''3x3 grid with linear interpolationStr…'' sup
       "x": 77.03703703703702,
       "y": 78.51851851851849,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {
@@ -8195,6 +8355,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": 0,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 32.93531070818844,
@@ -8269,6 +8433,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": -7.003774504353478,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 67.06468929181153,
@@ -8343,6 +8511,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": -7.003774504353482,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 100,
@@ -8417,6 +8589,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": 32.26711812749319,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.332577262805135,
@@ -8490,6 +8666,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "x": 30.332577262805135,
         "y": 29.977937709742424,
       },
+    },
+    "meta": {
+      "column": 1,
+      "row": 1,
     },
     "right": {
       "controlPoint1": {
@@ -8565,6 +8745,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": 29.9779377097424,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 107.14000775545462,
@@ -8639,6 +8823,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": 67.73288187250682,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 30.10984640257339,
@@ -8713,6 +8901,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "y": 70.15829554135874,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 69.89015359742659,
@@ -8786,6 +8978,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getAllCellBoun
         "x": 69.89015359742659,
         "y": 70.15829554135873,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 2,
     },
     "right": {
       "controlPoint1": {
@@ -8864,6 +9060,10 @@ exports[`getGrid > for fixture: ''3x3 grid'' supplies … > api > getCellBounds 
       "x": 69.89015359742659,
       "y": 70.15829554135873,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {
@@ -9962,6 +10162,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 0,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 14.90676898205037,
@@ -10036,6 +10240,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -5.087033283766091,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 18.11054053377437,
@@ -10110,6 +10318,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -5.579497164258915,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 33.99983494798167,
@@ -10184,6 +10396,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -7.065646696251983,
       },
     },
+    "meta": {
+      "column": 3,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 46.79824744277457,
@@ -10258,6 +10474,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -7.483105838237211,
       },
     },
+    "meta": {
+      "column": 4,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 62.7850476914268,
@@ -10332,6 +10552,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -7.225759331946189,
       },
     },
+    "meta": {
+      "column": 5,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 66.0001650520183,
@@ -10406,6 +10630,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -7.065646696251983,
       },
     },
+    "meta": {
+      "column": 6,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 81.88945946622562,
@@ -10480,6 +10708,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": -5.5794971642589175,
       },
     },
+    "meta": {
+      "column": 7,
+      "row": 0,
+    },
     "right": {
       "controlPoint1": {
         "x": 85.09323101794962,
@@ -10553,6 +10785,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 85.09323101794962,
         "y": -5.087033283766095,
       },
+    },
+    "meta": {
+      "column": 8,
+      "row": 0,
     },
     "right": {
       "controlPoint1": {
@@ -10628,6 +10864,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 14.561321302519772,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 10.659204831815071,
@@ -10702,6 +10942,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 11.274235143294765,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 14.235223967033534,
@@ -10776,6 +11020,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 10.924643056551696,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 32.074917030942444,
@@ -10850,6 +11098,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 9.870951584235572,
       },
     },
+    "meta": {
+      "column": 3,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 46.41194748567176,
@@ -10924,6 +11176,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 9.573360646026494,
       },
     },
+    "meta": {
+      "column": 4,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 64.3321324842182,
@@ -10998,6 +11254,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 9.756631105010273,
       },
     },
+    "meta": {
+      "column": 5,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 67.92508296905754,
@@ -11072,6 +11332,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 9.87095158423557,
       },
     },
+    "meta": {
+      "column": 6,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 85.76477603296648,
@@ -11146,6 +11410,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 10.92464305655169,
       },
     },
+    "meta": {
+      "column": 7,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 89.34079516818491,
@@ -11220,6 +11488,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 11.274235143294757,
       },
     },
+    "meta": {
+      "column": 8,
+      "row": 1,
+    },
     "right": {
       "controlPoint1": {
         "x": 105.8388590526232,
@@ -11294,6 +11566,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 18.120956058294,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 10.356221328940354,
@@ -11368,6 +11644,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 15.193859323977215,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 13.957005496569316,
@@ -11442,6 +11722,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 14.872841595984095,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 31.938355868976572,
@@ -11516,6 +11800,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 13.90564173560336,
       },
     },
+    "meta": {
+      "column": 3,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 46.384371978539576,
@@ -11590,6 +11878,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 13.632024438149516,
       },
     },
+    "meta": {
+      "column": 4,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 64.44281150562293,
@@ -11664,6 +11956,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 13.80047968767184,
       },
     },
+    "meta": {
+      "column": 5,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.0616441310234,
@@ -11738,6 +12034,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 13.905641735603362,
       },
     },
+    "meta": {
+      "column": 6,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 86.04299450343066,
@@ -11812,6 +12112,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 14.872841595984095,
       },
     },
+    "meta": {
+      "column": 7,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 89.64377867105964,
@@ -11886,6 +12190,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 15.193859323977208,
       },
     },
+    "meta": {
+      "column": 8,
+      "row": 2,
+    },
     "right": {
       "controlPoint1": {
         "x": 106.2116791145335,
@@ -11960,6 +12268,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 35.81144501263736,
       },
     },
+    "meta": {
+      "column": 0,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 9.393370315444324,
@@ -12034,6 +12346,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 34.68429540286167,
       },
     },
+    "meta": {
+      "column": 1,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 13.067791781409628,
@@ -12108,6 +12424,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 34.50614946861829,
       },
     },
+    "meta": {
+      "column": 2,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 31.506489377727924,
@@ -12182,6 +12502,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 33.97140766791451,
       },
     },
+    "meta": {
+      "column": 3,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 46.296682306594874,
@@ -12256,6 +12580,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 33.81765857423682,
       },
     },
+    "meta": {
+      "column": 4,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 64.79545515778193,
@@ -12330,6 +12658,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 33.9120377764519,
       },
     },
+    "meta": {
+      "column": 5,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 68.49351062227205,
@@ -12404,6 +12736,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 33.97140766791452,
       },
     },
+    "meta": {
+      "column": 6,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 86.93220821859038,
@@ -12478,6 +12814,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "y": 34.50614946861829,
       },
     },
+    "meta": {
+      "column": 7,
+      "row": 3,
+    },
     "right": {
       "controlPoint1": {
         "x": 90.60662968455566,
@@ -12551,6 +12891,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 90.60662968455566,
         "y": 34.68429540286165,
       },
+    },
+    "meta": {
+      "column": 8,
+      "row": 3,
     },
     "right": {
       "controlPoint1": {
@@ -12625,6 +12969,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": -7.486079575866522,
         "y": 46.448335864371934,
       },
+    },
+    "meta": {
+      "column": 0,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -12699,6 +13047,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 9.10671332928294,
         "y": 46.401154529320884,
       },
+    },
+    "meta": {
+      "column": 1,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -12773,6 +13125,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 12.798857754074035,
         "y": 46.30873167132737,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -12847,6 +13203,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 31.379666583858853,
         "y": 46.033464706429754,
       },
+    },
+    "meta": {
+      "column": 3,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -12921,6 +13281,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 46.27052792360408,
         "y": 45.95163653501774,
       },
+    },
+    "meta": {
+      "column": 4,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -12995,6 +13359,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 64.90120366837324,
         "y": 46.0015701088485,
       },
+    },
+    "meta": {
+      "column": 5,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -13069,6 +13437,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 68.62033341614116,
         "y": 46.03346470642974,
       },
+    },
+    "meta": {
+      "column": 6,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -13143,6 +13515,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 87.20114224592601,
         "y": 46.308731671327386,
       },
+    },
+    "meta": {
+      "column": 7,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -13217,6 +13593,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 90.89328667071709,
         "y": 46.40115452932088,
       },
+    },
+    "meta": {
+      "column": 8,
+      "row": 4,
     },
     "right": {
       "controlPoint1": {
@@ -13291,6 +13671,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": -7.272773604626854,
         "y": 64.18855498736266,
       },
+    },
+    "meta": {
+      "column": 0,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13365,6 +13749,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 9.02001263295335,
         "y": 65.94132077685272,
       },
+    },
+    "meta": {
+      "column": 1,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13439,6 +13827,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 12.706144327247483,
         "y": 65.99176971260896,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13513,6 +13905,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 31.34605023677678,
         "y": 66.14896080738826,
       },
+    },
+    "meta": {
+      "column": 3,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13587,6 +13983,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 46.262488280492676,
         "y": 66.18700083975243,
       },
+    },
+    "meta": {
+      "column": 4,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13661,6 +14061,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 64.93524720519895,
         "y": 66.16285836627593,
       },
+    },
+    "meta": {
+      "column": 5,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13735,6 +14139,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 68.65394976322324,
         "y": 66.14896080738826,
       },
+    },
+    "meta": {
+      "column": 6,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13809,6 +14217,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 87.29385567275254,
         "y": 65.99176971260896,
       },
+    },
+    "meta": {
+      "column": 7,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13883,6 +14295,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 90.97998736704665,
         "y": 65.9413207768527,
       },
+    },
+    "meta": {
+      "column": 8,
+      "row": 5,
     },
     "right": {
       "controlPoint1": {
@@ -13957,6 +14373,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": -7.140007755454638,
         "y": 67.73288187250682,
       },
+    },
+    "meta": {
+      "column": 0,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14031,6 +14451,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 9.064619443947874,
         "y": 69.84563708690509,
       },
+    },
+    "meta": {
+      "column": 1,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14105,6 +14529,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 12.743917051209845,
         "y": 69.92466038141129,
       },
+    },
+    "meta": {
+      "column": 2,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14179,6 +14607,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 31.36748467202419,
         "y": 70.168343088126,
       },
+    },
+    "meta": {
+      "column": 3,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14253,6 +14685,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 46.26651189280315,
         "y": 70.23035676124536,
       },
+    },
+    "meta": {
+      "column": 4,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14327,6 +14763,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 64.91952974883304,
         "y": 70.19139907830743,
       },
+    },
+    "meta": {
+      "column": 5,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14401,6 +14841,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 68.6325153279758,
         "y": 70.168343088126,
       },
+    },
+    "meta": {
+      "column": 6,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14475,6 +14919,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 87.25608294879018,
         "y": 69.92466038141129,
       },
+    },
+    "meta": {
+      "column": 7,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14549,6 +14997,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
         "x": 90.93538055605211,
         "y": 69.84563708690509,
       },
+    },
+    "meta": {
+      "column": 8,
+      "row": 6,
     },
     "right": {
       "controlPoint1": {
@@ -14627,6 +15079,10 @@ exports[`getGrid > for fixture: ''Variant columns and rows'' supplies … > api 
       "x": 13.957005496569316,
       "y": 14.872841595984095,
     },
+  },
+  "meta": {
+    "column": 2,
+    "row": 2,
   },
   "right": {
     "controlPoint1": {

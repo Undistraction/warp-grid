@@ -245,7 +245,8 @@ const getApi = (
    *
    * @param column - The column index of the cell.
    * @param row - The row index of the cell.
-   * @returns The bounding curves of the cell.
+   * @returns The bounding curves of the cell, including a meta object containing the
+   * row and column indices of that cell.
    */
   const getCellBounds = memoize(
     (column: number, row: number): BoundingCurves => {
@@ -258,6 +259,10 @@ const getApi = (
       const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
 
       return {
+        meta: {
+          row,
+          column,
+        },
         top: xAxis[row * gutterMultiplierX][column],
         bottom: xAxis[row * gutterMultiplierX + 1][column],
         left: yAxis[column * gutterMultiplierY][row],
