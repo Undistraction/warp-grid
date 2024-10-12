@@ -1,12 +1,18 @@
+## [2.3.0](https://github.com/undistraction/warp-grid/compare/v2.2.0...v2.3.0) (2024-10-12)
+
+### Features
+
+* Add config to api funcs to control bounds curve order ([b255096](https://github.com/undistraction/warp-grid/commit/b25509688fa7adf4b2b81288531a56b819346fcb))
+
 ## [2.2.0](https://github.com/undistraction/warp-grid/compare/v2.1.2...v2.2.0) (2024-10-11)
 
 ### Features
 
-* Expose row and cell indices as meta on BoundingCurves returned from API ([aa5f485](https://github.com/undistraction/warp-grid/commit/aa5f485d40c596acdf1f1f40833f4ce3dd5b9cb6))
+- Expose row and cell indices as meta on BoundingCurves returned from API ([aa5f485](https://github.com/undistraction/warp-grid/commit/aa5f485d40c596acdf1f1f40833f4ce3dd5b9cb6))
 
 ### Bug Fixes
 
-* Missing typing for bounding curves meta ([4b1cbc3](https://github.com/undistraction/warp-grid/commit/4b1cbc3a81f3678ab04b01a16d3ef93674dadb43))
+- Missing typing for bounding curves meta ([4b1cbc3](https://github.com/undistraction/warp-grid/commit/4b1cbc3a81f3678ab04b01a16d3ef93674dadb43))
 
 ## [2.1.2](https://github.com/undistraction/warp-grid/compare/v2.1.1...v2.1.2) (2024-10-10)
 
