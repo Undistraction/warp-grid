@@ -294,12 +294,31 @@ describe(`getGrid`, () => {
           )
           expect(gridSquareBounds).toMatchSnapshot()
         })
+
+        describe(`when passing 'makeBoundsCurvesSequential' as 'true'`, () => {
+          it(`provides bounds for the grid square at the supplied coordinates in clockwise orientation`, () => {
+            const gridSquareBounds = grid.getCellBounds(
+              ...input.api.getCellBounds.args,
+              { makeBoundsCurvesSequential: true }
+            )
+            expect(gridSquareBounds).toMatchSnapshot()
+          })
+        })
       })
 
       describe(`getAllCellBounds`, () => {
         it(`returns grid cell bounds for all cells, ordered left-to-right, top-to-bottom`, () => {
-          const gridCellBounds = grid.getAllCellBounds()
-          expect(gridCellBounds).toMatchSnapshot()
+          const allGridCellBounds = grid.getAllCellBounds()
+          expect(allGridCellBounds).toMatchSnapshot()
+        })
+
+        describe(`when passing 'makeBoundsCurvesSequential' as 'true'`, () => {
+          it(`provides bounds for the grid square at the supplied coordinates in clockwise orientation`, () => {
+            const allGridCellBounds = grid.getAllCellBounds({
+              makeBoundsCurvesSequential: true,
+            })
+            expect(allGridCellBounds).toMatchSnapshot()
+          })
         })
       })
     })

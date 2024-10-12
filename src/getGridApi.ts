@@ -4,6 +4,7 @@ import memoize from 'fast-memoize'
 import type {
   BoundingCurves,
   BoundingCurvesWithMeta,
+  Curve,
   GridApi,
   InterpolateLineU,
   InterpolateLineV,
@@ -36,6 +37,15 @@ type GetAPiConfig = {
 // -----------------------------------------------------------------------------
 
 const stepIsNotGutter = (step: Step): boolean => !step.isGutter
+
+const reverseCurve = (curve: Curve) => {
+  return {
+    startPoint: curve.endPoint,
+    endPoint: curve.startPoint,
+    controlPoint1: curve.controlPoint2,
+    controlPoint2: curve.controlPoint1,
+  }
+}
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -246,11 +256,20 @@ const getApi = (
    *
    * @param column - The column index of the cell.
    * @param row - The row index of the cell.
+   * @param {object} [options] - Optional parameters.
+   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
+   * top and bottom bounding curves run left to right and left and right bounds
+   * run top to bottom. This option will output bounds so that the bottom bounds
+   * run right to left and the left bounds run bottom to top.
    * @returns The bounding curves of the cell, including a meta object
    * containing the row and column indices of that cell.
    */
   const getCellBounds = memoize(
-    (column: number, row: number): BoundingCurvesWithMeta => {
+    (
+      column: number,
+      row: number,
+      { makeBoundsCurvesSequential = false } = {}
+    ): BoundingCurvesWithMeta => {
       validateGetSquareArguments(column, row, columns, rows)
 
       const { xAxis, yAxis } = getLines()
@@ -259,15 +278,20 @@ const getApi = (
       const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
       const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
 
+      const top = xAxis[row * gutterMultiplierX][column]
+      const bottom = xAxis[row * gutterMultiplierX + 1][column]
+      const left = yAxis[column * gutterMultiplierY][row]
+      const right = yAxis[column * gutterMultiplierY + 1][row]
+
       return {
         meta: {
           row,
           column,
         },
-        top: xAxis[row * gutterMultiplierX][column],
-        bottom: xAxis[row * gutterMultiplierX + 1][column],
-        left: yAxis[column * gutterMultiplierY][row],
-        right: yAxis[column * gutterMultiplierY + 1][row],
+        top,
+        bottom: makeBoundsCurvesSequential ? reverseCurve(bottom) : bottom,
+        left: makeBoundsCurvesSequential ? reverseCurve(left) : left,
+        right,
       }
     }
   )
@@ -275,30 +299,38 @@ const getApi = (
   /**
    * Retrieves the bounding curves for all cells in the grid, excluding gutter
    * steps.
+   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
+   * top and bottom bounding curves run left to right and left and right bounds
+   * run top to bottom. This option will output bounds so that the bottom bounds
+   * run right to left and the left bounds run bottom to top.
    *
-   * @returns {BoundingCurves[]} An array of bounding curves for each cell.
+   * @returns An array of bounding curves for each cell.
    */
-  const getAllCellBounds = memoize((): BoundingCurvesWithMeta[] => {
-    // We only want to run through steps that are not gutters so we filter both
-    // rows and columns first
-    return rows
-      .filter(stepIsNotGutter)
-      .reduce(
-        (
-          acc: BoundingCurvesWithMeta[],
-          row: Step,
-          rowIdx: number
-        ): BoundingCurvesWithMeta[] => {
-          const cellBounds = columns
-            .filter(stepIsNotGutter)
-            .map((column: Step, columnIdx: number) => {
-              return getCellBounds(columnIdx, rowIdx)
-            })
-          return [...acc, ...cellBounds]
-        },
-        []
-      )
-  })
+  const getAllCellBounds = memoize(
+    ({ makeBoundsCurvesSequential = false } = {}): BoundingCurvesWithMeta[] => {
+      // We only want to run through steps that are not gutters so we filter both
+      // rows and columns first
+      return rows
+        .filter(stepIsNotGutter)
+        .reduce(
+          (
+            acc: BoundingCurvesWithMeta[],
+            row: Step,
+            rowIdx: number
+          ): BoundingCurvesWithMeta[] => {
+            const cellBounds = columns
+              .filter(stepIsNotGutter)
+              .map((column: Step, columnIdx: number) => {
+                return getCellBounds(columnIdx, rowIdx, {
+                  makeBoundsCurvesSequential,
+                })
+              })
+            return [...acc, ...cellBounds]
+          },
+          []
+        )
+    }
+  )
 
   return {
     getPoint,

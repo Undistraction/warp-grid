@@ -161,9 +161,9 @@ const boundingCurves = {
 
 To generate a grid you must provide a set of four **bounding curves** (`top`, `left`, `bottom` and `right`) in the form of four cubic Bézier curves. A cubic Bézier curve describes a straight-line or curve using a start point (`startPoint`), an end point (`endPoint`) and two other control points(`controlPoint1` and `controlPoint2`). Each point has an `x` and `y` coordinate.
 
-At minimum you must supply start and end points for each curve. If you do not supply `controlPoint1` it will be set to the same coordinates as the start point, and if you do not supply `controlPoint2` it will be set to the same coordinates as the end point. Setting both control points to the same values as the start and end point will result in a straight line.
+At minimum you must supply start and end points for each curve. If you do not supply `controlPoint1` it will be set to the same coordinates as the start point, and if you do not supply `controlPoint2` it will be set to the same coordinates as the end point. Setting both control points to the same values as the start and end point will result in a straight line. You also need to ensure that the four curves meet at the corners.
 
-You also need to ensure that the four curves meet at the corners. You will probably be expecting the end of each curve to be the start of the next, however in keeping with the math involved in generating a coons-patch this is not the case. The `top` and `bottom` curves run left to right, and `left` and `right` curves run top to bottom, so this means that:
+You will probably be expecting the end of each curve to be the start of the next, however in keeping with the math involved in generating a coons-patch this is not the case. The `top` and `bottom` curves run left to right, and `left` and `right` curves run top to bottom, so this means that:
 
 - the `startPoint` of the `top` curve must share the same coordinates with the `startPoint` of the `left` curve.
 - the `endPoint` of the `top` curve must share the same coordinates with the `startPoint` of the `right` curve.
@@ -172,9 +172,19 @@ You also need to ensure that the four curves meet at the corners. You will proba
 
 ```
          top
-     |-------->|
+      -------->
 left |         | right
-     V-------->V
+     ↓ ------> ↓
+       bottom
+```
+
+Note that when you are getting cell bounds back from the API, both `getCellBounds` and `getAllCellBounds` accept a config object which has a `makeBoundsCurvesSequential` key. If this is set to true, the order of the bounding curves is made sequential:
+
+```
+         top
+     ↑ ------->
+left |         | right
+      <------- ↓
        bottom
 ```
 
