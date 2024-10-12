@@ -1,8 +1,14 @@
+## [2.4.0](https://github.com/undistraction/warp-grid/compare/v2.3.0...v2.4.0) (2024-10-12)
+
+### Features
+
+* Allow control over order cell bounds are returned in ([3d4af07](https://github.com/undistraction/warp-grid/commit/3d4af0712bd924c386e49179c21a4e56b2e49c28))
+
 ## [2.3.0](https://github.com/undistraction/warp-grid/compare/v2.2.0...v2.3.0) (2024-10-12)
 
 ### Features
 
-* Add config to api funcs to control bounds curve order ([b255096](https://github.com/undistraction/warp-grid/commit/b25509688fa7adf4b2b81288531a56b819346fcb))
+- Add config to api funcs to control bounds curve order ([b255096](https://github.com/undistraction/warp-grid/commit/b25509688fa7adf4b2b81288531a56b819346fcb))
 
 ## [2.2.0](https://github.com/undistraction/warp-grid/compare/v2.1.2...v2.2.0) (2024-10-11)
 
