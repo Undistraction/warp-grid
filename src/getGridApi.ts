@@ -1,6 +1,7 @@
 import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
 import memoize from 'fast-memoize'
 
+import { CellBoundsOrder } from './enums'
 import type {
   BoundingCurves,
   BoundingCurvesWithMeta,
@@ -46,6 +47,30 @@ const reverseCurve = (curve: Curve) => {
     controlPoint2: curve.controlPoint1,
   }
 }
+
+const getAreStepsVerticalFirst = (cellBoundsOrder: CellBoundsOrder): boolean =>
+  [
+    CellBoundsOrder.TTB_LTR,
+    CellBoundsOrder.TTB_RTL,
+    CellBoundsOrder.BTT_LTR,
+    CellBoundsOrder.BTT_RTL,
+  ].includes(cellBoundsOrder)
+
+const getIsOuterReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
+  [
+    CellBoundsOrder.BTT_LTR,
+    CellBoundsOrder.BTT_RTL,
+    CellBoundsOrder.RTL_TTB,
+    CellBoundsOrder.RTL_BTT,
+  ].includes(cellBoundsOrder)
+
+const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
+  [
+    CellBoundsOrder.TTB_RTL,
+    CellBoundsOrder.BTT_RTL,
+    CellBoundsOrder.LTR_BTT,
+    CellBoundsOrder.RTL_BTT,
+  ].includes(cellBoundsOrder)
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -256,7 +281,7 @@ const getApi = (
    *
    * @param column - The column index of the cell.
    * @param row - The row index of the cell.
-   * @param {object} [options] - Optional parameters.
+   * @param {object} [options] - Optional configuration.
    * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
    * top and bottom bounding curves run left to right and left and right bounds
    * run top to bottom. This option will output bounds so that the bottom bounds
@@ -270,6 +295,7 @@ const getApi = (
       row: number,
       { makeBoundsCurvesSequential = false } = {}
     ): BoundingCurvesWithMeta => {
+      console.log(column, `/`, row)
       validateGetSquareArguments(column, row, columns, rows)
 
       const { xAxis, yAxis } = getLines()
@@ -299,36 +325,66 @@ const getApi = (
   /**
    * Retrieves the bounding curves for all cells in the grid, excluding gutter
    * steps.
+   * @param {object} [options] - Optional configuration.
    * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
    * top and bottom bounding curves run left to right and left and right bounds
    * run top to bottom. This option will output bounds so that the bottom bounds
    * run right to left and the left bounds run bottom to top.
+   * @param {boolean} [config.cellBoundsOrder=CellBoundsOrder.TTB_LTR] - This
+   * property allows you to control the order in which the cell bounds are
+   * returned. The default is top to bottom, left to right.
    *
    * @returns An array of bounding curves for each cell.
    */
   const getAllCellBounds = memoize(
-    ({ makeBoundsCurvesSequential = false } = {}): BoundingCurvesWithMeta[] => {
-      // We only want to run through steps that are not gutters so we filter both
-      // rows and columns first
-      return rows
-        .filter(stepIsNotGutter)
-        .reduce(
-          (
-            acc: BoundingCurvesWithMeta[],
-            row: Step,
-            rowIdx: number
-          ): BoundingCurvesWithMeta[] => {
-            const cellBounds = columns
-              .filter(stepIsNotGutter)
-              .map((column: Step, columnIdx: number) => {
-                return getCellBounds(columnIdx, rowIdx, {
-                  makeBoundsCurvesSequential,
-                })
+    ({
+      makeBoundsCurvesSequential = false,
+      cellBoundsOrder = CellBoundsOrder.TTB_LTR,
+    } = {}): BoundingCurvesWithMeta[] => {
+      // We only want to run through steps that are not gutters so we filter
+      // both rows and columns first
+      const rowsThatAreNotGutters = rows.filter(stepIsNotGutter)
+      const columnsThatAreNotGutters = columns.filter(stepIsNotGutter)
+
+      const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
+
+      const outerSteps = isVerticalFirst
+        ? rowsThatAreNotGutters
+        : columnsThatAreNotGutters
+
+      const innerSteps = isVerticalFirst
+        ? columnsThatAreNotGutters
+        : rowsThatAreNotGutters
+
+      const isOuterReversed = getIsOuterReversed(cellBoundsOrder)
+      const isInnerReversed = getIsInnerReversed(cellBoundsOrder)
+
+      const outerStepsOriented = isOuterReversed
+        ? outerSteps.reverse()
+        : outerSteps
+      const innerStepsOriented = isInnerReversed
+        ? innerSteps.reverse()
+        : innerSteps
+
+      return outerStepsOriented.reduce(
+        (
+          acc: BoundingCurvesWithMeta[],
+          outerStep: Step,
+          outerIdx: number
+        ): BoundingCurvesWithMeta[] => {
+          const cellBounds = innerStepsOriented.map(
+            (innerStep: Step, innerIdx: number) => {
+              const arg1 = isVerticalFirst ? innerIdx : outerIdx
+              const arg2 = isVerticalFirst ? outerIdx : innerIdx
+              return getCellBounds(arg1, arg2, {
+                makeBoundsCurvesSequential,
               })
-            return [...acc, ...cellBounds]
-          },
-          []
-        )
+            }
+          )
+          return [...acc, ...cellBounds]
+        },
+        []
+      )
     }
   )
 

@@ -2,6 +2,28 @@ import getGrid from '../src/'
 import fixtures, { boundingCurvesValid } from './fixtures.js'
 
 // -----------------------------------------------------------------------------
+// Const
+// -----------------------------------------------------------------------------
+
+const enumValues = [
+  `topToBottom-leftToRight`,
+  `topToBottom-rightToLeft`,
+  `bottomToTop-leftToRight`,
+  `bottomToTop-rightToLeft`,
+  `leftToRight-topToBottom`,
+  `leftToRight-bottomToTop`,
+  `rightToLeft-topToBottom`,
+  `rightToLeft-bottomToTop`,
+]
+
+const cellBoundsOrderFixture = enumValues.map((key) => {
+  return {
+    name: key,
+    input: key,
+  }
+})
+
+// -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
@@ -320,6 +342,18 @@ describe(`getGrid`, () => {
             expect(allGridCellBounds).toMatchSnapshot()
           })
         })
+
+        describe.each(cellBoundsOrderFixture)(
+          `For cellBoundsOrder with key of $name`,
+          ({ input }) => {
+            it(`provides bounds for the grid square at the supplied coordinates in clockwise orientation`, () => {
+              const allGridCellBounds = grid.getAllCellBounds({
+                cellBoundsOrder: input,
+              })
+              expect(allGridCellBounds).toMatchSnapshot()
+            })
+          }
+        )
       })
     })
   })
