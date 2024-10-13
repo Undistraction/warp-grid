@@ -1,8 +1,14 @@
+## [2.4.1](https://github.com/undistraction/warp-grid/compare/v2.4.0...v2.4.1) (2024-10-13)
+
+### Bug Fixes
+
+* Export new CellBoundsOrder enum ([ea8c8f0](https://github.com/undistraction/warp-grid/commit/ea8c8f05741fb7e3dcc0bea8f10ce2c28195e7f0))
+
 ## [2.4.0](https://github.com/undistraction/warp-grid/compare/v2.3.0...v2.4.0) (2024-10-12)
 
 ### Features
 
-* Allow control over order cell bounds are returned in ([3d4af07](https://github.com/undistraction/warp-grid/commit/3d4af0712bd924c386e49179c21a4e56b2e49c28))
+- Allow control over order cell bounds are returned in ([3d4af07](https://github.com/undistraction/warp-grid/commit/3d4af0712bd924c386e49179c21a4e56b2e49c28))
 
 ## [2.3.0](https://github.com/undistraction/warp-grid/compare/v2.2.0...v2.3.0) (2024-10-12)
 
