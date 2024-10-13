@@ -5,7 +5,7 @@ import type {
   Point,
 } from 'coons-patch'
 
-import { InterpolationStrategy, LineStrategy } from './enums'
+import { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 
 // -----------------------------------------------------------------------------
 // Interfaces
@@ -48,8 +48,22 @@ export interface GridApi {
   getLinesXAxis: () => StepCurves[]
   getLinesYAxis: () => StepCurves[]
   getLines: () => Lines
-  getCellBounds: (columns: number, rows: number) => BoundingCurves
-  getAllCellBounds: () => BoundingCurves[]
+  getCellBounds: (
+    columns: number,
+    rows: number,
+    {
+      cellBoundsOrder,
+    }?: {
+      cellBoundsOrder?: CellBoundsOrder
+    }
+  ) => BoundingCurves
+  getAllCellBounds: ({
+    makeBoundsCurvesSequential,
+    cellBoundsOrder,
+  }?: {
+    makeBoundsCurvesSequential?: boolean
+    cellBoundsOrder?: CellBoundsOrder
+  }) => BoundingCurves[]
 }
 
 export interface WarpGrid extends GridApi {
