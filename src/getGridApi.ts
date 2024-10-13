@@ -295,7 +295,6 @@ const getApi = (
       row: number,
       { makeBoundsCurvesSequential = false } = {}
     ): BoundingCurvesWithMeta => {
-      console.log(column, `/`, row)
       validateGetSquareArguments(column, row, columns, rows)
 
       const { xAxis, yAxis } = getLines()
