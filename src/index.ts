@@ -2,7 +2,7 @@
 // Re-export Types
 // -----------------------------------------------------------------------------
 
-export { InterpolationStrategy, LineStrategy } from './enums'
+export { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 export type {
   BezierEasing,
   BezierEasingParams,
