@@ -1,8 +1,14 @@
+## [2.4.2](https://github.com/undistraction/warp-grid/compare/v2.4.1...v2.4.2) (2024-10-13)
+
+### Bug Fixes
+
+* Missing types in GridApi ([04ca8dd](https://github.com/undistraction/warp-grid/commit/04ca8dde9c04751119e79f19062ad9546acd1a25))
+
 ## [2.4.1](https://github.com/undistraction/warp-grid/compare/v2.4.0...v2.4.1) (2024-10-13)
 
 ### Bug Fixes
 
-* Export new CellBoundsOrder enum ([ea8c8f0](https://github.com/undistraction/warp-grid/commit/ea8c8f05741fb7e3dcc0bea8f10ce2c28195e7f0))
+- Export new CellBoundsOrder enum ([ea8c8f0](https://github.com/undistraction/warp-grid/commit/ea8c8f05741fb7e3dcc0bea8f10ce2c28195e7f0))
 
 ## [2.4.0](https://github.com/undistraction/warp-grid/compare/v2.3.0...v2.4.0) (2024-10-12)
 
