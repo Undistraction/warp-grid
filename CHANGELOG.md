@@ -1,8 +1,14 @@
+## [2.4.3](https://github.com/undistraction/warp-grid/compare/v2.4.2...v2.4.3) (2024-10-14)
+
+### Bug Fixes
+
+* Cell bound order ([da6fe95](https://github.com/undistraction/warp-grid/commit/da6fe956ec0e9af486e1a161bd80c604d99549b3))
+
 ## [2.4.2](https://github.com/undistraction/warp-grid/compare/v2.4.1...v2.4.2) (2024-10-13)
 
 ### Bug Fixes
 
-* Missing types in GridApi ([04ca8dd](https://github.com/undistraction/warp-grid/commit/04ca8dde9c04751119e79f19062ad9546acd1a25))
+- Missing types in GridApi ([04ca8dd](https://github.com/undistraction/warp-grid/commit/04ca8dde9c04751119e79f19062ad9546acd1a25))
 
 ## [2.4.1](https://github.com/undistraction/warp-grid/compare/v2.4.0...v2.4.1) (2024-10-13)
 
