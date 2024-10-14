@@ -357,33 +357,31 @@ const getApi = (
 
       const isOuterReversed = getIsOuterReversed(cellBoundsOrder)
       const isInnerReversed = getIsInnerReversed(cellBoundsOrder)
+      const outerStepsLength = outerSteps.length
+      const innerStepsLength = innerSteps.length
 
-      const outerStepsOriented = isOuterReversed
-        ? outerSteps.reverse()
-        : outerSteps
-      const innerStepsOriented = isInnerReversed
-        ? innerSteps.reverse()
-        : innerSteps
+      const cellsBounds = []
 
-      return outerStepsOriented.reduce(
-        (
-          acc: BoundingCurvesWithMeta[],
-          outerStep: Step,
-          outerIdx: number
-        ): BoundingCurvesWithMeta[] => {
-          const cellBounds = innerStepsOriented.map(
-            (innerStep: Step, innerIdx: number) => {
-              const arg1 = isVerticalFirst ? innerIdx : outerIdx
-              const arg2 = isVerticalFirst ? outerIdx : innerIdx
-              return getCellBounds(arg1, arg2, {
-                makeBoundsCurvesSequential,
-              })
-            }
+      for (let i = 0; i < outerStepsLength; i++) {
+        const outerIdxResolved = isOuterReversed ? outerStepsLength - i - 1 : i
+
+        for (let j = 0; j < innerStepsLength; j++) {
+          const innerIdxResolved = isInnerReversed
+            ? innerStepsLength - j - 1
+            : j
+
+          const rowIdx = isVerticalFirst ? innerIdxResolved : outerIdxResolved
+          const columnIdx = isVerticalFirst
+            ? outerIdxResolved
+            : innerIdxResolved
+          cellsBounds.push(
+            getCellBounds(rowIdx, columnIdx, {
+              makeBoundsCurvesSequential,
+            })
           )
-          return [...acc, ...cellBounds]
-        },
-        []
-      )
+        }
+      }
+      return cellsBounds
     }
   )
 
