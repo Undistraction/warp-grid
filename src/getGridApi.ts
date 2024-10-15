@@ -303,10 +303,17 @@ const getApi = (
       const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
       const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
 
-      const top = xAxis[row * gutterMultiplierX][column]
-      const bottom = xAxis[row * gutterMultiplierX + 1][column]
-      const left = yAxis[column * gutterMultiplierY][row]
-      const right = yAxis[column * gutterMultiplierY + 1][row]
+      const selectedColumnIdx = column * gutterMultiplierX
+      const selectedRowIdx = row * gutterMultiplierY
+      const selectedRowTop = xAxis[selectedRowIdx]
+      const selectedRowBottom = xAxis[selectedRowIdx + 1]
+      const selectedRowLeft = yAxis[selectedColumnIdx]
+      const selectedRowRight = yAxis[selectedColumnIdx + 1]
+
+      const top = selectedRowTop[column]
+      const bottom = selectedRowBottom[column]
+      const left = selectedRowLeft[row]
+      const right = selectedRowRight[row]
 
       return {
         meta: {

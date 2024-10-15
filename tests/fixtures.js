@@ -82,6 +82,21 @@ const allFixtures = [
     },
   },
   {
+    name: `3x3 grid with gutter as array including 0`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        gutter: [0, 0.2],
+      },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
     name: `3x3 grid with linear interpolationStrategy`,
     input: {
       bounds: boundingCurvesValid,
