@@ -1,8 +1,14 @@
+## [2.4.4](https://github.com/undistraction/warp-grid/compare/v2.4.3...v2.4.4) (2024-10-15)
+
+### Bug Fixes
+
+* Inverted gaps ([b048c20](https://github.com/undistraction/warp-grid/commit/b048c203be5d49386f2002c8b4d0bd31bcf17a6e))
+
 ## [2.4.3](https://github.com/undistraction/warp-grid/compare/v2.4.2...v2.4.3) (2024-10-14)
 
 ### Bug Fixes
 
-* Cell bound order ([da6fe95](https://github.com/undistraction/warp-grid/commit/da6fe956ec0e9af486e1a161bd80c604d99549b3))
+- Cell bound order ([da6fe95](https://github.com/undistraction/warp-grid/commit/da6fe956ec0e9af486e1a161bd80c604d99549b3))
 
 ## [2.4.2](https://github.com/undistraction/warp-grid/compare/v2.4.1...v2.4.2) (2024-10-13)
 
