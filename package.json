@@ -46,7 +46,7 @@
     "link": "pnpm link ../coons-patch",
     "unlink": "pnpm unlink ../coons-patch",
     "tsc": "tsc",
-    "audit-npm-packages": "audit-ci --config ./audit-ci.jsonc"
+    "audit-npm-packages": "audit-ci --config ./audit-ci.jsonc --skip-dev"
   },
   "keywords": [
     "coons patch",
