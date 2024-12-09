@@ -303,8 +303,8 @@ const getApi = (
       const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
       const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
 
-      const selectedColumnIdx = column * gutterMultiplierX
       const selectedRowIdx = row * gutterMultiplierY
+      const selectedColumnIdx = column * gutterMultiplierX
       const selectedRowTop = xAxis[selectedRowIdx]
       const selectedRowBottom = xAxis[selectedRowIdx + 1]
       const selectedRowLeft = yAxis[selectedColumnIdx]
