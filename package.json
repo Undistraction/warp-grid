@@ -45,7 +45,8 @@
     "release-preview": "semantic-release --no-ci --dry-run --debug",
     "link": "pnpm link ../coons-patch",
     "unlink": "pnpm unlink ../coons-patch",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "audit-npm-packages": "audit-ci --config ./audit-ci.jsonc"
   },
   "keywords": [
     "coons patch",
@@ -68,6 +69,7 @@
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitest/coverage-v8": "^2.0.5",
+    "audit-ci": "^7.1.0",
     "babel-jest": "^29.7.0",
     "commitlint": "^19.3.0",
     "dotenv": "^16.4.5",
@@ -105,7 +107,8 @@
   },
   "pnpm": {
     "overrides": {
-      "conventional-changelog-conventionalcommits": ">= 8.0.0"
+      "conventional-changelog-conventionalcommits": ">= 8.0.0",
+      "cross-spawn": "^7.0.5"
     }
   }
 }
