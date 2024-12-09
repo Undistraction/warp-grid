@@ -11,6 +11,18 @@ import {
   isUndefined,
 } from '../../src/utils/is'
 
+// -----------------------------------------------------------------------------
+// Const
+// -----------------------------------------------------------------------------
+
+const func = () => {
+  // no-op
+}
+
+// -----------------------------------------------------------------------------
+// Tests
+// -----------------------------------------------------------------------------
+
 describe(`types`, () => {
   describe(`isInt`, () => {
     it(`returns true if argument is an int`, () => {
@@ -34,7 +46,7 @@ describe(`types`, () => {
       expect(isInt(`abc`)).toBeFalsy()
       expect(isInt(``)).toBeFalsy()
       expect(isInt(/abc/)).toBeFalsy()
-      expect(isInt(() => {})).toBeFalsy()
+      expect(isInt(func)).toBeFalsy()
     })
   })
 
@@ -60,7 +72,7 @@ describe(`types`, () => {
       expect(isNumber(`abc`)).toBeFalsy()
       expect(isNumber(``)).toBeFalsy()
       expect(isNumber(/abc/)).toBeFalsy()
-      expect(isNumber(() => {})).toBeFalsy()
+      expect(isNumber(func)).toBeFalsy()
     })
   })
 
@@ -82,7 +94,7 @@ describe(`types`, () => {
       expect(isUndefined(1)).toBeFalsy()
       expect(isUndefined([])).toBeFalsy()
       expect(isUndefined({})).toBeFalsy()
-      expect(isUndefined(() => {})).toBeFalsy()
+      expect(isUndefined(func)).toBeFalsy()
     })
   })
 
@@ -104,7 +116,7 @@ describe(`types`, () => {
       expect(isNull(/abc/)).toBeFalsy()
       expect(isNull(0.1)).toBeFalsy()
       expect(isNull(1)).toBeFalsy()
-      expect(isNull(() => {})).toBeFalsy()
+      expect(isNull(func)).toBeFalsy()
     })
   })
 
@@ -126,7 +138,7 @@ describe(`types`, () => {
       expect(isNil(1)).toBeFalsy()
       expect(isNil([])).toBeFalsy()
       expect(isNil({})).toBeFalsy()
-      expect(isNil(() => {})).toBeFalsy()
+      expect(isNil(func)).toBeFalsy()
     })
   })
 
@@ -149,7 +161,7 @@ describe(`types`, () => {
       expect(isString(1)).toBeFalsy()
       expect(isString([])).toBeFalsy()
       expect(isString({})).toBeFalsy()
-      expect(isString(() => {})).toBeFalsy()
+      expect(isString(func)).toBeFalsy()
     })
   })
 
@@ -171,7 +183,7 @@ describe(`types`, () => {
       expect(isArray(123)).toBeFalsy()
       expect(isArray(/abc/)).toBeFalsy()
       expect(isArray({})).toBeFalsy()
-      expect(isArray(() => {})).toBeFalsy()
+      expect(isArray(func)).toBeFalsy()
     })
   })
 
@@ -193,7 +205,7 @@ describe(`types`, () => {
       expect(isPlainObj(123)).toBeFalsy()
       expect(isPlainObj([])).toBeFalsy()
       expect(isPlainObj(/abc/)).toBeFalsy()
-      expect(isPlainObj(() => {})).toBeFalsy()
+      expect(isPlainObj(func)).toBeFalsy()
     })
   })
 })

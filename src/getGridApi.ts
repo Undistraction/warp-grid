@@ -26,7 +26,7 @@ import {
 // -----------------------------------------------------------------------------
 
 // Internal
-type GetAPiConfig = {
+interface GetAPiConfig {
   interpolatePointOnCurveU: InterpolatePointOnCurve
   interpolatePointOnCurveV: InterpolatePointOnCurve
   interpolateLineU: InterpolateLineU

@@ -70,10 +70,8 @@ export interface WarpGrid extends GridApi {
   model: GridModel
 }
 
-export interface ObjectWithStringKeys {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  [key: string]: any
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObjectWithStringKeys = Record<string, any>
 
 // -----------------------------------------------------------------------------
 // Types
@@ -91,7 +89,7 @@ export type Steps = Step[]
 
 export type StepDefinition = number | number[] | Step[]
 
-export type BezierEasing = {
+export interface BezierEasing {
   xAxis: BezierEasingParams
   yAxis: BezierEasingParams
 }
