@@ -39,16 +39,14 @@ export const interpolateStraightLineU = (
 ): Curve => {
   const startPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    vStart,
-    uStart,
+    { u: vStart, v: uStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const endPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    vStart,
-    uEnd,
+    { u: vStart, v: uEnd },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
@@ -91,16 +89,14 @@ export const interpolateStraightLineV = (
 ): Curve => {
   const startPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uStart,
-    vStart,
+    { u: uStart, v: vStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const endPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uEnd,
-    vStart,
+    { u: uEnd, v: vStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
