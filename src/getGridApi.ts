@@ -95,10 +95,14 @@ const getApi = (
    * @returns The point on the surface.
    */
   const getPoint = memoize((x: number, y: number): Point => {
-    return coonsPatch(boundingCurves, x, y, {
-      interpolatePointOnCurveU,
-      interpolatePointOnCurveV,
-    })
+    return coonsPatch(
+      boundingCurves,
+      { u: x, v: y },
+      {
+        interpolatePointOnCurveU,
+        interpolatePointOnCurveV,
+      }
+    )
   })
 
   const getLinesXAxis = (): StepCurves[] => {
@@ -125,7 +129,7 @@ const getApi = (
 
       for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
         const column = processedColumns[columnIdx]
-        const columnValue = column?.value
+        const columnValue = column.value
         const uSize = columnValue / columnsTotalValue
         const uEnd = uStart + uSize
 
@@ -180,7 +184,7 @@ const getApi = (
 
       for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
         const row = processedRows[rowIdx]
-        const rowValue = row?.value
+        const rowValue = row.value
         const vSize = rowValue / rowsTotalValue
         const vEnd = vStart + vSize
 
@@ -255,8 +259,7 @@ const getApi = (
       for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
         const point = interpolatePointOnSurfaceBilinear(
           boundingCurves,
-          uStart,
-          vStart,
+          { u: uStart, v: vStart },
           interpolatePointOnCurveU,
           interpolatePointOnCurveV
         )

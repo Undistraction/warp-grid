@@ -58,16 +58,14 @@ export const interpolateCurveU = (
 
   const midPoint1 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uStart,
-    vStart + vSize * T_MIDPOINT_1,
+    { u: uStart, v: vStart + vSize * T_MIDPOINT_1 },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint2 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uStart,
-    vStart + vSize * T_MIDPOINT_2,
+    { u: uStart, v: vStart + vSize * T_MIDPOINT_2 },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
@@ -119,16 +117,14 @@ export const interpolateCurveV = (
 
   const midPoint1 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uStart + uSize * T_MIDPOINT_1,
-    vStart,
+    { u: uStart + uSize * T_MIDPOINT_1, v: vStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint2 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    uStart + uSize * T_MIDPOINT_2,
-    vStart,
+    { u: uStart + uSize * T_MIDPOINT_2, v: vStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )

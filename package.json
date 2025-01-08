@@ -1,7 +1,7 @@
 {
   "name": "warp-grid",
   "version": "2.4.3",
-  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c",
+  "packageManager": "pnpm@9.15.0+sha256.09a8fe31a34fda706354680619f4002f4ccef6dadff93240d24ef6c831f0fd28",
   "description": "Create a complex grid, warped in 2D space and access data about its lines and cells",
   "exports": {
     ".": {
@@ -88,7 +88,8 @@
     "rollup": "^4.22.4",
     "semantic-release": "^24.0.0",
     "ts-jest": "^29.2.3",
-    "typedoc": "^0.27.0",
+    "typescript": "5.6.3",
+    "typedoc": "^0.26.5",
     "typescript-eslint": "^8.17.0",
     "vite": "^6.0.0",
     "vite-plugin-dts": "4.3.0",
