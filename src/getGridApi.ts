@@ -20,6 +20,8 @@ import {
   validateGetIntersectionsArguments,
   validateGetSquareArguments,
 } from './validation'
+import { isPixelNumberString } from './utils/regexp'
+import { isString } from './utils/is'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -37,7 +39,7 @@ interface GetAPiConfig {
 // Utils
 // -----------------------------------------------------------------------------
 
-const stepIsNotGutter = (step: Step): boolean => !step.isGutter
+const isStepNotGutter = (step: Step): boolean => !step.isGutter
 
 const reverseCurve = (curve: Curve) => {
   return {
@@ -72,6 +74,19 @@ const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
     CellBoundsOrder.RTL_BTT,
   ].includes(cellBoundsOrder)
 
+const getTotalAbsoluteGutterSize = (steps: Step[]): number => {
+  return steps.reduce((acc, step) => {
+    const { value } = step
+    if (step.isGutter && isString(value) && isPixelNumberString(value)) {
+      return acc + Number(value.split(`px`)[0])
+    }
+    return acc
+  }, 0)
+}
+
+// const hasNonZeroGutter = (gutter: number | string) =>
+//   isNumber(gutter) && gutter > 0
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -80,7 +95,7 @@ const getApi = (
   boundingCurves: BoundingCurves,
   columns: Step[],
   rows: Step[],
-  gutter: [number, number],
+  gutter: [number | string, number | string],
   {
     interpolatePointOnCurveU,
     interpolatePointOnCurveV,
@@ -123,6 +138,20 @@ const getApi = (
       return [[boundingCurves.top], [boundingCurves.bottom]]
     }
 
+    // Because we support absolute pixel-based values for gutters, we need to
+    // know how much space those gutters will take up so we can share the
+    // remaining space between the non-pixel-based gutters and steps.
+    const totalAbsoluteGutterSizeV = getTotalAbsoluteGutterSize(processedRows)
+    const totalAbsoluteGutterSizeH =
+      getTotalAbsoluteGutterSize(processedColumns)
+
+    // Get total length of the curve on each side [totalSpace]
+    // Subtract the total gutter size from the total length to give
+    // [remainingSpaceU, remainingSpaceUOpposite]
+    // Run through the steps, and calculate the u or v value for each step, for each side (left and right or top and bottom) If it's a gutter with a pixel value then its u or v value will be [pxValue / totalSpace], otherwise it will be [stepValue / remainingSpaceU]
+    // interpolateLine based on u or v values of each side.
+
+    // Otherwise work our way through the grid
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
       const lineSections = []
       let uStart = 0
@@ -133,13 +162,11 @@ const getApi = (
         const uSize = columnValue / columnsTotalValue
         const uEnd = uStart + uSize
 
+        // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
           const curve = interpolateLineU(
             boundingCurves,
-            uStart,
-            uSize,
-            uEnd,
-            vStart,
+            { uStart, uSize, uEnd, vStart },
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -178,6 +205,14 @@ const getApi = (
       return [[boundingCurves.left], [boundingCurves.right]]
     }
 
+    // Because we support absolute pixel-based values for gutters, we need to
+    // know how much space those gutters will take up so we can share the
+    // remaining space between the non-pixel-based gutters and steps.
+    const totalAbsoluteGutterSizeH =
+      getTotalAbsoluteGutterSize(processedColumns)
+    const totalAbsoluteGutterSizeV = getTotalAbsoluteGutterSize(processedRows)
+
+    // Otherwise work our way through the grid
     for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
       const lineSections = []
       let vStart = 0
@@ -188,13 +223,11 @@ const getApi = (
         const vSize = rowValue / rowsTotalValue
         const vEnd = vStart + vSize
 
+        // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
           const curve = interpolateLineV(
             boundingCurves,
-            vStart,
-            vSize,
-            vEnd,
-            uStart,
+            { vStart, vSize, vEnd, uStart },
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -352,8 +385,8 @@ const getApi = (
     } = {}): BoundingCurvesWithMeta[] => {
       // We only want to run through steps that are not gutters so we filter
       // both rows and columns first
-      const rowsThatAreNotGutters = rows.filter(stepIsNotGutter)
-      const columnsThatAreNotGutters = columns.filter(stepIsNotGutter)
+      const rowsThatAreNotGutters = rows.filter(isStepNotGutter)
+      const columnsThatAreNotGutters = columns.filter(isStepNotGutter)
 
       const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
 

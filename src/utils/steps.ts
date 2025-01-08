@@ -6,11 +6,23 @@ import type {
   UnprocessedSteps,
 } from '../types'
 import { times } from './functional'
-import { isInt, isPlainObj } from './is'
+import { isInt, isNumber, isPlainObj } from './is'
 
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
+
+// If the value is just a number string (without px), convert it to a
+// number. If its 0px default it to 0, otherwise return unchanged.
+const getProcessedStepValue = (step: number | string): number | string => {
+  if (isNumber(step)) {
+    return Number(step)
+  }
+  if (step === `0px`) {
+    return 0
+  }
+  return step
+}
 
 const ensureArray = (unprocessedSteps: UnprocessedSteps): ExpandedSteps => {
   if (isInt(unprocessedSteps)) {
@@ -27,14 +39,15 @@ const ensureObjects = (steps: ExpandedSteps) =>
       return step
     } else {
       return {
-        value: step,
+        value: getProcessedStepValue(step),
       }
     }
   })
 
-const insertGutters = (steps: Steps, gutter: number): Steps => {
+const insertGutters = (steps: Steps, gutter: number | string): Steps => {
   const lastStepIndex = steps.length - 1
-  const hasGutter = gutter > 0
+  const hasGutter =
+    (isNumber(gutter) && gutter > 0) || gutter === `0` || gutter === `0px`
   return steps.reduce((acc: Steps, step: Step, idx: number): Steps => {
     const isLastStep = idx === lastStepIndex
     // Insert a gutter step if we have gutters and are not the last step
@@ -67,7 +80,7 @@ export const processSteps = ({
   gutter,
 }: {
   steps: UnprocessedSteps
-  gutter: number
+  gutter: number | string
 }): Steps => {
   const stepsArray = ensureArray(steps)
   const stepsArrayOfObjs = ensureObjects(stepsArray)
