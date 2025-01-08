@@ -15,9 +15,11 @@ import {
   isNil,
   isNumber,
   isPlainObj,
+  isString,
   isUndefined,
 } from './utils/is'
 import { roundTo5 } from './utils/math'
+import { isPixelNumberString } from './utils/regexp'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -147,6 +149,39 @@ export const validateBoundingCurves = (
   validateCornerPoints(boundingCurves)
 }
 
+export const validateGutterNumber = (gutter: number): void => {
+  if (gutter < 0) {
+    throw new Error(`Gutter must be a positive number, but was '${gutter}'`)
+  }
+}
+
+export const validateGutterStringNumber = (gutter: string): void => {
+  const valueNumber = Number(gutter)
+  if (isNaN(valueNumber)) {
+    throw new Error(
+      `Numeric portion of string must be a number, but was '${gutter}'`
+    )
+  }
+  validateGutterNumber(valueNumber)
+}
+
+export const validateGutterString = (gutter: string): void => {
+  if (isPixelNumberString(gutter)) {
+    const numericPortion = gutter.split(`px`)[0]
+    validateGutterStringNumber(numericPortion)
+  } else {
+    validateGutterString(gutter)
+  }
+}
+
+export const validateGutter = (gutter: number | string): void => {
+  if (isString(gutter)) {
+    validateGutterString(gutter)
+  } else {
+    validateGutterNumber(gutter)
+  }
+}
+
 export const validateGrid = (
   gridDefinition: GridDefinitionWithDefaults
 ): void => {
@@ -184,8 +219,14 @@ export const validateGrid = (
           `if grid.gutters is an Array it must have a length of 2`
         )
       }
-    } else if (!isNumber(gutter)) {
-      throw new Error(`grid.gutters must be an Int or an Array of Ints`)
+      gutter.map(validateGutter)
+    } else {
+      if (!isNumber(gutter) && !isString(gutter)) {
+        throw new Error(
+          `grid.gutters must be an Int, a string, or an Array of Ints or strings`
+        )
+      }
+      validateGutter(gutter)
     }
   }
 

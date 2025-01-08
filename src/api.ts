@@ -21,7 +21,7 @@ import type {
   InterpolatePointOnCurveFactory,
   WarpGrid,
 } from './types'
-import { isArray, isFunction, isNumber } from './utils/is'
+import { isArray, isFunction } from './utils/is'
 import { processSteps } from './utils/steps'
 import { validateBoundingCurves, validateGrid } from './validation'
 // -----------------------------------------------------------------------------
@@ -102,12 +102,12 @@ const getLineStrategy = ({
 }: GridDefinitionWithDefaults): [InterpolateLineU, InterpolateLineV] => {
   const interpolateLineU =
     lineStrategy === LineStrategy.CURVES
-      ? interpolateCurveV
-      : interpolateStraightLineV
-  const interpolateLineV =
-    lineStrategy === LineStrategy.CURVES
       ? interpolateCurveU
       : interpolateStraightLineU
+  const interpolateLineV =
+    lineStrategy === LineStrategy.CURVES
+      ? interpolateCurveV
+      : interpolateStraightLineV
 
   return [interpolateLineU, interpolateLineV]
 }
@@ -155,9 +155,9 @@ const warpGrid = (
 
   const { gutter } = definitionWithDefaults
 
-  const gutterArray: [number, number] = isNumber(gutter)
-    ? [gutter, gutter]
-    : gutter
+  const gutterArray: [number | string, number | string] = isArray(gutter)
+    ? gutter
+    : [gutter, gutter]
 
   const [columns, rows] = [
     { steps: definitionWithDefaults.columns, gutter: gutterArray[0] },

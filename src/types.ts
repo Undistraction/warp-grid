@@ -12,7 +12,7 @@ import { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 // -----------------------------------------------------------------------------
 
 export interface Step {
-  value: number
+  value: number | string
   isGutter?: boolean
 }
 
@@ -24,7 +24,7 @@ export interface Lines {
 export interface GridDefinition {
   columns: StepDefinition
   rows: StepDefinition
-  gutter?: number | [number, number]
+  gutter?: (number | string) | [number | string, number | string]
   interpolationStrategy?:
     | InterpolationStrategy
     | InterpolatePointOnCurveFactory
@@ -53,7 +53,7 @@ export interface GridApi {
     rows: number,
     {
       cellBoundsOrder,
-    }?: {
+    }: {
       cellBoundsOrder?: CellBoundsOrder
     }
   ) => BoundingCurves
@@ -70,12 +70,12 @@ export interface WarpGrid extends GridApi {
   model: GridModel
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ObjectWithStringKeys = Record<string, any>
-
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObjectWithStringKeys = Record<string, any>
 
 export type StepCurves = Curve[]
 
@@ -103,26 +103,34 @@ export interface BoundingCurvesWithMeta extends BoundingCurves {
   }
 }
 
+export interface InterpolationParamsU {
+  uStart: number
+  uSize: number
+  uEnd: number
+  vStart: number
+}
+
+export interface InterpolationParamsV {
+  vStart: number
+  vSize: number
+  vEnd: number
+  uStart: number
+}
+
 // -----------------------------------------------------------------------------
 // Types: Function signatures
 // -----------------------------------------------------------------------------
 
 export type InterpolateLineU = (
   boundingCurves: BoundingCurves,
-  vStart: number,
-  vSize: number,
-  vEnd: number,
-  uStart: number,
+  { uStart, uSize, uEnd, vStart }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
 export type InterpolateLineV = (
   boundingCurves: BoundingCurves,
-  uStart: number,
-  uSize: number,
-  uEnd: number,
-  vStart: number,
+  { vStart, vSize, vEnd, uStart }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
