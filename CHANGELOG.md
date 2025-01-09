@@ -1,3 +1,11 @@
+## [2.5.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v2.5.0-next.1) (2025-01-09)
+
+### Features
+
+* Integrate coons-patch API changes ([f36dbda](https://github.com/undistraction/warp-grid/commit/f36dbda99de99a7f66dd022a104e2863fd91a85e))
+* WIP ([fe1cf30](https://github.com/undistraction/warp-grid/commit/fe1cf30c0e78630f6b9c7739c20ac59e580def5f))
+* WIP ([e1a89cf](https://github.com/undistraction/warp-grid/commit/e1a89cffa75f568b0e985db222dd2bb38972f698))
+
 ## [2.4.4](https://github.com/undistraction/warp-grid/compare/v2.4.3...v2.4.4) (2024-10-15)
 
 ### Bug Fixes
