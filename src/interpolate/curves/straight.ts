@@ -32,20 +32,32 @@ import type {
  */
 export const interpolateStraightLineU = (
   boundingCurves: BoundingCurves,
-  { uStart, uEnd, vStart }: InterpolationParamsU,
+  {
+    uStart,
+    uEnd,
+    vStart,
+    uOppositeStart,
+    uOppositeEnd,
+    vOppositeStart,
+  }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
   const startPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart, v: vStart },
+    {
+      u: uStart,
+      v: vStart,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const endPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uEnd, v: vStart },
+    { u: uEnd, v: vStart, uOpposite: uOppositeEnd, vOpposite: vOppositeStart },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
@@ -79,20 +91,32 @@ export const interpolateStraightLineU = (
  */
 export const interpolateStraightLineV = (
   boundingCurves: BoundingCurves,
-  { vStart, vEnd, uStart }: InterpolationParamsV,
+  {
+    vStart,
+    vEnd,
+    uStart,
+    uOppositeStart,
+    vOppositeStart,
+    vOppositeEnd,
+  }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
   const startPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart, v: vStart },
+    {
+      u: uStart,
+      v: vStart,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const endPoint = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart, v: vEnd },
+    { u: uStart, v: vEnd, uOpposite: uOppositeStart, vOpposite: vOppositeEnd },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )

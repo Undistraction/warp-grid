@@ -15,13 +15,12 @@ import type {
   Step,
   StepCurves,
 } from './types'
-import { getStepData, getTSize } from './utils/steps'
+import { getSize, getStepData, isGutterNonZero } from './utils/steps'
 import {
   validateGetIntersectionsArguments,
   validateGetSquareArguments,
 } from './validation'
-import { isPixelNumberString } from './utils/regexp'
-import { isString } from './utils/is'
+import { getBezierCurveLength } from './utils/bezier'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -74,19 +73,6 @@ const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
     CellBoundsOrder.RTL_BTT,
   ].includes(cellBoundsOrder)
 
-const getTotalAbsoluteGutterSize = (steps: Step[]): number => {
-  return steps.reduce((acc, step) => {
-    const { value } = step
-    if (step.isGutter && isString(value) && isPixelNumberString(value)) {
-      return acc + Number(value.split(`px`)[0])
-    }
-    return acc
-  }, 0)
-}
-
-// const hasNonZeroGutter = (gutter: number | string) =>
-//   isNumber(gutter) && gutter > 0
-
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -103,6 +89,14 @@ const getApi = (
     interpolateLineV,
   }: GetAPiConfig
 ): GridApi => {
+  // Cache lengths of bounding curves for use in API
+  const curveLengths = {
+    top: getBezierCurveLength(boundingCurves.top),
+    left: getBezierCurveLength(boundingCurves.left),
+    bottom: getBezierCurveLength(boundingCurves.bottom),
+    right: getBezierCurveLength(boundingCurves.right),
+  }
+
   /**
    * Retrieves the point on the surface based on the given coordinates.
    * @param x - The x-coordinate of the point.
@@ -120,53 +114,67 @@ const getApi = (
     )
   })
 
+  // Lines running vertically
   const getLinesXAxis = (): StepCurves[] => {
     const {
       processedColumns,
       processedRows,
       columnsTotalCount,
       rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
+      columnsTotalRatioValue,
+      rowsTotalRatioValue,
+      nonAbsoluteSpaceLeftRatio,
+      nonAbsoluteSpaceRightRatio,
+      nonAbsoluteSpaceTopRatio,
+      nonAbsoluteSpaceBottomRatio,
+    } = getStepData(columns, rows, curveLengths)
 
     const curves = []
     let vStart = 0
+    let vOppositeStart = 0
 
     // Short circuit if we are only 1x1 and just return bounds
     if (columnsTotalCount === 1 && rowsTotalCount === 1) {
       return [[boundingCurves.top], [boundingCurves.bottom]]
     }
 
-    // Because we support absolute pixel-based values for gutters, we need to
-    // know how much space those gutters will take up so we can share the
-    // remaining space between the non-pixel-based gutters and steps.
-    const totalAbsoluteGutterSizeV = getTotalAbsoluteGutterSize(processedRows)
-    const totalAbsoluteGutterSizeH =
-      getTotalAbsoluteGutterSize(processedColumns)
-
-    // Get total length of the curve on each side [totalSpace]
-    // Subtract the total gutter size from the total length to give
-    // [remainingSpaceU, remainingSpaceUOpposite]
-    // Run through the steps, and calculate the u or v value for each step, for each side (left and right or top and bottom) If it's a gutter with a pixel value then its u or v value will be [pxValue / totalSpace], otherwise it will be [stepValue / remainingSpaceU]
-    // interpolateLine based on u or v values of each side.
-
     // Otherwise work our way through the grid
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
-      const lineSections = []
+      const lineSections: Curve[] = []
       let uStart = 0
+      let uOppositeStart = 0
 
-      for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
-        const column = processedColumns[columnIdx]
-        const columnValue = column.value
-        const uSize = columnValue / columnsTotalValue
+      processedColumns.map((column) => {
+        const uSize = getSize(
+          column,
+          curveLengths.top,
+          columnsTotalRatioValue,
+          nonAbsoluteSpaceTopRatio
+        )
+        const uOppositeSize = getSize(
+          column,
+          curveLengths.bottom,
+          columnsTotalRatioValue,
+          nonAbsoluteSpaceBottomRatio
+        )
+
         const uEnd = uStart + uSize
+        const uOppositeEnd = uOppositeStart + uOppositeSize
 
         // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
           const curve = interpolateLineU(
             boundingCurves,
-            { uStart, uSize, uEnd, vStart },
+            {
+              uStart,
+              uSize,
+              uEnd,
+              vStart,
+              uOppositeEnd,
+              uOppositeStart,
+              uOppositeSize,
+              vOppositeStart,
+            },
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -175,59 +183,92 @@ const getApi = (
         }
 
         uStart += uSize
-      }
+        uOppositeStart += uOppositeSize
+      })
 
       curves.push(lineSections)
 
-      if (rowIdx !== rowsTotalCount) {
-        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+      if (rowIdx < rowsTotalCount) {
+        const row = processedRows[rowIdx]
+        vStart += getSize(
+          row,
+          curveLengths.left,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceLeftRatio
+        )
+        vOppositeStart += getSize(
+          row,
+          curveLengths.right,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceRightRatio
+        )
       }
     }
 
     return curves
   }
 
+  // Lines running horizontally
   const getLinesYAxis = (): StepCurves[] => {
     const {
       processedColumns,
       processedRows,
       columnsTotalCount,
       rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
+      columnsTotalRatioValue,
+      rowsTotalRatioValue,
+      nonAbsoluteSpaceLeftRatio,
+      nonAbsoluteSpaceRightRatio,
+      nonAbsoluteSpaceTopRatio,
+      nonAbsoluteSpaceBottomRatio,
+    } = getStepData(columns, rows, curveLengths)
 
     const curves = []
     let uStart = 0
+    let uOppositeStart = 0
 
     // Short circuit if we are only 1x1 and just return the bounds
     if (columnsTotalCount === 1 && rowsTotalCount === 1) {
       return [[boundingCurves.left], [boundingCurves.right]]
     }
 
-    // Because we support absolute pixel-based values for gutters, we need to
-    // know how much space those gutters will take up so we can share the
-    // remaining space between the non-pixel-based gutters and steps.
-    const totalAbsoluteGutterSizeH =
-      getTotalAbsoluteGutterSize(processedColumns)
-    const totalAbsoluteGutterSizeV = getTotalAbsoluteGutterSize(processedRows)
-
     // Otherwise work our way through the grid
     for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-      const lineSections = []
+      const lineSections: Curve[] = []
       let vStart = 0
+      let vOppositeStart = 0
 
-      for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
-        const row = processedRows[rowIdx]
-        const rowValue = row.value
-        const vSize = rowValue / rowsTotalValue
+      processedRows.map((row) => {
+        const vSize = getSize(
+          row,
+          curveLengths.left,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceLeftRatio
+        )
+        const vOppositeSize = getSize(
+          row,
+          curveLengths.right,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceRightRatio
+        )
+
         const vEnd = vStart + vSize
+        const vOppositeEnd = vOppositeStart + vOppositeSize
 
         // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
           const curve = interpolateLineV(
             boundingCurves,
-            { vStart, vSize, vEnd, uStart },
+            {
+              vStart,
+              vSize,
+              vEnd,
+              uStart,
+              vOppositeEnd,
+              vOppositeSize,
+              vOppositeStart,
+              uOppositeStart,
+            },
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -236,13 +277,26 @@ const getApi = (
         }
 
         vStart += vSize
-      }
+        vOppositeStart += vOppositeSize
+      })
 
       curves.push(lineSections)
 
       // Calculate the position of the next column
-      if (columnIdx !== columnsTotalCount) {
-        uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+      if (columnIdx < columnsTotalCount) {
+        const column = processedColumns[columnIdx]
+        uStart += getSize(
+          column,
+          curveLengths.top,
+          columnsTotalRatioValue,
+          nonAbsoluteSpaceTopRatio
+        )
+        uOppositeStart += getSize(
+          column,
+          curveLengths.bottom,
+          columnsTotalRatioValue,
+          nonAbsoluteSpaceBottomRatio
+        )
       }
     }
 
@@ -279,20 +333,31 @@ const getApi = (
       processedRows,
       columnsTotalCount,
       rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
+      columnsTotalRatioValue,
+      rowsTotalRatioValue,
+      nonAbsoluteSpaceLeftRatio,
+      nonAbsoluteSpaceRightRatio,
+      nonAbsoluteSpaceTopRatio,
+      nonAbsoluteSpaceBottomRatio,
+    } = getStepData(columns, rows, curveLengths)
 
     const intersections = []
     let vStart = 0
+    let vOppositeStart = 0
 
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
       let uStart = 0
+      let uOppositeStart = 0
 
       for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
         const point = interpolatePointOnSurfaceBilinear(
           boundingCurves,
-          { u: uStart, v: vStart },
+          {
+            u: uStart,
+            v: vStart,
+            uOpposite: uOppositeStart,
+            vOpposite: vOppositeStart,
+          },
           interpolatePointOnCurveU,
           interpolatePointOnCurveV
         )
@@ -300,12 +365,36 @@ const getApi = (
         intersections.push(point)
 
         if (columnIdx !== columnsTotalCount) {
-          uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+          const column = processedColumns[columnIdx]
+          uStart += getSize(
+            column,
+            curveLengths.top,
+            columnsTotalRatioValue,
+            nonAbsoluteSpaceTopRatio
+          )
+          uOppositeStart += getSize(
+            column,
+            curveLengths.bottom,
+            columnsTotalRatioValue,
+            nonAbsoluteSpaceBottomRatio
+          )
         }
       }
 
       if (rowIdx !== rowsTotalCount) {
-        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+        const row = processedRows[rowIdx]
+        vStart += getSize(
+          row,
+          curveLengths.left,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceLeftRatio
+        )
+        vOppositeStart += getSize(
+          row,
+          curveLengths.right,
+          rowsTotalRatioValue,
+          nonAbsoluteSpaceRightRatio
+        )
       }
     }
 
@@ -335,9 +424,9 @@ const getApi = (
 
       const { xAxis, yAxis } = getLines()
 
-      // If there is a gutter, we need to skip over the gutter space
-      const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
-      const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
+      // If there is a gutter, we need to skip over the gutter steps
+      const gutterMultiplierX = isGutterNonZero(gutter[0]) ? 2 : 1
+      const gutterMultiplierY = isGutterNonZero(gutter[1]) ? 2 : 1
 
       const selectedRowIdx = row * gutterMultiplierY
       const selectedColumnIdx = column * gutterMultiplierX

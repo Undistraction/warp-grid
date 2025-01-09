@@ -140,6 +140,36 @@ const allFixtures = [
       },
     },
   },
+  {
+    name: `3x3 grid with absolute gutter value`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        gutter: `2px`,
+      },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `3x3 grid with mixed gutter values`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        gutter: [`2px`, 0.1],
+      },
+      api: {
+        getPoint: { args: [0.5, 0.25] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
 ]
 
 const fixtures = allFixtures.filter(({ skipTest }) => skipTest !== true)

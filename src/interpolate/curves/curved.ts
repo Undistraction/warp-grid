@@ -41,27 +41,55 @@ const T_MIDPOINT_2 = 0.75
  */
 export const interpolateCurveU = (
   boundingCurves: BoundingCurves,
-  { uStart, uSize, uEnd, vStart }: InterpolationParamsU,
+  {
+    uStart,
+    uSize,
+    uEnd,
+    vStart,
+    vOppositeStart,
+    uOppositeEnd,
+    uOppositeSize,
+    uOppositeStart,
+  }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
   const { startPoint, endPoint } = interpolateStraightLineU(
     boundingCurves,
-    { uStart, uSize, uEnd, vStart },
+    {
+      uStart,
+      uSize,
+      uEnd,
+      vStart,
+      vOppositeStart,
+      uOppositeEnd,
+      uOppositeSize,
+      uOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint1 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart + uSize * T_MIDPOINT_1, v: vStart },
+    {
+      u: uStart + uSize * T_MIDPOINT_1,
+      v: vStart,
+      uOpposite: uOppositeStart + uOppositeSize * T_MIDPOINT_1,
+      vOpposite: vOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint2 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart + uSize * T_MIDPOINT_2, v: vStart },
+    {
+      u: uStart + uSize * T_MIDPOINT_2,
+      v: vStart,
+      uOpposite: uOppositeStart + uOppositeSize * T_MIDPOINT_2,
+      vOpposite: vOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
@@ -94,27 +122,55 @@ export const interpolateCurveU = (
  */
 export const interpolateCurveV = (
   boundingCurves: BoundingCurves,
-  { vStart, vSize, vEnd, uStart }: InterpolationParamsV,
+  {
+    vStart,
+    vSize,
+    vEnd,
+    uStart,
+    vOppositeEnd,
+    vOppositeSize,
+    vOppositeStart,
+    uOppositeStart,
+  }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
   const { startPoint, endPoint } = interpolateStraightLineV(
     boundingCurves,
-    { vStart, vSize, vEnd, uStart },
+    {
+      vStart,
+      vSize,
+      vEnd,
+      uStart,
+      vOppositeEnd,
+      vOppositeSize,
+      vOppositeStart,
+      uOppositeStart,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint1 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart, v: vStart + vSize * T_MIDPOINT_1 },
+    {
+      u: uStart,
+      v: vStart + vSize * T_MIDPOINT_1,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart + vOppositeSize * T_MIDPOINT_1,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
 
   const midPoint2 = interpolatePointOnSurfaceBilinear(
     boundingCurves,
-    { u: uStart, v: vStart + vSize * T_MIDPOINT_2 },
+    {
+      u: uStart,
+      v: vStart + vSize * T_MIDPOINT_2,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart + vOppositeSize * T_MIDPOINT_2,
+    },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )

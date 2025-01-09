@@ -74,6 +74,13 @@ export interface WarpGrid extends GridApi {
 // Types
 // -----------------------------------------------------------------------------
 
+export interface CurveLengths {
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ObjectWithStringKeys = Record<string, any>
 
@@ -108,6 +115,10 @@ export interface InterpolationParamsU {
   uSize: number
   uEnd: number
   vStart: number
+  uOppositeStart: number
+  uOppositeSize: number
+  uOppositeEnd: number
+  vOppositeStart: number
 }
 
 export interface InterpolationParamsV {
@@ -115,7 +126,21 @@ export interface InterpolationParamsV {
   vSize: number
   vEnd: number
   uStart: number
+  vOppositeStart: number
+  vOppositeSize: number
+  vOppositeEnd: number
+  uOppositeStart: number
 }
+
+// export interface RemainingSpaceParamsU {
+//   top: number
+//   bottom: number
+// }
+
+// export interface RemainingSpaceParamsV {
+//   left: number
+//   right: number
+// }
 
 // -----------------------------------------------------------------------------
 // Types: Function signatures
