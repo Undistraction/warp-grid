@@ -2,11 +2,13 @@
 // Const
 // -----------------------------------------------------------------------------
 
+import { isString } from './is'
+
 const VALID_GUTTER_REGEXP = /^\d+(px)?$/
 
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
-export const isPixelNumberString = (value: string): boolean =>
-  VALID_GUTTER_REGEXP.test(value)
+export const isPixelNumberString = (value: unknown): boolean =>
+  isString(value) && VALID_GUTTER_REGEXP.test(value)

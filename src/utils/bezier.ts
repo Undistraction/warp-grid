@@ -9,6 +9,7 @@ import matrix from 'matrix-js'
 
 import type { Curve, Points } from '../types'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
+import { Bezier } from 'bezier-js'
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -39,4 +40,18 @@ export const fitCubicBezierToPoints = (
     controlPoint2: result[2],
     endPoint: result[3],
   }
+}
+
+export function getBezierCurveLength(curve: Curve): number {
+  const bCurve = new Bezier(
+    curve.startPoint.x,
+    curve.startPoint.y,
+    curve.controlPoint1.x,
+    curve.controlPoint1.y,
+    curve.controlPoint2.x,
+    curve.controlPoint2.y,
+    curve.endPoint.x,
+    curve.endPoint.y
+  )
+  return bCurve.length()
 }
