@@ -4,7 +4,7 @@ import type {
   GridDefinitionWithDefaults,
   InterpolatePointOnCurve,
   Point,
-  Steps,
+  Step,
   UnprocessedSteps,
 } from './types'
 import { mapObj } from './utils/functional'
@@ -15,11 +15,11 @@ import {
   isNil,
   isNumber,
   isPlainObj,
-  isString,
   isUndefined,
 } from './utils/is'
 import { roundTo5 } from './utils/math'
 import { isPixelNumberString } from './utils/regexp'
+import { getPixelStringNumericComponent } from './utils/steps'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -53,40 +53,83 @@ export const validateT = (t: number): void => {
   }
 }
 
+export const validateColumnNumber = (value: number): void => {
+  if (value < 0) {
+    throw new Error(
+      `If column is a number, it must be a positive integer, but was '${value}'`
+    )
+  }
+}
+
+const validateStep = ({ value }: Step): void => {
+  if (isNumber(value)) {
+    validateColumnNumber(value)
+  } else if (isPixelNumberString(value)) {
+    const numericPortion = getPixelStringNumericComponent(value)
+    validateColumnNumber(numericPortion)
+  } else {
+    throw new Error(
+      `A step value must be a non-negative number or a pixel string, but it was '${value}'`
+    )
+  }
+}
+
+const validateColumn = (value: string | number | Step): void => {
+  if (isNumber(value)) {
+    validateColumnNumber(value)
+  } else if (isPixelNumberString(value)) {
+    const numericPortion = getPixelStringNumericComponent(value)
+    validateColumnNumber(numericPortion)
+  } else if (isPlainObj(value)) {
+    validateStep(value)
+  } else {
+    throw new Error(
+      `A column value must be a non-negative number or a pixel string, but it was '${value}'`
+    )
+  }
+}
+
+const validateRow = (value: string | number | Step): void => {
+  if (isNumber(value)) {
+    validateColumnNumber(value)
+  } else if (isPixelNumberString(value)) {
+    const numericPortion = getPixelStringNumericComponent(value)
+    validateColumnNumber(numericPortion)
+  } else if (isPlainObj(value)) {
+    validateStep(value)
+  } else {
+    throw new Error(
+      `A row value must be a non-negative number or a pixel string, but it was '${value}'`
+    )
+  }
+}
+
 const validateColumnsAndRows = (
   columns: UnprocessedSteps,
   rows: UnprocessedSteps
 ): void => {
-  if (!isInt(columns)) {
-    if (isArray(columns)) {
-      columns.map((column) => {
-        if (!isInt(column) && !isPlainObj(column)) {
-          throw new Error(
-            `A column must be an integer or an object, but it was '${column}'`
-          )
-        }
-      }, columns)
-    } else {
-      throw new Error(
-        `columns must be an integer or an array, but it was '${columns}'`
-      )
-    }
+  if (isInt(columns)) {
+    validateColumnNumber(columns)
+  } else if (isArray(columns)) {
+    columns.map((column: string | number | Step) => {
+      validateColumn(column)
+    }, columns)
+  } else {
+    throw new Error(
+      `columns must be an integer or an array, but it was '${columns}'`
+    )
   }
 
-  if (!isInt(rows)) {
-    if (isArray(rows)) {
-      rows.map((row) => {
-        if (!isInt(row) && !isPlainObj(row)) {
-          throw new Error(
-            `A row must be an integer or an object, but it was '${row}'`
-          )
-        }
-      }, rows)
-    } else {
-      throw new Error(
-        `rows must be an integer or an array, but it was '${rows}'`
-      )
-    }
+  if (isInt(rows)) {
+    validateColumnNumber(rows)
+  } else if (isArray(rows)) {
+    rows.map((column: string | number | Step) => {
+      validateRow(column)
+    }, columns)
+  } else {
+    throw new Error(
+      `rows must be an integer or an array, but it was '${columns}'`
+    )
   }
 }
 
@@ -155,30 +198,16 @@ export const validateGutterNumber = (gutter: number): void => {
   }
 }
 
-export const validateGutterStringNumber = (gutter: string): void => {
-  const valueNumber = Number(gutter)
-  if (isNaN(valueNumber)) {
-    throw new Error(
-      `Numeric portion of string must be a number, but was '${gutter}'`
-    )
-  }
-  validateGutterNumber(valueNumber)
-}
-
-export const validateGutterString = (gutter: string): void => {
-  if (isPixelNumberString(gutter)) {
-    const numericPortion = gutter.split(`px`)[0]
-    validateGutterStringNumber(numericPortion)
-  } else {
-    validateGutterString(gutter)
-  }
-}
-
 export const validateGutter = (gutter: number | string): void => {
-  if (isString(gutter)) {
-    validateGutterString(gutter)
-  } else {
+  if (isNumber(gutter)) {
     validateGutterNumber(gutter)
+  } else if (isPixelNumberString(gutter)) {
+    const numericPortion = getPixelStringNumericComponent(gutter)
+    validateGutterNumber(numericPortion)
+  } else {
+    throw new Error(
+      `Gutter must be a number, or a pixel string, but was '${gutter}'`
+    )
   }
 }
 
@@ -199,7 +228,9 @@ export const validateGrid = (
   }
 
   if (!isArray(columns) && !isInt(columns)) {
-    throw new Error(`grid.columns must be an Array of Ints or Int`)
+    throw new Error(
+      `grid.columns must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
+    )
   }
 
   if (isNil(rows)) {
@@ -208,7 +239,7 @@ export const validateGrid = (
 
   if (!isArray(rows) && !isInt(rows)) {
     throw new Error(
-      `grid.rows must be an Int, an Array of Ints, or an Array of objects`
+      `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
     )
   }
 
@@ -216,14 +247,14 @@ export const validateGrid = (
     if (isArray(gutter)) {
       if (gutter.length > 2) {
         throw new Error(
-          `if grid.gutters is an Array it must have a length of 2`
+          `if grid.gutters is an Array it must have a length of 1 or 2`
         )
       }
       gutter.map(validateGutter)
     } else {
-      if (!isNumber(gutter) && !isString(gutter)) {
+      if (!isNumber(gutter) && !isPixelNumberString(gutter)) {
         throw new Error(
-          `grid.gutters must be an Int, a string, or an Array of Ints or strings`
+          `grid.gutters must be an Int, a string, or an Array of Ints and/or pixel-strings`
         )
       }
       validateGutter(gutter)
@@ -282,8 +313,8 @@ export const validateGetPointArguments = (u: number, v: number): void => {
 export const validateGetSquareArguments = (
   x: number,
   y: number,
-  columns: Steps,
-  rows: Steps
+  columns: Step[],
+  rows: Step[]
 ): void => {
   const columnCount = columns.length
   const rowCount = rows.length

@@ -19,7 +19,6 @@ export type {
   Step,
   StepCurves,
   StepDefinition,
-  Steps,
   WarpGrid,
 } from './types'
 

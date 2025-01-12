@@ -22,7 +22,7 @@ const T_MIDPOINT_2 = 0.75
 // -----------------------------------------------------------------------------
 
 /**
- * Interpolates a cubic Bezier curve along the V direction of a surface defined
+ * Interpolates a cubic Bezier curve along the U direction of a surface defined
  * by bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
@@ -43,27 +43,25 @@ export const interpolateCurveU = (
   boundingCurves: BoundingCurves,
   {
     uStart,
-    uSize,
     uEnd,
     vStart,
     vOppositeStart,
     uOppositeEnd,
-    uOppositeSize,
     uOppositeStart,
   }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
+  const uSize = uEnd - uStart
+  const uOppositeSize = uOppositeEnd - uOppositeStart
   const { startPoint, endPoint } = interpolateStraightLineU(
     boundingCurves,
     {
       uStart,
-      uSize,
       uEnd,
       vStart,
       vOppositeStart,
       uOppositeEnd,
-      uOppositeSize,
       uOppositeStart,
     },
     interpolatePointOnCurveU,
@@ -103,7 +101,7 @@ export const interpolateCurveU = (
 }
 
 /**
- * Interpolates a cubic Bezier curve along the U direction of a surface defined
+ * Interpolates a cubic Bezier curve along the V direction of a surface defined
  * by bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
@@ -124,28 +122,26 @@ export const interpolateCurveV = (
   boundingCurves: BoundingCurves,
   {
     vStart,
-    vSize,
     vEnd,
     uStart,
-    vOppositeEnd,
-    vOppositeSize,
-    vOppositeStart,
     uOppositeStart,
+    vOppositeEnd,
+    vOppositeStart,
   }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
+  const vSize = vEnd - vStart
+  const vOppositeSize = vOppositeEnd - vOppositeStart
   const { startPoint, endPoint } = interpolateStraightLineV(
     boundingCurves,
     {
       vStart,
-      vSize,
       vEnd,
       uStart,
-      vOppositeEnd,
-      vOppositeSize,
-      vOppositeStart,
       uOppositeStart,
+      vOppositeEnd,
+      vOppositeStart,
     },
     interpolatePointOnCurveU,
     interpolatePointOnCurveV

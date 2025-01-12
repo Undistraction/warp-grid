@@ -106,14 +106,16 @@ describe(`getGrid`, () => {
         it(`throws if columns are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: {} })
-          }).toThrow(`grid.columns must be an Array of Ints or Int`)
+          }).toThrow(
+            `grid.columns must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
+          )
         })
 
         it(`throws if rows are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: [], rows: {} })
           }).toThrow(
-            `grid.rows must be an Int, an Array of Ints, or an Array of objects`
+            `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
           )
         })
       })
