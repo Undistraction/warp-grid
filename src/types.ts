@@ -38,8 +38,8 @@ export type GridDefinitionWithDefaults = Required<GridDefinition>
 
 export interface GridModel {
   boundingCurves: BoundingCurves
-  columns: Steps
-  rows: Steps
+  columns: Step[]
+  rows: Step[]
 }
 
 export interface GridApi {
@@ -92,8 +92,6 @@ export type UnprocessedSteps = number | (number | Step)[]
 
 export type ExpandedSteps = (number | Step)[]
 
-export type Steps = Step[]
-
 export type StepDefinition = number | number[] | Step[]
 
 export interface BezierEasing {
@@ -112,35 +110,21 @@ export interface BoundingCurvesWithMeta extends BoundingCurves {
 
 export interface InterpolationParamsU {
   uStart: number
-  uSize: number
   uEnd: number
   vStart: number
   uOppositeStart: number
-  uOppositeSize: number
   uOppositeEnd: number
   vOppositeStart: number
 }
 
 export interface InterpolationParamsV {
   vStart: number
-  vSize: number
   vEnd: number
   uStart: number
   vOppositeStart: number
-  vOppositeSize: number
   vOppositeEnd: number
   uOppositeStart: number
 }
-
-// export interface RemainingSpaceParamsU {
-//   top: number
-//   bottom: number
-// }
-
-// export interface RemainingSpaceParamsV {
-//   left: number
-//   right: number
-// }
 
 // -----------------------------------------------------------------------------
 // Types: Function signatures
@@ -148,14 +132,14 @@ export interface InterpolationParamsV {
 
 export type InterpolateLineU = (
   boundingCurves: BoundingCurves,
-  { uStart, uSize, uEnd, vStart }: InterpolationParamsU,
+  { uStart, uEnd, vStart }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
 export type InterpolateLineV = (
   boundingCurves: BoundingCurves,
-  { vStart, vSize, vEnd, uStart }: InterpolationParamsV,
+  { vStart, vEnd, uStart }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve

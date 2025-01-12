@@ -2,13 +2,22 @@ import type {
   CurveLengths,
   ExpandedSteps,
   Step,
-  Steps,
   UnprocessedStep,
   UnprocessedSteps,
 } from '../types'
 import { times } from './functional'
-import { isInt, isNumber, isPlainObj, isString } from './is'
+import { isInt, isNumber, isPlainObj } from './is'
 import { isPixelNumberString } from './regexp'
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+interface SideData {
+  start: number
+  curveLength: number
+  nonAbsoluteRatio: number
+}
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -40,10 +49,10 @@ const ensureObjects = (steps: ExpandedSteps) =>
     }
   })
 
-const insertGutters = (steps: Steps, gutter: number | string): Steps => {
+const insertGutters = (steps: Step[], gutter: number | string): Step[] => {
   const lastStepIndex = steps.length - 1
 
-  return steps.reduce((acc: Steps, step: Step, idx: number): Steps => {
+  return steps.reduce((acc: Step[], step: Step, idx: number): Step[] => {
     const isLastStep = idx === lastStepIndex
     // Insert a gutter step if we have gutters and are not the last step
     return isLastStep || !isGutterNonZero(gutter)
@@ -52,65 +61,54 @@ const insertGutters = (steps: Steps, gutter: number | string): Steps => {
   }, [])
 }
 
-const addAll = (steps: Steps) =>
+const addStepRatioValues = (steps: Step[]) =>
   steps.reduce((total: number, step: Step) => {
+    const { value } = step
     // Only add steps with values that are not absolute
-    return isNumber(step.value) ? total + step.value : total
+    return isNumber(value) ? total + value : total
   }, 0)
 
-const getCounts = (columns: Steps, rows: Steps) => ({
+const addStepAbsoluteValues = (steps: Step[]) =>
+  steps.reduce((acc, step) => {
+    const { value } = step
+    return isPixelNumberString(value)
+      ? acc + getPixelStringNumericComponent(value)
+      : acc
+  }, 0)
+
+const getCounts = (columns: Step[], rows: Step[]) => ({
   columnsTotalCount: columns.length,
   rowsTotalCount: rows.length,
 })
 
-const getTotalRatioValues = (columns: Steps, rows: Steps) => ({
-  columnsTotalRatioValue: addAll(columns),
-  rowsTotalRatioValue: addAll(rows),
+const getTotalRatioValues = (columns: Step[], rows: Step[]) => ({
+  columnsTotalRatioValue: addStepRatioValues(columns),
+  rowsTotalRatioValue: addStepRatioValues(rows),
 })
 
-function getPixelStringNumericComponent(value: string): number {
-  return Number(value.split(`px`)[0])
-}
-
-const getAbsoluteGutterRatio = (
-  gutter: string,
-  totalLength: number
-): number => {
-  return getPixelStringNumericComponent(gutter) / totalLength
-}
-
-const getTotalAbsoluteGutterSize = (steps: Step[]): number => {
-  return steps.reduce((acc, step) => {
-    const { value } = step
-    if (step.isGutter && isString(value) && isPixelNumberString(value)) {
-      return acc + getPixelStringNumericComponent(value)
-    }
-    return acc
-  }, 0)
+const getAbsoluteRatio = (value: string, totalLength: number): number => {
+  return getPixelStringNumericComponent(value) / totalLength
 }
 
 const getNonAbsoluteSpaceRatios = (
-  columns: Steps,
-  rows: Steps,
+  columns: Step[],
+  rows: Step[],
   curveLengths: CurveLengths
 ) => {
-  const totalAbsoluteGutterSizeU = getTotalAbsoluteGutterSize(columns)
-  const totalAbsoluteGutterSizeV = getTotalAbsoluteGutterSize(rows)
+  const totalAbsoluteSizeU = addStepAbsoluteValues(columns)
+  const totalAbsoluteSizeV = addStepAbsoluteValues(rows)
 
-  const totalAbsoluteGutterRatioTop =
-    totalAbsoluteGutterSizeU / curveLengths.top
-  const totalAbsoluteGutterRatioBottom =
-    totalAbsoluteGutterSizeU / curveLengths.bottom
-  const totalAbsoluteGutterRatioLeft =
-    totalAbsoluteGutterSizeV / curveLengths.left
-  const totalAbsoluteGutterRatioRight =
-    totalAbsoluteGutterSizeV / curveLengths.right
+  const totalAbsoluteRatioTop = totalAbsoluteSizeU / curveLengths.top
+  const totalAbsoluteRatioBottom = totalAbsoluteSizeU / curveLengths.bottom
+  const totalAbsoluteRatioLeft = totalAbsoluteSizeV / curveLengths.left
+  const totalAbsoluteRatioRight = totalAbsoluteSizeV / curveLengths.right
 
-  const nonAbsoluteSpaceTopRatio = 1 - totalAbsoluteGutterRatioTop
-  const nonAbsoluteSpaceBottomRatio = 1 - totalAbsoluteGutterRatioBottom
+  const nonAbsoluteSpaceTopRatio = 1 - totalAbsoluteRatioTop
+  const nonAbsoluteSpaceBottomRatio = 1 - totalAbsoluteRatioBottom
 
-  const nonAbsoluteSpaceLeftRatio = 1 - totalAbsoluteGutterRatioLeft
-  const nonAbsoluteSpaceRightRatio = 1 - totalAbsoluteGutterRatioRight
+  const nonAbsoluteSpaceLeftRatio = 1 - totalAbsoluteRatioLeft
+  const nonAbsoluteSpaceRightRatio = 1 - totalAbsoluteRatioRight
+
   return {
     nonAbsoluteSpaceTopRatio,
     nonAbsoluteSpaceBottomRatio,
@@ -119,27 +117,44 @@ const getNonAbsoluteSpaceRatios = (
   }
 }
 
+const getSize = (
+  step: Step,
+  totalNonAbsoluteValue: number,
+  sideData: SideData
+): number => {
+  // If step value is absolute, we use the ratio of the value to curve length
+  if (isPixelNumberString(step.value)) {
+    return getAbsoluteRatio(step.value as string, sideData.curveLength)
+  }
+
+  // Otherwise we use the ratio of the value to the non-absolute space
+  const stepRatio = (step.value as number) / totalNonAbsoluteValue
+  return stepRatio * sideData.nonAbsoluteRatio
+}
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
+export function getPixelStringNumericComponent(value: string): number {
+  return Number(value.split(`px`)[0])
+}
+
 export const isGutterNonZero = (gutter: number | string) =>
-  (isNumber(gutter) && gutter > 0) || isString(gutter)
+  (isNumber(gutter) && gutter > 0) || isPixelNumberString(gutter)
 
-export const getSize = (
+export const getEndValues = (
   step: Step,
-  curveLength: number,
-  totalNonAbsoluteValue: number,
-  remainingSpaceRatio: number
-): number => {
-  // If the step is a gutter and a pixel number string, we use the ratio of the
-  // gutter to the curve length
-  if (step.isGutter && isPixelNumberString(step.value)) {
-    return getAbsoluteGutterRatio(step.value as string, curveLength)
-  }
+  totalRatioValue: number,
+  sideData: SideData,
+  sideDataOpposite: SideData
+) => {
+  const size = getSize(step, totalRatioValue, sideData)
+  const uOppositeSize = getSize(step, totalRatioValue, sideDataOpposite)
 
-  const stepRatio = (step.value as number) / totalNonAbsoluteValue
-  return stepRatio * remainingSpaceRatio
+  const end = sideData.start + size
+  const oppositeEnd = sideDataOpposite.start + uOppositeSize
+  return [end, oppositeEnd]
 }
 
 export const processSteps = ({
@@ -148,13 +163,13 @@ export const processSteps = ({
 }: {
   steps: UnprocessedSteps
   gutter: number | string
-}): Steps => {
+}): Step[] => {
   const stepsArray = ensureArray(steps)
   const stepsArrayOfObjs = ensureObjects(stepsArray)
   return insertGutters(stepsArrayOfObjs, gutter)
 }
 
-export const processSteps2 = (steps: UnprocessedSteps): Steps => {
+export const processSteps2 = (steps: UnprocessedSteps): Step[] => {
   const arrayOfSteps = ensureArray(steps)
   return ensureObjects(arrayOfSteps)
 }

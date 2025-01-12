@@ -13,15 +13,13 @@ import type {
 // -----------------------------------------------------------------------------
 
 /**
- * Interpolates a straight line along the V direction of a surface defined by
+ * Interpolates a straight line along the U axis of a surface defined by
  * bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
  * define the surface boundaries.
- * @param {number} uStart - The starting parameter along the U direction.
- * @param {number} uSize - The size of the step along the U direction.
- * @param {number} uEnd - The ending parameter along the U direction.
- * @param {number} vStart - The starting parameter along the V direction.
+ * @param {InterpolationParamsU} params - Parameters describing curve start and
+ * end points
  * @param {InterpolatePointOnCurveU} interpolatePointOnCurveU - A function to
  * interpolate points on the U axis.
  * @param {InterpolatePointOnCurveU} interpolatePointOnCurveV - A function to
@@ -35,9 +33,9 @@ export const interpolateStraightLineU = (
   {
     uStart,
     uEnd,
-    vStart,
     uOppositeStart,
     uOppositeEnd,
+    vStart,
     vOppositeStart,
   }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
@@ -72,18 +70,16 @@ export const interpolateStraightLineU = (
 }
 
 /**
- * Interpolates a straight line along the U direction of a surface defined by
+ * Interpolates a straight line along the V axis of a surface defined by
  * bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
  * define the surface boundaries.
- * @param {number} uStart - The starting parameter along the U direction.
- * @param {number} uSize - The size of the step along the U direction.
- * @param {number} uEnd - The ending parameter along the U direction.
- * @param {number} vStart - The starting parameter along the V direction.
- * @param {InterpolatePointOnCurve} interpolatePointOnCurveU - A function to
+ * @param {InterpolationParamsU} params - Parameters describing curve start and
+ * end points
+ * @param {InterpolatePointOnCurveU} interpolatePointOnCurveU - A function to
  * interpolate points on the U axis.
- * @param {InterpolatePointOnCurve} interpolatePointOnCurveV - A function to
+ * @param {InterpolatePointOnCurveU} interpolatePointOnCurveV - A function to
  * interpolate points on the V axis.
  * @returns {Curve} The interpolated straight line as a cubic Bezier curve.
  *
@@ -94,10 +90,10 @@ export const interpolateStraightLineV = (
   {
     vStart,
     vEnd,
-    uStart,
-    uOppositeStart,
     vOppositeStart,
     vOppositeEnd,
+    uStart,
+    uOppositeStart,
   }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve

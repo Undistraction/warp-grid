@@ -15,7 +15,7 @@ import type {
   Step,
   StepCurves,
 } from './types'
-import { getSize, getStepData, isGutterNonZero } from './utils/steps'
+import { getEndValues, getStepData, isGutterNonZero } from './utils/steps'
 import {
   validateGetIntersectionsArguments,
   validateGetSquareArguments,
@@ -97,6 +97,19 @@ const getApi = (
     right: getBezierCurveLength(boundingCurves.right),
   }
 
+  const {
+    processedColumns,
+    processedRows,
+    columnsTotalCount,
+    rowsTotalCount,
+    columnsTotalRatioValue,
+    rowsTotalRatioValue,
+    nonAbsoluteSpaceLeftRatio,
+    nonAbsoluteSpaceRightRatio,
+    nonAbsoluteSpaceTopRatio,
+    nonAbsoluteSpaceBottomRatio,
+  } = getStepData(columns, rows, curveLengths)
+
   /**
    * Retrieves the point on the surface based on the given coordinates.
    * @param x - The x-coordinate of the point.
@@ -114,21 +127,8 @@ const getApi = (
     )
   })
 
-  // Lines running vertically
+  // Lines running HORIZONTALLY
   const getLinesXAxis = (): StepCurves[] => {
-    const {
-      processedColumns,
-      processedRows,
-      columnsTotalCount,
-      rowsTotalCount,
-      columnsTotalRatioValue,
-      rowsTotalRatioValue,
-      nonAbsoluteSpaceLeftRatio,
-      nonAbsoluteSpaceRightRatio,
-      nonAbsoluteSpaceTopRatio,
-      nonAbsoluteSpaceBottomRatio,
-    } = getStepData(columns, rows, curveLengths)
-
     const curves = []
     let vStart = 0
     let vOppositeStart = 0
@@ -145,21 +145,20 @@ const getApi = (
       let uOppositeStart = 0
 
       processedColumns.map((column) => {
-        const uSize = getSize(
+        const [uEnd, uOppositeEnd] = getEndValues(
           column,
-          curveLengths.top,
           columnsTotalRatioValue,
-          nonAbsoluteSpaceTopRatio
+          {
+            start: uStart,
+            curveLength: curveLengths.top,
+            nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+          },
+          {
+            start: uOppositeStart,
+            curveLength: curveLengths.bottom,
+            nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+          }
         )
-        const uOppositeSize = getSize(
-          column,
-          curveLengths.bottom,
-          columnsTotalRatioValue,
-          nonAbsoluteSpaceBottomRatio
-        )
-
-        const uEnd = uStart + uSize
-        const uOppositeEnd = uOppositeStart + uOppositeSize
 
         // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
@@ -167,12 +166,10 @@ const getApi = (
             boundingCurves,
             {
               uStart,
-              uSize,
               uEnd,
               vStart,
-              uOppositeEnd,
               uOppositeStart,
-              uOppositeSize,
+              uOppositeEnd,
               vOppositeStart,
             },
             interpolatePointOnCurveU,
@@ -182,47 +179,38 @@ const getApi = (
           lineSections.push(curve)
         }
 
-        uStart += uSize
-        uOppositeStart += uOppositeSize
+        // Only update after we have saved the curve
+        uStart = uEnd
+        uOppositeStart = uOppositeEnd
       })
 
       curves.push(lineSections)
 
       if (rowIdx < rowsTotalCount) {
         const row = processedRows[rowIdx]
-        vStart += getSize(
+        const [vEnd, vOppositeEnd] = getEndValues(
           row,
-          curveLengths.left,
           rowsTotalRatioValue,
-          nonAbsoluteSpaceLeftRatio
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
         )
-        vOppositeStart += getSize(
-          row,
-          curveLengths.right,
-          rowsTotalRatioValue,
-          nonAbsoluteSpaceRightRatio
-        )
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
       }
     }
-
     return curves
   }
 
-  // Lines running horizontally
+  // Lines running VERTICALLY
   const getLinesYAxis = (): StepCurves[] => {
-    const {
-      processedColumns,
-      processedRows,
-      columnsTotalCount,
-      rowsTotalCount,
-      columnsTotalRatioValue,
-      rowsTotalRatioValue,
-      nonAbsoluteSpaceLeftRatio,
-      nonAbsoluteSpaceRightRatio,
-      nonAbsoluteSpaceTopRatio,
-      nonAbsoluteSpaceBottomRatio,
-    } = getStepData(columns, rows, curveLengths)
-
     const curves = []
     let uStart = 0
     let uOppositeStart = 0
@@ -239,21 +227,20 @@ const getApi = (
       let vOppositeStart = 0
 
       processedRows.map((row) => {
-        const vSize = getSize(
+        const [vEnd, vOppositeEnd] = getEndValues(
           row,
-          curveLengths.left,
           rowsTotalRatioValue,
-          nonAbsoluteSpaceLeftRatio
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
         )
-        const vOppositeSize = getSize(
-          row,
-          curveLengths.right,
-          rowsTotalRatioValue,
-          nonAbsoluteSpaceRightRatio
-        )
-
-        const vEnd = vStart + vSize
-        const vOppositeEnd = vOppositeStart + vOppositeSize
 
         // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
@@ -261,12 +248,10 @@ const getApi = (
             boundingCurves,
             {
               vStart,
-              vSize,
               vEnd,
               uStart,
-              vOppositeEnd,
-              vOppositeSize,
               vOppositeStart,
+              vOppositeEnd,
               uOppositeStart,
             },
             interpolatePointOnCurveU,
@@ -276,8 +261,9 @@ const getApi = (
           lineSections.push(curve)
         }
 
-        vStart += vSize
-        vOppositeStart += vOppositeSize
+        // Only update after we have saved the curve
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
       })
 
       curves.push(lineSections)
@@ -285,18 +271,24 @@ const getApi = (
       // Calculate the position of the next column
       if (columnIdx < columnsTotalCount) {
         const column = processedColumns[columnIdx]
-        uStart += getSize(
+
+        const [uEnd, uOppositeEnd] = getEndValues(
           column,
-          curveLengths.top,
           columnsTotalRatioValue,
-          nonAbsoluteSpaceTopRatio
+          {
+            start: uStart,
+            curveLength: curveLengths.top,
+            nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+          },
+          {
+            start: uOppositeStart,
+            curveLength: curveLengths.bottom,
+            nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+          }
         )
-        uOppositeStart += getSize(
-          column,
-          curveLengths.bottom,
-          columnsTotalRatioValue,
-          nonAbsoluteSpaceBottomRatio
-        )
+
+        uStart = uEnd
+        uOppositeStart = uOppositeEnd
       }
     }
 
@@ -366,35 +358,43 @@ const getApi = (
 
         if (columnIdx !== columnsTotalCount) {
           const column = processedColumns[columnIdx]
-          uStart += getSize(
+          const [uEnd, uOppositeEnd] = getEndValues(
             column,
-            curveLengths.top,
             columnsTotalRatioValue,
-            nonAbsoluteSpaceTopRatio
+            {
+              start: uStart,
+              curveLength: curveLengths.top,
+              nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+            },
+            {
+              start: uOppositeStart,
+              curveLength: curveLengths.bottom,
+              nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+            }
           )
-          uOppositeStart += getSize(
-            column,
-            curveLengths.bottom,
-            columnsTotalRatioValue,
-            nonAbsoluteSpaceBottomRatio
-          )
+          uStart = uEnd
+          uOppositeStart = uOppositeEnd
         }
       }
 
       if (rowIdx !== rowsTotalCount) {
         const row = processedRows[rowIdx]
-        vStart += getSize(
+        const [vEnd, vOppositeEnd] = getEndValues(
           row,
-          curveLengths.left,
           rowsTotalRatioValue,
-          nonAbsoluteSpaceLeftRatio
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
         )
-        vOppositeStart += getSize(
-          row,
-          curveLengths.right,
-          rowsTotalRatioValue,
-          nonAbsoluteSpaceRightRatio
-        )
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
       }
     }
 
