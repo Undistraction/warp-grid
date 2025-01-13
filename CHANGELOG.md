@@ -1,3 +1,15 @@
+## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.5.0-next.1...v3.0.0-next.1) (2025-01-13)
+
+### ⚠ BREAKING CHANGES
+
+* The API has changed.
+
+### Features
+
+* API changes ([fb60c36](https://github.com/undistraction/warp-grid/commit/fb60c366788e12caa483fb27b89a9076e78de665))
+* WIP ([f07440f](https://github.com/undistraction/warp-grid/commit/f07440f3e9695d8fa4931b3ad5557383303a0086))
+* WIP ([75a4478](https://github.com/undistraction/warp-grid/commit/75a447869e122a39cd2fff4c6d99e32bcbeaf2da))
+
 ## [2.5.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v2.5.0-next.1) (2025-01-09)
 
 ### Features
