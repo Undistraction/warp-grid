@@ -22,8 +22,8 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4
       coons-patch:
-        specifier: 3.0.0-next.3
-        version: 3.0.0-next.3
+        specifier: 3.0.0-next.4
+        version: 3.0.0-next.4
       fast-memoize:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1849,8 +1849,8 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  coons-patch@3.0.0-next.3:
-    resolution: {integrity: sha512-eJM7VXxILXYoIIKTSXqFpre8WK3Dd4dStWiU83CpHtdjN+1Uk/Nu14rg0Z1YgWavOHoP0pwBlfWA8DkzJvhWbg==}
+  coons-patch@3.0.0-next.4:
+    resolution: {integrity: sha512-3/DpCNKK6sMDdotWfof67tTZS7jFa/yjbCBjCwl+8Z/qhhupruLS2Bv87Ksxs6s9/NFuncb78Q065/G7bxJPqg==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -6187,7 +6187,7 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  coons-patch@3.0.0-next.3:
+  coons-patch@3.0.0-next.4:
     dependencies:
       fast-memoize: 2.5.2
 
