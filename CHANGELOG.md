@@ -1,3 +1,13 @@
+## [3.0.0-next.2](https://github.com/undistraction/warp-grid/compare/v3.0.0-next.1...v3.0.0-next.2) (2025-01-13)
+
+### ⚠ BREAKING CHANGES
+
+* Update dependencies
+
+### Bug Fixes
+
+* Update dependencies ([8ae4c4e](https://github.com/undistraction/warp-grid/commit/8ae4c4e026b86d9fd1f1e521c805c44e44cb7fb8))
+
 ## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.5.0-next.1...v3.0.0-next.1) (2025-01-13)
 
 ### ⚠ BREAKING CHANGES
