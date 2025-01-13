@@ -1,4 +1,4 @@
-import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
+import coonsPatch from 'coons-patch'
 import memoize from 'fast-memoize'
 
 import { CellBoundsOrder } from './enums'
@@ -10,6 +10,8 @@ import type {
   InterpolateLineU,
   InterpolateLineV,
   InterpolatePointOnCurve,
+  InterpolationParamsU,
+  InterpolationParamsV,
   Lines,
   Point,
   Step,
@@ -21,6 +23,7 @@ import {
   validateGetSquareArguments,
 } from './validation'
 import { getBezierCurveLength } from './utils/bezier'
+import { mapObj } from './utils/functional'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -72,6 +75,8 @@ const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
     CellBoundsOrder.LTR_BTT,
     CellBoundsOrder.RTL_BTT,
   ].includes(cellBoundsOrder)
+
+const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -162,16 +167,21 @@ const getApi = (
 
         // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
+          const paramsClamped: InterpolationParamsU = mapObj<
+            number,
+            InterpolationParamsU
+          >(clampT, {
+            uStart,
+            uEnd,
+            vStart,
+            uOppositeStart,
+            uOppositeEnd,
+            vOppositeStart,
+          })
+
           const curve = interpolateLineU(
             boundingCurves,
-            {
-              uStart,
-              uEnd,
-              vStart,
-              uOppositeStart,
-              uOppositeEnd,
-              vOppositeStart,
-            },
+            paramsClamped,
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -244,16 +254,21 @@ const getApi = (
 
         // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
+          const paramsClamped: InterpolationParamsV = mapObj<
+            number,
+            InterpolationParamsV
+          >(clampT, {
+            vStart,
+            vEnd,
+            uStart,
+            vOppositeStart,
+            vOppositeEnd,
+            uOppositeStart,
+          })
+
           const curve = interpolateLineV(
             boundingCurves,
-            {
-              vStart,
-              vEnd,
-              uStart,
-              vOppositeStart,
-              vOppositeEnd,
-              uOppositeStart,
-            },
+            paramsClamped,
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -342,7 +357,7 @@ const getApi = (
       let uOppositeStart = 0
 
       for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-        const point = interpolatePointOnSurfaceBilinear(
+        const point = coonsPatch(
           boundingCurves,
           {
             u: uStart,
@@ -350,8 +365,7 @@ const getApi = (
             uOpposite: uOppositeStart,
             vOpposite: vOppositeStart,
           },
-          interpolatePointOnCurveU,
-          interpolatePointOnCurveV
+          { interpolatePointOnCurveU, interpolatePointOnCurveV }
         )
 
         intersections.push(point)

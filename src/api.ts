@@ -148,7 +148,6 @@ const warpGrid = (
   boundingCurves: BoundingCurves,
   definition: GridDefinition
 ): WarpGrid => {
-  console.log(`@warp grid`)
   // Don't destructure arg so we can pass it around as is
   const definitionWithDefaults = mergeWithDefaults(definition)
   validateBoundingCurves(boundingCurves)

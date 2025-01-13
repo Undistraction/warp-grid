@@ -1,4 +1,4 @@
-import { interpolatePointOnSurfaceBilinear } from 'coons-patch'
+import coonsPatch from 'coons-patch'
 
 import type {
   BoundingCurves,
@@ -41,7 +41,7 @@ export const interpolateStraightLineU = (
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
-  const startPoint = interpolatePointOnSurfaceBilinear(
+  const startPoint = coonsPatch(
     boundingCurves,
     {
       u: uStart,
@@ -49,15 +49,13 @@ export const interpolateStraightLineU = (
       uOpposite: uOppositeStart,
       vOpposite: vOppositeStart,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const endPoint = interpolatePointOnSurfaceBilinear(
+  const endPoint = coonsPatch(
     boundingCurves,
     { u: uEnd, v: vStart, uOpposite: uOppositeEnd, vOpposite: vOppositeStart },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   // Set the control points to the start and end points so the line is straight
@@ -98,7 +96,7 @@ export const interpolateStraightLineV = (
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
-  const startPoint = interpolatePointOnSurfaceBilinear(
+  const startPoint = coonsPatch(
     boundingCurves,
     {
       u: uStart,
@@ -106,15 +104,13 @@ export const interpolateStraightLineV = (
       uOpposite: uOppositeStart,
       vOpposite: vOppositeStart,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const endPoint = interpolatePointOnSurfaceBilinear(
+  const endPoint = coonsPatch(
     boundingCurves,
     { u: uStart, v: vEnd, uOpposite: uOppositeStart, vOpposite: vOppositeEnd },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   // Set the control points to the start and end points so the line is straight

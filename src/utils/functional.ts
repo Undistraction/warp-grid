@@ -15,15 +15,16 @@ export const times = (f: (i: number) => any, n: number): any[] => {
   return result
 }
 
-export const mapObj = (
-  f: (value: any, key: string, idx: number) => any,
+// The values of each object key will be the same as the return value of f (T)
+export const mapObj = <T, R = Record<string, T>>(
+  f: (value: any, key: string, idx: number) => T,
   o: ObjectWithStringKeys
-): ObjectWithStringKeys => {
+): R => {
   return Object.keys(o).reduce((acc, key, idx) => {
     const value = o[key]
     return {
       ...acc,
       [key]: f(value, key, idx),
     }
-  }, {})
+  }, {}) as R
 }

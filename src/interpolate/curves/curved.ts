@@ -1,5 +1,3 @@
-import { interpolatePointOnSurfaceBilinear } from 'coons-patch'
-
 import type {
   BoundingCurves,
   Curve,
@@ -9,6 +7,7 @@ import type {
 } from '../../types'
 import { fitCubicBezierToPoints } from '../../utils/bezier'
 import { interpolateStraightLineU, interpolateStraightLineV } from './straight'
+import coonsPatch from 'coons-patch'
 
 // -----------------------------------------------------------------------------
 // Const
@@ -68,7 +67,7 @@ export const interpolateCurveU = (
     interpolatePointOnCurveV
   )
 
-  const midPoint1 = interpolatePointOnSurfaceBilinear(
+  const midPoint1 = coonsPatch(
     boundingCurves,
     {
       u: uStart + uSize * T_MIDPOINT_1,
@@ -76,11 +75,10 @@ export const interpolateCurveU = (
       uOpposite: uOppositeStart + uOppositeSize * T_MIDPOINT_1,
       vOpposite: vOppositeStart,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const midPoint2 = interpolatePointOnSurfaceBilinear(
+  const midPoint2 = coonsPatch(
     boundingCurves,
     {
       u: uStart + uSize * T_MIDPOINT_2,
@@ -88,8 +86,7 @@ export const interpolateCurveU = (
       uOpposite: uOppositeStart + uOppositeSize * T_MIDPOINT_2,
       vOpposite: vOppositeStart,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   const curve = fitCubicBezierToPoints(
@@ -147,7 +144,7 @@ export const interpolateCurveV = (
     interpolatePointOnCurveV
   )
 
-  const midPoint1 = interpolatePointOnSurfaceBilinear(
+  const midPoint1 = coonsPatch(
     boundingCurves,
     {
       u: uStart,
@@ -155,11 +152,10 @@ export const interpolateCurveV = (
       uOpposite: uOppositeStart,
       vOpposite: vOppositeStart + vOppositeSize * T_MIDPOINT_1,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const midPoint2 = interpolatePointOnSurfaceBilinear(
+  const midPoint2 = coonsPatch(
     boundingCurves,
     {
       u: uStart,
@@ -167,8 +163,7 @@ export const interpolateCurveV = (
       uOpposite: uOppositeStart,
       vOpposite: vOppositeStart + vOppositeSize * T_MIDPOINT_2,
     },
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   const curve = fitCubicBezierToPoints(
