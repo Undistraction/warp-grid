@@ -1,3 +1,13 @@
+## [3.0.0](https://github.com/undistraction/warp-grid/compare/v2.4.4...v3.0.0) (2025-01-14)
+
+### ⚠ BREAKING CHANGES
+
+* This contains changes to functionality and API.
+
+### Features
+
+* API improvments including adding support for absolute steps and gutters ([#16](https://github.com/undistraction/warp-grid/issues/16)) ([ab0abb0](https://github.com/undistraction/warp-grid/commit/ab0abb0c1262a0232c8ef2160d7c5702ad47ff3d))
+
 ## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v3.0.0-next.1) (2025-01-14)
 
 ### ⚠ BREAKING CHANGES
