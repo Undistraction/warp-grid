@@ -1,3 +1,9 @@
+## [3.0.2](https://github.com/undistraction/warp-grid/compare/v3.0.1...v3.0.2) (2025-01-14)
+
+### Bug Fixes
+
+* Make getCellBounds config optional ([1769d05](https://github.com/undistraction/warp-grid/commit/1769d0537432d82cf46740e12702e92b6ef4d43a))
+
 ## [3.0.1](https://github.com/undistraction/warp-grid/compare/v3.0.0...v3.0.1) (2025-01-14)
 
 ### Bug Fixes
