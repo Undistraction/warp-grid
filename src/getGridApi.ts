@@ -413,7 +413,7 @@ const getApi = (
     (
       columnIdx: number,
       rowIdx: number,
-      { makeBoundsCurvesSequential = false } = {}
+      { makeBoundsCurvesSequential = false }: GetAllCellBoundsProps = {}
     ): BoundingCurvesWithMeta => {
       validateGetSquareArguments(columnIdx, rowIdx, columns, rows)
 
