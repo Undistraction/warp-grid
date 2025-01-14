@@ -89,7 +89,7 @@ export interface GridApi {
   getCellBounds: (
     columnIdx: number,
     rowIdx: number,
-    config: GetCellBoundsConfig
+    config?: GetCellBoundsConfig
   ) => BoundingCurves
 
   /**
