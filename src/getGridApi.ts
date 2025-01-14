@@ -6,20 +6,22 @@ import type {
   BoundingCurves,
   BoundingCurvesWithMeta,
   Curve,
+  GetAllCellBoundsProps,
+  GetPointProps,
   GridApi,
   InterpolateLineU,
   InterpolateLineV,
   InterpolatePointOnCurve,
   InterpolationParamsU,
   InterpolationParamsV,
-  Lines,
+  LinesByAxis,
   Point,
   Step,
-  StepCurves,
 } from './types'
 import { getEndValues, getStepData, isGutterNonZero } from './utils/steps'
 import {
   validateGetIntersectionsArguments,
+  validateGetPointArguments,
   validateGetSquareArguments,
 } from './validation'
 import { getBezierCurveLength } from './utils/bezier'
@@ -41,9 +43,9 @@ interface GetAPiConfig {
 // Utils
 // -----------------------------------------------------------------------------
 
-const isStepNotGutter = (step: Step): boolean => !step.isGutter
+const getIsStepNotGutter = (step: Step): boolean => !step.isGutter
 
-const reverseCurve = (curve: Curve) => {
+const getCurveReversed = (curve: Curve) => {
   return {
     startPoint: curve.endPoint,
     endPoint: curve.startPoint,
@@ -83,18 +85,14 @@ const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
 // -----------------------------------------------------------------------------
 
 /**
- * Creates an API that provides methods for working with a grid defined by bounding curves.
- *
- * @param {BoundingCurves} boundingCurves - The curves that define the boundaries of the grid surface
- * @param {Step[]} columns - Array of step configurations defining the horizontal divisions of the grid
- * @param {Step[]} rows - Array of step configurations defining the vertical divisions of the grid
- * @param {[number | string, number | string]} gutter - A tuple of [horizontal, vertical] gutter sizes
- * @param {GetAPiConfig} config - Configuration object containing interpolation functions
- * @param {InterpolatePointOnCurve} config.interpolatePointOnCurveU - Function to interpolate points along horizontal curves
- * @param {InterpolatePointOnCurve} config.interpolatePointOnCurveV - Function to interpolate points along vertical curves
- * @param {InterpolateLineU} config.interpolateLineU - Function to interpolate horizontal grid lines
- * @param {InterpolateLineV} config.interpolateLineV - Function to interpolate vertical grid lines
- * @returns {GridApi} Methods for working with the grid surface
+ * Creates a grid API instance with the specified configuration.
+ * @param boundingCurves The curves defining the grid boundaries.
+ * @param columns Array of steps defining column structure.
+ * @param rows Array of steps defining row structure.
+ * @param gutter The horizontal and vertical spacing between cells.
+ * @param config Object containing interpolation functions for grid calculations.
+ * @returns API interacting with the defined grid.
+ * @throws ValidationError When grid boundaries are invalid or interpolation functions are missing.
  */
 const getApi = (
   boundingCurves: BoundingCurves,
@@ -129,25 +127,15 @@ const getApi = (
     nonAbsoluteSpaceBottomRatio,
   } = getStepData(columns, rows, curveLengths)
 
-  /**
-   * Retrieves the point on the surface based on the given coordinates.
-   * @param x - The x-coordinate of the point.
-   * @param y - The y-coordinate of the point.
-   * @returns The point on the surface.
-   */
-  const getPoint = memoize((x: number, y: number): Point => {
-    return coonsPatch(
-      boundingCurves,
-      { u: x, v: y },
-      {
-        interpolatePointOnCurveU,
-        interpolatePointOnCurveV,
-      }
-    )
+  const getPoint = memoize((params: GetPointProps): Point => {
+    validateGetPointArguments(params)
+    return coonsPatch(boundingCurves, params, {
+      interpolatePointOnCurveU,
+      interpolatePointOnCurveV,
+    })
   })
 
-  // Lines running HORIZONTALLY
-  const getLinesXAxis = (): StepCurves[] => {
+  const getLinesXAxis = (): Curve[][] => {
     const curves = []
     let vStart = 0
     let vOppositeStart = 0
@@ -233,8 +221,7 @@ const getApi = (
     return curves
   }
 
-  // Lines running VERTICALLY
-  const getLinesYAxis = (): StepCurves[] => {
+  const getLinesYAxis = (): Curve[][] => {
     const curves = []
     let uStart = 0
     let uOppositeStart = 0
@@ -324,22 +311,13 @@ const getApi = (
     return curves
   }
 
-  /**
-   * Retrieves the lines for the grid axes.
-   * @returns An object containing the lines for the x-axis and y-axis.
-   */
-  const getLines = memoize((): Lines => {
+  const getLines = memoize((): LinesByAxis => {
     return {
       xAxis: getLinesXAxis(),
       yAxis: getLinesYAxis(),
     }
   })
 
-  /**
-   * Retrieves the intersection points on the surface.
-   *
-   * @returns An array of Point objects representing the intersection points.
-   */
   const getIntersections = memoize((): Point[] => {
     validateGetIntersectionsArguments(
       boundingCurves,
@@ -429,26 +407,13 @@ const getApi = (
     return intersections
   })
 
-  /**
-   * Retrieves the bounding curves of a cell in the grid.
-   *
-   * @param column - The column index of the cell.
-   * @param row - The row index of the cell.
-   * @param {object} [options] - Optional configuration.
-   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
-   * top and bottom bounding curves run left to right and left and right bounds
-   * run top to bottom. This option will output bounds so that the bottom bounds
-   * run right to left and the left bounds run bottom to top.
-   * @returns The bounding curves of the cell, including a meta object
-   * containing the row and column indices of that cell.
-   */
   const getCellBounds = memoize(
     (
-      column: number,
-      row: number,
+      columnIdx: number,
+      rowIdx: number,
       { makeBoundsCurvesSequential = false } = {}
     ): BoundingCurvesWithMeta => {
-      validateGetSquareArguments(column, row, columns, rows)
+      validateGetSquareArguments(columnIdx, rowIdx, columns, rows)
 
       const { xAxis, yAxis } = getLines()
 
@@ -456,54 +421,40 @@ const getApi = (
       const gutterMultiplierX = isGutterNonZero(gutter[0]) ? 2 : 1
       const gutterMultiplierY = isGutterNonZero(gutter[1]) ? 2 : 1
 
-      const selectedRowIdx = row * gutterMultiplierY
-      const selectedColumnIdx = column * gutterMultiplierX
+      const selectedRowIdx = rowIdx * gutterMultiplierY
+      const selectedColumnIdx = columnIdx * gutterMultiplierX
       const selectedRowTop = xAxis[selectedRowIdx]
       const selectedRowBottom = xAxis[selectedRowIdx + 1]
       const selectedRowLeft = yAxis[selectedColumnIdx]
       const selectedRowRight = yAxis[selectedColumnIdx + 1]
 
-      const top = selectedRowTop[column]
-      const bottom = selectedRowBottom[column]
-      const left = selectedRowLeft[row]
-      const right = selectedRowRight[row]
+      const top = selectedRowTop[columnIdx]
+      const bottom = selectedRowBottom[columnIdx]
+      const left = selectedRowLeft[rowIdx]
+      const right = selectedRowRight[rowIdx]
 
       return {
         meta: {
-          row,
-          column,
+          row: rowIdx,
+          column: columnIdx,
         },
         top,
-        bottom: makeBoundsCurvesSequential ? reverseCurve(bottom) : bottom,
-        left: makeBoundsCurvesSequential ? reverseCurve(left) : left,
+        bottom: makeBoundsCurvesSequential ? getCurveReversed(bottom) : bottom,
+        left: makeBoundsCurvesSequential ? getCurveReversed(left) : left,
         right,
       }
     }
   )
 
-  /**
-   * Retrieves the bounding curves for all cells in the grid, excluding gutter
-   * steps.
-   * @param {object} [options] - Optional configuration.
-   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
-   * top and bottom bounding curves run left to right and left and right bounds
-   * run top to bottom. This option will output bounds so that the bottom bounds
-   * run right to left and the left bounds run bottom to top.
-   * @param {boolean} [config.cellBoundsOrder=CellBoundsOrder.TTB_LTR] - This
-   * property allows you to control the order in which the cell bounds are
-   * returned. The default is top to bottom, left to right.
-   *
-   * @returns An array of bounding curves for each cell.
-   */
   const getAllCellBounds = memoize(
     ({
       makeBoundsCurvesSequential = false,
       cellBoundsOrder = CellBoundsOrder.TTB_LTR,
-    } = {}): BoundingCurvesWithMeta[] => {
+    }: GetAllCellBoundsProps = {}): BoundingCurvesWithMeta[] => {
       // We only want to run through steps that are not gutters so we filter
       // both rows and columns first
-      const rowsThatAreNotGutters = rows.filter(isStepNotGutter)
-      const columnsThatAreNotGutters = columns.filter(isStepNotGutter)
+      const rowsThatAreNotGutters = rows.filter(getIsStepNotGutter)
+      const columnsThatAreNotGutters = columns.filter(getIsStepNotGutter)
 
       const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
 

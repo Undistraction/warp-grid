@@ -53,6 +53,7 @@ export const interpolateCurveU = (
 ): Curve => {
   const uSize = uEnd - uStart
   const uOppositeSize = uOppositeEnd - uOppositeStart
+
   const { startPoint, endPoint } = interpolateStraightLineU(
     boundingCurves,
     {
@@ -89,12 +90,10 @@ export const interpolateCurveU = (
     { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const curve = fitCubicBezierToPoints(
+  return fitCubicBezierToPoints(
     [startPoint, midPoint1, midPoint2, endPoint],
     [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
   )
-
-  return curve
 }
 
 /**
@@ -130,6 +129,7 @@ export const interpolateCurveV = (
 ): Curve => {
   const vSize = vEnd - vStart
   const vOppositeSize = vOppositeEnd - vOppositeStart
+
   const { startPoint, endPoint } = interpolateStraightLineV(
     boundingCurves,
     {
@@ -166,10 +166,8 @@ export const interpolateCurveV = (
     { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const curve = fitCubicBezierToPoints(
+  return fitCubicBezierToPoints(
     [startPoint, midPoint1, midPoint2, endPoint],
     [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
   )
-
-  return curve
 }

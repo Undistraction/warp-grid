@@ -46,7 +46,7 @@ const allFixtures = [
         rows: 3,
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -61,7 +61,7 @@ const allFixtures = [
         gutter: 0.1,
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -76,7 +76,22 @@ const allFixtures = [
         gutter: [0.1, 0.2],
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `3x3 grid with gutter as px-string`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+        gutter: `10px`,
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -91,7 +106,7 @@ const allFixtures = [
         gutter: [0, 0.2],
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -106,7 +121,7 @@ const allFixtures = [
         interpolationStrategy: `linear`,
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -121,13 +136,13 @@ const allFixtures = [
         lineStrategy: `curves`,
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
   },
   {
-    name: `Variant columns and rows`,
+    name: `Mixed relative columns and rows`,
     input: {
       bounds: boundingCurvesValid,
       grid: {
@@ -135,7 +150,51 @@ const allFixtures = [
         rows: [5, 1, 5, 3, 5, 1, 10],
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `Mixed relative columns and rows`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: [5, 1, 5, 4, 5, 1, 5, 1, 5],
+        rows: [5, 1, 5, 3, 5, 1, 10],
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `Mixed columns, gutters and rows`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: [
+          { value: 5 },
+          1,
+          { value: 2, isGutter: true },
+          4,
+          1,
+          `20px`,
+          1,
+          { value: `20px` },
+        ],
+        rows: [
+          { value: 1 },
+          2,
+          { value: 3, isGutter: true },
+          `10px`,
+          3,
+          { value: `10px` },
+        ],
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -150,7 +209,7 @@ const allFixtures = [
         gutter: `2px`,
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [2, 2] },
       },
     },
@@ -165,7 +224,21 @@ const allFixtures = [
         gutter: [`2px`, 0.1],
       },
       api: {
-        getPoint: { args: [0.5, 0.25] },
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `3x3 grid with uOpposite and vOpposite values`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: 3,
+        rows: 3,
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25, uOpposite: 1, vOpposite: 0.7 }] },
         getCellBounds: { args: [2, 2] },
       },
     },

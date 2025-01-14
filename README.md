@@ -17,13 +17,13 @@ This package allows you to create a complex grid and distort it, taking the conc
 
 There is an [editor](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, giving access to all the configuration available.
 
-The package provides a set of powerful configuration options to define the grid including variable width columns and gutters, control over distribution of rows and column distribution using Bézier easing, and access to different types of interpolation, as well as the option to provide your own interpolation.
+The package provides a set of powerful configuration options to define the grid including variable- or fixed-width/height columns and gutters, control over distribution of rows and columns using Bézier easing, and access to different types of interpolation, as well as the option to provide your own interpolation.
 
-Its API gives you access to information about the grid's metrics: its bounds, rows, columns, gutters and cells. It is designed so that the metrics for an individual grid-cell can be used as bounds for another grid, allowing nested grids.
+Its API gives you access to information about the grid's metrics: its bounds, rows, columns, gutters and cells. It is designed to be recursive, so that the metrics for an individual grid-cell can be used as bounds for a completely different grid, allowing for nested grids.
 
-This package does not handle any rendering itself, but provides you with all the data you need to render the grid using SVG, Canvas or anything else you like.
+This package does not handle any rendering itself, but provides you with all the information about the grid that you need to render the grid using SVG, Canvas or anything else you like.
 
-If you just want to generate a coons-patch, you can use an underlying package called [coons-patch](https://github.com/Undistraction/coons-patch).
+If you just want to generate a coons-patch, you can use the lower level package [coons-patch](https://github.com/Undistraction/coons-patch).
 
 ## Install package
 
@@ -35,13 +35,13 @@ npm add warp-grid
 yarn add warp-grid
 ```
 
-[Package Documentation](http://warp-grid-docs.undistraction.com/) (TSDoc generated).
+[Package Documentation](http://warp-grid-docs.undistraction.com/) (TypeDoc generated).
 
 This package is written in TypeScript and exports its types.
 
 ## Quick-start
 
-The basic workflow is that you supply bounds representing the edges of your grid, and a grid configuration object describing the grid you'd like to map onto the bounds. You receive an object with information about the grid, and an API to allow you to get information about the grid. This means no expensive calculations are done up front, and calculations are only performed when you need them.
+The basic workflow is that you supply bounds representing the edges of boundaries of your grid, and a grid configuration object describing the grid you'd like to map onto those bounds. In return you receive an object with information about the grid, and an API to allow you to get information about the grid. This means no expensive calculations are done up front, and calculations are only performed as and when you need them.
 
 ```typeScript
 import warpGrid from 'warp-grid'
@@ -192,29 +192,34 @@ left |         | right
 
 The grid definition is an object describing the grid you are modelling. It will be merged with a set of defaults.
 
+Before going any further it is important to understand how the grid handles columns, rows and gutters. Individual step values can either be numbers, in which case the values are treated as relative values to each other, or absolute values (in the form of pixel-strings with the format '{number}px', for example '48px'). The grid calculations will favour gutters, rows and columns with absolute values, with steps and gutters with relative values sharing the remaining available space. It is important to remember that the length of each side of the grid is independent. The grid will first calculate the length of each side, allow space for all the steps and gutters with absolute values, then share out the remaining space amongst the other steps and gutters. This allows for some pretty interesting layouts.
+
+Under the hood, gutters are just steps with `isGutter` set to `true`. By using objects for step values you can control individual gutter sizes (see below),
+
 ### Columns and Rows
 
-`columns` and `rows` define the number of columns and rows in the grid. A grid has a minimum of one row and one column. The generic name for columns and rows used in the following docs is _steps_.
+`columns` and `rows` define the number of columns and rows in the grid. A grid has a minimum of one row and one column. The generic name for columns and rows used in the following docs and in the codebase is _steps_.
 
 These fields can be one of the following:
 
 1. **An integer**, in which case that integer will represent the number of columns or rows. For example `columns: 2`, will result in a grid with two columns.
 
-2. **An array of integers**, in which case the number of steps will equal the number of items in the array, with the size of each step consisting of the value of that array item as an integer of the total of all the values. For example, `columns: [3, 5, 1, 1]` will result in a total of `10` `(3 + 5 + 1 + 1)`, meaning that the first column will be 3/10 (30%) of the grid width, the second column 5/10 (50%), and the remaining two columns 1/10 (10%) each.
-
-3. **An array of objects**, each with a `value` key: (`{ value: 2}`). This will work the same as the previous example, with the combined value of all the `value` keys dictating the total value, and the `value` key dictating the size of each step.
+2. **An array of integers or pixel strings or objects**, in which case the steps will each have those absolute or relative value, or if objects will have the absolute or relative value provided by the object's `value` property. To tell the grid to treat an item as a gutter, set `isGutter` to `true`. You can mix integers, string and objects.
 
 ```typeScript
 {
   columns: [
     2,
-    3,
+    `30px`,
     1
   ],
   rows: [
     1,
-    1,
-    1,
+    `10px`,
+    {
+      value: 2,
+      isGutter: true,
+    },
     5,
     5
   ],
@@ -222,19 +227,17 @@ These fields can be one of the following:
 }
 ```
 
-It is also possible to add gutters here (see below).
-
 ### Gutters
 
-`gutter` describes the width of horizontal gutters and the height of vertical gutters. Gutters are the spaces between the grid cells. If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters are also a ratio of the total value, for example, if columns are `[1,4,3]` and gutters are `1` then the total will be `10` `(1 + 4 + 3 + (2 * 1))`. There will be three rows of 1/10 (10%), 4/10 (40%) and 3/10 (30%) with two gutters of 1/10 (10%) between them.
+`gutter` describes the width of horizontal gutters and the height of vertical gutters. Gutters are the spaces between the grid cells. If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters can either be relative or absolute pixel-numbers, for example: `3`, or `3px`.
 
-There is an additional way to add gutters without using the gutters property. You can add them to the `rows` or `columns` arrays, using an object with a `value` property, but also adding an `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
+As outlined above, there is an additional way to add gutters without using the gutters property. You can add them to the `rows` or `columns` arrays, using an object with a `value` property, but also adding an `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
 
 ```typeScript
 {
   gutter: [
     2,
-    3
+    `10px`
   ],
   …
 }
@@ -374,7 +377,7 @@ The return value is a `warp grid` object representing the grid and providing an 
 
 One of the powerful features of this package is that a grid cell can itself be used as bounds for another grid. To achieve this, the bounding curves returned from `getCellBounds` and `getAllCellBounds` follow the same pattern as the bounding curves used to define the grid, meaning the top and bottom curves run left-to-right and the left and right curves run top-to-bottom.
 
-- `getPoint(x, y)` returns the point on the grid at the supplied `x` and `y` ratios.Both `x` and `y` should be a number from `0–1` inclusive. For example, an `x` of `0` and a `y` of `0` would return a point in the top left corner. An `x` of `1`and a `y` of `1` would return a point the top right corner.
+- `getPoint(u, v)` returns the point on the grid at the supplied `u` and `v` ratios.Both `u` and `v` should be a number from `0–1` inclusive. For example, a `u` of `0` and a `v` of `0` would return a point in the top left corner. An `u` of `1`and a `v` of `1` would return a point in the bottom right corner (remember that the top and bottom boundary curves run from left-to-right and the left and right boundary curves run from top to bottom).
 
 - `getLinesXAxis()` returns an array representing all the curves for each step along the x-axis. This includes curves for all left and right edges.
 
@@ -384,9 +387,9 @@ One of the powerful features of this package is that a grid cell can itself be u
 
 - `getIntersections()` returns an array of points, one for every point at which an x-axis line intersects with a y-axis line.
 
-- `getCellBounds(row, column)` returns a set of bounding curves for the cell at the supplied row and column. Row and column are zero-based.
+- `getCellBounds(rowIdx, columnIdx)` returns a set of bounding curves for the cell at the supplied row and column. Row and column are zero-based. You can pass an optional config object as the third argument. See the docs for more information.
 
-- `getAllCellBounds()` returns an array of bounding curves for all the cells in the grid.
+- `getAllCellBounds()` returns an array of bounding curves for all the cells in the grid. See the docs for additional config parameters. You can pass an optional config object as the third argument. See the docs for more information.
 
 ## Dependencies
 

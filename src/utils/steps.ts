@@ -23,8 +23,8 @@ interface SideData {
 // Utils
 // -----------------------------------------------------------------------------
 
-// If the value is just a number string (without px), convert it to a
-// number. If its 0px default it to 0, otherwise return unchanged.
+// If the value is a string value that is just a number (without px), convert it
+// to a number. If its 0px default it to 0, otherwise return unchanged.
 const getProcessedStepValue = (step: number | string): number | string => {
   if (isNumber(step)) {
     return Number(step)
@@ -38,7 +38,7 @@ const getProcessedStepValue = (step: number | string): number | string => {
 const ensureArray = (unprocessedSteps: UnprocessedSteps): ExpandedSteps =>
   isInt(unprocessedSteps) ? times(() => 1, unprocessedSteps) : unprocessedSteps
 
-const ensureObjects = (steps: ExpandedSteps) =>
+const ensureObjectsAndProcess = (steps: ExpandedSteps) =>
   steps.map((step: UnprocessedStep): Step => {
     if (isPlainObj(step)) {
       return step
@@ -165,13 +165,13 @@ export const processSteps = ({
   gutter: number | string
 }): Step[] => {
   const stepsArray = ensureArray(steps)
-  const stepsArrayOfObjs = ensureObjects(stepsArray)
+  const stepsArrayOfObjs = ensureObjectsAndProcess(stepsArray)
   return insertGutters(stepsArrayOfObjs, gutter)
 }
 
 export const processSteps2 = (steps: UnprocessedSteps): Step[] => {
   const arrayOfSteps = ensureArray(steps)
-  return ensureObjects(arrayOfSteps)
+  return ensureObjectsAndProcess(arrayOfSteps)
 }
 
 export const getStepData = (

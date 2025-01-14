@@ -2,6 +2,7 @@ import { InterpolationStrategy, LineStrategy } from './enums'
 import { ValidationError } from './errors/ValidationError'
 import type {
   BoundingCurves,
+  GetPointProps,
   GridDefinitionWithDefaults,
   InterpolatePointOnCurve,
   Point,
@@ -27,8 +28,8 @@ import { getPixelStringNumericComponent } from './utils/steps'
 // -----------------------------------------------------------------------------
 
 const getPointsAreSame = (point1: Point, point2: Point): boolean => {
-  // Round the points to 5 decimal places to avoid rounding issues where the
-  // values are fractionally different
+  // Round the points to 5 decimal places before comparing to avoid rounding
+  // issues where the values are fractionally different
   const roundedPoint1 = mapObj(roundTo5, point1)
   const roundedPoint2 = mapObj(roundTo5, point2)
 
@@ -303,14 +304,14 @@ export const validateGrid = (
   }
 }
 
-export const validateGetPointArguments = (u: number, v: number): void => {
-  if (u < 0 || u > 1) {
-    throw new ValidationError(`u value must be between 0 and 1, but was '${u}'`)
-  }
-
-  if (v < 0 || v > 1) {
-    throw new ValidationError(`v value must be between 0 and 1, but was '${v}'`)
-  }
+export const validateGetPointArguments = (params: GetPointProps): void => {
+  mapObj((value, name) => {
+    if (value < 0 || value > 1) {
+      throw new ValidationError(
+        `${name} must be between 0 and 1, but was '${value}'`
+      )
+    }
+  }, params)
 }
 
 export const validateGetSquareArguments = (
@@ -330,13 +331,13 @@ export const validateGetSquareArguments = (
 
   if (x >= columnCount) {
     throw new ValidationError(
-      `Grid is '${columnCount}' columns wide but coordinates are zero-based, and you passed x:'${x}'`
+      `X is zero-based and cannot be greater than number of columns - 1. Grid is '${columnCount}' columns wide and you passed x:'${x}'`
     )
   }
 
   if (y >= rowCount) {
     throw new ValidationError(
-      `Grid is '${rowCount}' rows high but coordinates are zero-based, and you passed y:'${y}'`
+      `Y is zero-based and cannot be greater than number of rows - 1. Grid is '${rowCount}' rows wide and you passed y:'${y}'`
     )
   }
 }

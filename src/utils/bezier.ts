@@ -7,43 +7,16 @@
 
 import matrix from 'matrix-js'
 
-import type { Curve, Points } from '../types'
+import type { Curve, Point } from '../types'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
 import { Bezier } from 'bezier-js'
 
 // -----------------------------------------------------------------------------
-// Exports
+// Utils
 // -----------------------------------------------------------------------------
 
-export const fitCubicBezierToPoints = (
-  points: Points,
-  ratios: number[]
-): Curve => {
-  const numberOfPoints = points.length
-  const { tMatrix, tMatrixTransposed } = getRatioMatrix(ratios)
-
-  const basisMatrix = getBasisMatrix(numberOfPoints)
-  const basisMatrixInverted = matrix(basisMatrix.inv())
-  const ratioMultipliedMatrix = matrix(tMatrix.prod(tMatrixTransposed))
-  const invertedRatioMultipliedMatrix = matrix(ratioMultipliedMatrix.inv())
-  const step1 = matrix(invertedRatioMultipliedMatrix.prod(tMatrix))
-  const step2 = matrix(basisMatrixInverted.prod(step1))
-  const X = matrix(points.map((v) => [v.x]))
-  const x = step2.prod(X)
-  const Y = matrix(points.map((v) => [v.y]))
-  const y = step2.prod(Y)
-  const result = x.map((r: number[], i: number) => ({ x: r[0], y: y[i][0] }))
-
-  return {
-    startPoint: result[0],
-    controlPoint1: result[1],
-    controlPoint2: result[2],
-    endPoint: result[3],
-  }
-}
-
-export function getBezierCurveLength(curve: Curve): number {
-  const bCurve = new Bezier(
+const getBezierFromCurve = (curve: Curve): Bezier =>
+  new Bezier(
     curve.startPoint.x,
     curve.startPoint.y,
     curve.controlPoint1.x,
@@ -53,5 +26,38 @@ export function getBezierCurveLength(curve: Curve): number {
     curve.endPoint.x,
     curve.endPoint.y
   )
-  return bCurve.length()
+
+const pointsToCurve = (points: Point[]): Curve => ({
+  startPoint: points[0],
+  controlPoint1: points[1],
+  controlPoint2: points[2],
+  endPoint: points[3],
+})
+
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+export const fitCubicBezierToPoints = (
+  points: Point[],
+  ratios: number[]
+): Curve => {
+  const numberOfPoints = points.length
+  const { tMatrix, tMatrixTransposed } = getRatioMatrix(ratios)
+  const basisMatrix = getBasisMatrix(numberOfPoints)
+  const basisMatrixInverted = matrix(basisMatrix.inv())
+  const ratioMultipliedMatrix = matrix(tMatrix.prod(tMatrixTransposed))
+  const invertedRatioMultipliedMatrix = matrix(ratioMultipliedMatrix.inv())
+  const step1 = matrix(invertedRatioMultipliedMatrix.prod(tMatrix))
+  const step2 = matrix(basisMatrixInverted.prod(step1))
+  const X = matrix(points.map((v: Point) => [v.x]))
+  const x = step2.prod(X)
+  const Y = matrix(points.map((v: Point) => [v.y]))
+  const y = step2.prod(Y)
+  const result = x.map((r: number[], i: number) => ({ x: r[0], y: y[i][0] }))
+  return pointsToCurve(result)
+}
+
+export function getBezierCurveLength(curve: Curve): number {
+  return getBezierFromCurve(curve).length()
 }
