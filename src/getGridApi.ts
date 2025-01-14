@@ -14,9 +14,11 @@ import type {
   InterpolatePointOnCurve,
   InterpolationParamsU,
   InterpolationParamsV,
+  ObjectWithStringKeys,
   LinesByAxis,
   Point,
   Step,
+  InterpolationParameters,
 } from './types'
 import { getEndValues, getStepData, isGutterNonZero } from './utils/steps'
 import {
@@ -79,6 +81,9 @@ const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
   ].includes(cellBoundsOrder)
 
 const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
+
+const mapClampT = <T>(o: ObjectWithStringKeys) =>
+  mapObj<number, ObjectWithStringKeys>(clampT, o) as T
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -169,17 +174,15 @@ const getApi = (
 
         // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
-          const paramsClamped: InterpolationParamsU = mapObj<
-            number,
-            InterpolationParamsU
-          >(clampT, {
-            uStart,
-            uEnd,
-            vStart,
-            uOppositeStart,
-            uOppositeEnd,
-            vOppositeStart,
-          })
+          const paramsClamped: InterpolationParamsU =
+            mapClampT<InterpolationParamsU>({
+              uStart,
+              uEnd,
+              vStart,
+              uOppositeStart,
+              uOppositeEnd,
+              vOppositeStart,
+            })
 
           const curve = interpolateLineU(
             boundingCurves,
@@ -255,17 +258,15 @@ const getApi = (
 
         // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
-          const paramsClamped: InterpolationParamsV = mapObj<
-            number,
-            InterpolationParamsV
-          >(clampT, {
-            vStart,
-            vEnd,
-            uStart,
-            vOppositeStart,
-            vOppositeEnd,
-            uOppositeStart,
-          })
+          const paramsClamped: InterpolationParamsV =
+            mapClampT<InterpolationParamsV>({
+              vStart,
+              vEnd,
+              uStart,
+              vOppositeStart,
+              vOppositeEnd,
+              uOppositeStart,
+            })
 
           const curve = interpolateLineV(
             boundingCurves,
@@ -349,16 +350,17 @@ const getApi = (
       let uOppositeStart = 0
 
       for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-        const point = coonsPatch(
-          boundingCurves,
-          {
-            u: uStart,
-            v: vStart,
-            uOpposite: uOppositeStart,
-            vOpposite: vOppositeStart,
-          },
-          { interpolatePointOnCurveU, interpolatePointOnCurveV }
-        )
+        const paramsClamped = mapClampT<InterpolationParameters>({
+          u: uStart,
+          v: vStart,
+          uOpposite: uOppositeStart,
+          vOpposite: vOppositeStart,
+        })
+
+        const point = coonsPatch(boundingCurves, paramsClamped, {
+          interpolatePointOnCurveU,
+          interpolatePointOnCurveV,
+        })
 
         intersections.push(point)
 

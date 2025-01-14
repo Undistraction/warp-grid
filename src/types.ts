@@ -239,6 +239,7 @@ export interface WarpGrid extends GridApi {
 export type {
   BoundingCurves,
   Curve,
+  InterpolationParameters,
   InterpolatePointOnCurve,
   Point,
 } from 'coons-patch'
@@ -272,7 +273,7 @@ export interface BoundingCurvesWithMeta extends BoundingCurves {
   }
 }
 
-export interface InterpolationParamsU {
+export interface InterpolationParamsU extends ObjectWithStringKeys {
   uStart: number
   uEnd: number
   vStart: number
@@ -281,7 +282,7 @@ export interface InterpolationParamsU {
   vOppositeStart: number
 }
 
-export interface InterpolationParamsV {
+export interface InterpolationParamsV extends ObjectWithStringKeys {
   vStart: number
   vEnd: number
   uStart: number
