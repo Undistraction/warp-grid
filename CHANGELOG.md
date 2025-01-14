@@ -1,3 +1,73 @@
+## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v3.0.0-next.1) (2025-01-14)
+
+### ⚠ BREAKING CHANGES
+
+* This is a breaking change
+* Update dependencies
+* The API has changed.
+
+### Features
+
+* Add clamping ([4617a24](https://github.com/undistraction/warp-grid/commit/4617a247ef4ce1741ba7a30fe15fb3977f8e69aa))
+* API changes ([95ef751](https://github.com/undistraction/warp-grid/commit/95ef75186038d8df4a5cad41705b835344b42a2d))
+* Integrate coons-patch API changes ([2467802](https://github.com/undistraction/warp-grid/commit/246780286bb5643c6b1d9477139f1f76564ea06d))
+* WIP ([5e7f684](https://github.com/undistraction/warp-grid/commit/5e7f6840353d2098525403ddcd14c920d9fec133))
+* WIP ([385045a](https://github.com/undistraction/warp-grid/commit/385045aacfab3681fcf29d807107e390d22aa6da))
+* WIP ([2bdb4d0](https://github.com/undistraction/warp-grid/commit/2bdb4d0fd89111ff0741b92bd304a9b25e9f0de9))
+* WIP ([bcb389e](https://github.com/undistraction/warp-grid/commit/bcb389e4bb63a4e8106738e9860ccb51ae5b16ec))
+* WIP ([5c992e9](https://github.com/undistraction/warp-grid/commit/5c992e98c192ed0eb6cd4b5f46e12f730cb3a908))
+* WIP ([8222b78](https://github.com/undistraction/warp-grid/commit/8222b782b3f4b5646e088a07c01877780da05696))
+
+### Bug Fixes
+
+* Force publish ([3e015e1](https://github.com/undistraction/warp-grid/commit/3e015e1759eaf586051bbad098ebf4103a5d4f79))
+* Update dependencies ([f776dff](https://github.com/undistraction/warp-grid/commit/f776dffdbbb4dc1475d357db0062e59957ddc29f))
+
+## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v3.0.0-next.1) (2025-01-14)
+
+### ⚠ BREAKING CHANGES
+
+* This is a breaking change
+* Update dependencies
+* The API has changed.
+
+### Features
+
+* Add clamping ([4617a24](https://github.com/undistraction/warp-grid/commit/4617a247ef4ce1741ba7a30fe15fb3977f8e69aa))
+* API changes ([95ef751](https://github.com/undistraction/warp-grid/commit/95ef75186038d8df4a5cad41705b835344b42a2d))
+* Integrate coons-patch API changes ([2467802](https://github.com/undistraction/warp-grid/commit/246780286bb5643c6b1d9477139f1f76564ea06d))
+* WIP ([5e7f684](https://github.com/undistraction/warp-grid/commit/5e7f6840353d2098525403ddcd14c920d9fec133))
+* WIP ([385045a](https://github.com/undistraction/warp-grid/commit/385045aacfab3681fcf29d807107e390d22aa6da))
+* WIP ([2bdb4d0](https://github.com/undistraction/warp-grid/commit/2bdb4d0fd89111ff0741b92bd304a9b25e9f0de9))
+* WIP ([bcb389e](https://github.com/undistraction/warp-grid/commit/bcb389e4bb63a4e8106738e9860ccb51ae5b16ec))
+* WIP ([5c992e9](https://github.com/undistraction/warp-grid/commit/5c992e98c192ed0eb6cd4b5f46e12f730cb3a908))
+* WIP ([8222b78](https://github.com/undistraction/warp-grid/commit/8222b782b3f4b5646e088a07c01877780da05696))
+
+### Bug Fixes
+
+* Force publish ([3e015e1](https://github.com/undistraction/warp-grid/commit/3e015e1759eaf586051bbad098ebf4103a5d4f79))
+* Update dependencies ([f776dff](https://github.com/undistraction/warp-grid/commit/f776dffdbbb4dc1475d357db0062e59957ddc29f))
+
+## [3.0.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.5.0-next.1...v3.0.0-next.1) (2025-01-13)
+
+### ⚠ BREAKING CHANGES
+
+* The API has changed.
+
+### Features
+
+* API changes ([fb60c36](https://github.com/undistraction/warp-grid/commit/fb60c366788e12caa483fb27b89a9076e78de665))
+* WIP ([f07440f](https://github.com/undistraction/warp-grid/commit/f07440f3e9695d8fa4931b3ad5557383303a0086))
+* WIP ([75a4478](https://github.com/undistraction/warp-grid/commit/75a447869e122a39cd2fff4c6d99e32bcbeaf2da))
+
+## [2.5.0-next.1](https://github.com/undistraction/warp-grid/compare/v2.4.4...v2.5.0-next.1) (2025-01-09)
+
+### Features
+
+* Integrate coons-patch API changes ([f36dbda](https://github.com/undistraction/warp-grid/commit/f36dbda99de99a7f66dd022a104e2863fd91a85e))
+* WIP ([fe1cf30](https://github.com/undistraction/warp-grid/commit/fe1cf30c0e78630f6b9c7739c20ac59e580def5f))
+* WIP ([e1a89cf](https://github.com/undistraction/warp-grid/commit/e1a89cffa75f568b0e985db222dd2bb38972f698))
+
 ## [2.4.4](https://github.com/undistraction/warp-grid/compare/v2.4.3...v2.4.4) (2024-10-15)
 
 ### Bug Fixes

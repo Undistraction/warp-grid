@@ -106,14 +106,16 @@ describe(`getGrid`, () => {
         it(`throws if columns are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: {} })
-          }).toThrow(`grid.columns must be an Array of Ints or Int`)
+          }).toThrow(
+            `grid.columns must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
+          )
         })
 
         it(`throws if rows are not Array or Int`, () => {
           expect(() => {
             getGrid(boundingCurvesValid, { columns: [], rows: {} })
           }).toThrow(
-            `grid.rows must be an Int, an Array of Ints, or an Array of objects`
+            `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
           )
         })
       })
@@ -172,41 +174,41 @@ describe(`getGrid`, () => {
 
       describe(`api`, () => {
         describe(`getPoint`, () => {
-          it(`throws if u value is less than 0`, () => {
+          it(`throws if x is less than 0`, () => {
             const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              grid.getPoint(-1, 0)
-            }).toThrow(`u value must be between 0 and 1, but was '-1'`)
+              grid.getPoint({ u: -1, v: 0 })
+            }).toThrow(`u must be between 0 and 1, but was '-1'`)
           })
-          it(`throws if u value is greater than 1`, () => {
+          it(`throws if u is greater than 1`, () => {
             const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              grid.getPoint(2, 0)
-            }).toThrow(`u value must be between 0 and 1, but was '2'`)
+              grid.getPoint({ u: 2, v: 0 })
+            }).toThrow(`u must be between 0 and 1, but was '2'`)
           })
-          it(`throws if v value is less than 0`, () => {
+          it(`throws if v is less than 0`, () => {
             const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              grid.getPoint(0, -1)
-            }).toThrow(`v value must be between 0 and 1, but was '-1'`)
+              grid.getPoint({ u: 0, v: -1 })
+            }).toThrow(`v must be between 0 and 1, but was '-1'`)
           })
-          it(`throws if v value is greater than 1`, () => {
+          it(`throws if v is greater than 1`, () => {
             const grid = getGrid(boundingCurvesValid, {
               columns: 4,
               rows: 3,
             })
             expect(() => {
-              grid.getPoint(0, 2)
-            }).toThrow(`v value must be between 0 and 1, but was '2'`)
+              grid.getPoint({ u: 0, v: 2 })
+            }).toThrow(`v must be between 0 and 1, but was '2'`)
           })
         })
 
@@ -219,7 +221,7 @@ describe(`getGrid`, () => {
             expect(() => {
               grid.getCellBounds(4, 2)
             }).toThrow(
-              `Grid is '4' columns wide but coordinates are zero-based, and you passed x:'4'`
+              `X is zero-based and cannot be greater than number of columns - 1. Grid is '4' columns wide and you passed x:'4'`
             )
           })
 
@@ -231,7 +233,7 @@ describe(`getGrid`, () => {
             expect(() => {
               grid.getCellBounds(3, 3)
             }).toThrow(
-              `Grid is '3' rows high but coordinates are zero-based, and you passed y:'3'`
+              `Y is zero-based and cannot be greater than number of rows - 1. Grid is '3' rows wide and you passed y:'3'`
             )
           })
 

@@ -2,7 +2,7 @@
 // Const
 // -----------------------------------------------------------------------------
 
-const binomialCoefficients = [[1], [1, 1]]
+const BINOMIAL_COEFFICIENTS = [[1], [1, 1]]
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -21,7 +21,7 @@ export const binomial = (n: number, k: number): number => {
     return 1
   }
 
-  const lut = binomialCoefficients
+  const lut = BINOMIAL_COEFFICIENTS
 
   while (n >= lut.length) {
     const lutLength = lut.length

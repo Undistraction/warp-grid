@@ -1,9 +1,11 @@
-import { interpolatePointOnSurfaceBilinear } from 'coons-patch'
+import coonsPatch from 'coons-patch'
 
 import type {
   BoundingCurves,
   Curve,
   InterpolatePointOnCurve,
+  InterpolationParamsU,
+  InterpolationParamsV,
 } from '../../types'
 
 // -----------------------------------------------------------------------------
@@ -11,18 +13,16 @@ import type {
 // -----------------------------------------------------------------------------
 
 /**
- * Interpolates a straight line along the U direction of a surface defined by
+ * Interpolates a straight line along the U axis of a surface defined by
  * bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
  * define the surface boundaries.
- * @param {number} uStart - The starting parameter along the U direction.
- * @param {number} uSize - The size of the step along the U direction.
- * @param {number} uEnd - The ending parameter along the U direction.
- * @param {number} vStart - The starting parameter along the V direction.
- * @param {InterpolatePointOnCurve} interpolatePointOnCurveU - A function to
+ * @param {InterpolationParamsU} params - Parameters describing curve start and
+ * end points
+ * @param {InterpolatePointOnCurveU} interpolatePointOnCurveU - A function to
  * interpolate points on the U axis.
- * @param {InterpolatePointOnCurve} interpolatePointOnCurveV - A function to
+ * @param {InterpolatePointOnCurveU} interpolatePointOnCurveV - A function to
  * interpolate points on the V axis.
  * @returns {Curve} The interpolated straight line as a cubic Bezier curve.
  *
@@ -30,27 +30,32 @@ import type {
  */
 export const interpolateStraightLineU = (
   boundingCurves: BoundingCurves,
-  uStart: number,
-  uSize: number,
-  uEnd: number,
-  vStart: number,
+  {
+    uStart,
+    uEnd,
+    uOppositeStart,
+    uOppositeEnd,
+    vStart,
+    vOppositeStart,
+  }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
-  const startPoint = interpolatePointOnSurfaceBilinear(
+  const startPoint = coonsPatch(
     boundingCurves,
-    vStart,
-    uStart,
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    {
+      u: uStart,
+      v: vStart,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart,
+    },
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const endPoint = interpolatePointOnSurfaceBilinear(
+  const endPoint = coonsPatch(
     boundingCurves,
-    vStart,
-    uEnd,
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { u: uEnd, v: vStart, uOpposite: uOppositeEnd, vOpposite: vOppositeStart },
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   // Set the control points to the start and end points so the line is straight
@@ -63,15 +68,13 @@ export const interpolateStraightLineU = (
 }
 
 /**
- * Interpolates a straight line along the V direction of a surface defined by
+ * Interpolates a straight line along the V axis of a surface defined by
  * bounding curves.
  *
  * @param {BoundingCurves} boundingCurves - An object containing curves that
  * define the surface boundaries.
- * @param {number} uStart - The starting parameter along the U direction.
- * @param {number} uSize - The size of the step along the U direction.
- * @param {number} uEnd - The ending parameter along the U direction.
- * @param {number} vStart - The starting parameter along the V direction.
+ * @param {InterpolationParamsU} params - Parameters describing curve start and
+ * end points
  * @param {InterpolatePointOnCurveU} interpolatePointOnCurveU - A function to
  * interpolate points on the U axis.
  * @param {InterpolatePointOnCurveU} interpolatePointOnCurveV - A function to
@@ -82,27 +85,32 @@ export const interpolateStraightLineU = (
  */
 export const interpolateStraightLineV = (
   boundingCurves: BoundingCurves,
-  uStart: number,
-  uSize: number,
-  uEnd: number,
-  vStart: number,
+  {
+    vStart,
+    vEnd,
+    vOppositeStart,
+    vOppositeEnd,
+    uStart,
+    uOppositeStart,
+  }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ): Curve => {
-  const startPoint = interpolatePointOnSurfaceBilinear(
+  const startPoint = coonsPatch(
     boundingCurves,
-    uStart,
-    vStart,
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    {
+      u: uStart,
+      v: vStart,
+      uOpposite: uOppositeStart,
+      vOpposite: vOppositeStart,
+    },
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  const endPoint = interpolatePointOnSurfaceBilinear(
+  const endPoint = coonsPatch(
     boundingCurves,
-    uEnd,
-    vStart,
-    interpolatePointOnCurveU,
-    interpolatePointOnCurveV
+    { u: uStart, v: vEnd, uOpposite: uOppositeStart, vOpposite: vOppositeEnd },
+    { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
   // Set the control points to the start and end points so the line is straight

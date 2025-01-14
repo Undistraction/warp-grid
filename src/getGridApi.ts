@@ -1,4 +1,4 @@
-import coonsPatch, { interpolatePointOnSurfaceBilinear } from 'coons-patch'
+import coonsPatch from 'coons-patch'
 import memoize from 'fast-memoize'
 
 import { CellBoundsOrder } from './enums'
@@ -6,20 +6,26 @@ import type {
   BoundingCurves,
   BoundingCurvesWithMeta,
   Curve,
+  GetAllCellBoundsProps,
+  GetPointProps,
   GridApi,
   InterpolateLineU,
   InterpolateLineV,
   InterpolatePointOnCurve,
-  Lines,
+  InterpolationParamsU,
+  InterpolationParamsV,
+  LinesByAxis,
   Point,
   Step,
-  StepCurves,
 } from './types'
-import { getStepData, getTSize } from './utils/steps'
+import { getEndValues, getStepData, isGutterNonZero } from './utils/steps'
 import {
   validateGetIntersectionsArguments,
+  validateGetPointArguments,
   validateGetSquareArguments,
 } from './validation'
+import { getBezierCurveLength } from './utils/bezier'
+import { mapObj } from './utils/functional'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -37,9 +43,9 @@ interface GetAPiConfig {
 // Utils
 // -----------------------------------------------------------------------------
 
-const stepIsNotGutter = (step: Step): boolean => !step.isGutter
+const getIsStepNotGutter = (step: Step): boolean => !step.isGutter
 
-const reverseCurve = (curve: Curve) => {
+const getCurveReversed = (curve: Curve) => {
   return {
     startPoint: curve.endPoint,
     endPoint: curve.startPoint,
@@ -72,15 +78,27 @@ const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
     CellBoundsOrder.RTL_BTT,
   ].includes(cellBoundsOrder)
 
+const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
+/**
+ * Creates a grid API instance with the specified configuration.
+ * @param boundingCurves The curves defining the grid boundaries.
+ * @param columns Array of steps defining column structure.
+ * @param rows Array of steps defining row structure.
+ * @param gutter The horizontal and vertical spacing between cells.
+ * @param config Object containing interpolation functions for grid calculations.
+ * @returns API interacting with the defined grid.
+ * @throws ValidationError When grid boundaries are invalid or interpolation functions are missing.
+ */
 const getApi = (
   boundingCurves: BoundingCurves,
   columns: Step[],
   rows: Step[],
-  gutter: [number, number],
+  gutter: [number | string, number | string],
   {
     interpolatePointOnCurveU,
     interpolatePointOnCurveV,
@@ -88,54 +106,84 @@ const getApi = (
     interpolateLineV,
   }: GetAPiConfig
 ): GridApi => {
-  /**
-   * Retrieves the point on the surface based on the given coordinates.
-   * @param x - The x-coordinate of the point.
-   * @param y - The y-coordinate of the point.
-   * @returns The point on the surface.
-   */
-  const getPoint = memoize((x: number, y: number): Point => {
-    return coonsPatch(boundingCurves, x, y, {
+  // Cache lengths of bounding curves for use in API
+  const curveLengths = {
+    top: getBezierCurveLength(boundingCurves.top),
+    left: getBezierCurveLength(boundingCurves.left),
+    bottom: getBezierCurveLength(boundingCurves.bottom),
+    right: getBezierCurveLength(boundingCurves.right),
+  }
+
+  const {
+    processedColumns,
+    processedRows,
+    columnsTotalCount,
+    rowsTotalCount,
+    columnsTotalRatioValue,
+    rowsTotalRatioValue,
+    nonAbsoluteSpaceLeftRatio,
+    nonAbsoluteSpaceRightRatio,
+    nonAbsoluteSpaceTopRatio,
+    nonAbsoluteSpaceBottomRatio,
+  } = getStepData(columns, rows, curveLengths)
+
+  const getPoint = memoize((params: GetPointProps): Point => {
+    validateGetPointArguments(params)
+    return coonsPatch(boundingCurves, params, {
       interpolatePointOnCurveU,
       interpolatePointOnCurveV,
     })
   })
 
-  const getLinesXAxis = (): StepCurves[] => {
-    const {
-      processedColumns,
-      processedRows,
-      columnsTotalCount,
-      rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
-
+  const getLinesXAxis = (): Curve[][] => {
     const curves = []
     let vStart = 0
+    let vOppositeStart = 0
 
     // Short circuit if we are only 1x1 and just return bounds
     if (columnsTotalCount === 1 && rowsTotalCount === 1) {
       return [[boundingCurves.top], [boundingCurves.bottom]]
     }
 
+    // Otherwise work our way through the grid
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
-      const lineSections = []
+      const lineSections: Curve[] = []
       let uStart = 0
+      let uOppositeStart = 0
 
-      for (let columnIdx = 0; columnIdx < columnsTotalCount; columnIdx++) {
-        const column = processedColumns[columnIdx]
-        const columnValue = column?.value
-        const uSize = columnValue / columnsTotalValue
-        const uEnd = uStart + uSize
+      processedColumns.map((column) => {
+        const [uEnd, uOppositeEnd] = getEndValues(
+          column,
+          columnsTotalRatioValue,
+          {
+            start: uStart,
+            curveLength: curveLengths.top,
+            nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+          },
+          {
+            start: uOppositeStart,
+            curveLength: curveLengths.bottom,
+            nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+          }
+        )
 
+        // If the column is a gutter, we don't want to add a line
         if (!column.isGutter) {
-          const curve = interpolateLineU(
-            boundingCurves,
+          const paramsClamped: InterpolationParamsU = mapObj<
+            number,
+            InterpolationParamsU
+          >(clampT, {
             uStart,
-            uSize,
             uEnd,
             vStart,
+            uOppositeStart,
+            uOppositeEnd,
+            vOppositeStart,
+          })
+
+          const curve = interpolateLineU(
+            boundingCurves,
+            paramsClamped,
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -143,54 +191,85 @@ const getApi = (
           lineSections.push(curve)
         }
 
-        uStart += uSize
-      }
+        // Only update after we have saved the curve
+        uStart = uEnd
+        uOppositeStart = uOppositeEnd
+      })
 
       curves.push(lineSections)
 
-      if (rowIdx !== rowsTotalCount) {
-        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+      if (rowIdx < rowsTotalCount) {
+        const row = processedRows[rowIdx]
+        const [vEnd, vOppositeEnd] = getEndValues(
+          row,
+          rowsTotalRatioValue,
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
+        )
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
       }
     }
-
     return curves
   }
 
-  const getLinesYAxis = (): StepCurves[] => {
-    const {
-      processedColumns,
-      processedRows,
-      columnsTotalCount,
-      rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
-
+  const getLinesYAxis = (): Curve[][] => {
     const curves = []
     let uStart = 0
+    let uOppositeStart = 0
 
     // Short circuit if we are only 1x1 and just return the bounds
     if (columnsTotalCount === 1 && rowsTotalCount === 1) {
       return [[boundingCurves.left], [boundingCurves.right]]
     }
 
+    // Otherwise work our way through the grid
     for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-      const lineSections = []
+      const lineSections: Curve[] = []
       let vStart = 0
+      let vOppositeStart = 0
 
-      for (let rowIdx = 0; rowIdx < rowsTotalCount; rowIdx++) {
-        const row = processedRows[rowIdx]
-        const rowValue = row?.value
-        const vSize = rowValue / rowsTotalValue
-        const vEnd = vStart + vSize
+      processedRows.map((row) => {
+        const [vEnd, vOppositeEnd] = getEndValues(
+          row,
+          rowsTotalRatioValue,
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
+        )
 
+        // If the column is a gutter, we don't want to add a line
         if (!row.isGutter) {
-          const curve = interpolateLineV(
-            boundingCurves,
+          const paramsClamped: InterpolationParamsV = mapObj<
+            number,
+            InterpolationParamsV
+          >(clampT, {
             vStart,
-            vSize,
             vEnd,
             uStart,
+            vOppositeStart,
+            vOppositeEnd,
+            uOppositeStart,
+          })
+
+          const curve = interpolateLineV(
+            boundingCurves,
+            paramsClamped,
             interpolatePointOnCurveU,
             interpolatePointOnCurveV
           )
@@ -198,36 +277,47 @@ const getApi = (
           lineSections.push(curve)
         }
 
-        vStart += vSize
-      }
+        // Only update after we have saved the curve
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
+      })
 
       curves.push(lineSections)
 
       // Calculate the position of the next column
-      if (columnIdx !== columnsTotalCount) {
-        uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+      if (columnIdx < columnsTotalCount) {
+        const column = processedColumns[columnIdx]
+
+        const [uEnd, uOppositeEnd] = getEndValues(
+          column,
+          columnsTotalRatioValue,
+          {
+            start: uStart,
+            curveLength: curveLengths.top,
+            nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+          },
+          {
+            start: uOppositeStart,
+            curveLength: curveLengths.bottom,
+            nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+          }
+        )
+
+        uStart = uEnd
+        uOppositeStart = uOppositeEnd
       }
     }
 
     return curves
   }
 
-  /**
-   * Retrieves the lines for the grid axes.
-   * @returns An object containing the lines for the x-axis and y-axis.
-   */
-  const getLines = memoize((): Lines => {
+  const getLines = memoize((): LinesByAxis => {
     return {
       xAxis: getLinesXAxis(),
       yAxis: getLinesYAxis(),
     }
   })
 
-  /**
-   * Retrieves the intersection points on the surface.
-   *
-   * @returns An array of Point objects representing the intersection points.
-   */
   const getIntersections = memoize((): Point[] => {
     validateGetIntersectionsArguments(
       boundingCurves,
@@ -242,115 +332,129 @@ const getApi = (
       processedRows,
       columnsTotalCount,
       rowsTotalCount,
-      columnsTotalValue,
-      rowsTotalValue,
-    } = getStepData(columns, rows)
+      columnsTotalRatioValue,
+      rowsTotalRatioValue,
+      nonAbsoluteSpaceLeftRatio,
+      nonAbsoluteSpaceRightRatio,
+      nonAbsoluteSpaceTopRatio,
+      nonAbsoluteSpaceBottomRatio,
+    } = getStepData(columns, rows, curveLengths)
 
     const intersections = []
     let vStart = 0
+    let vOppositeStart = 0
 
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
       let uStart = 0
+      let uOppositeStart = 0
 
       for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-        const point = interpolatePointOnSurfaceBilinear(
+        const point = coonsPatch(
           boundingCurves,
-          uStart,
-          vStart,
-          interpolatePointOnCurveU,
-          interpolatePointOnCurveV
+          {
+            u: uStart,
+            v: vStart,
+            uOpposite: uOppositeStart,
+            vOpposite: vOppositeStart,
+          },
+          { interpolatePointOnCurveU, interpolatePointOnCurveV }
         )
 
         intersections.push(point)
 
         if (columnIdx !== columnsTotalCount) {
-          uStart += getTSize(processedColumns, columnIdx, columnsTotalValue)
+          const column = processedColumns[columnIdx]
+          const [uEnd, uOppositeEnd] = getEndValues(
+            column,
+            columnsTotalRatioValue,
+            {
+              start: uStart,
+              curveLength: curveLengths.top,
+              nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
+            },
+            {
+              start: uOppositeStart,
+              curveLength: curveLengths.bottom,
+              nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
+            }
+          )
+          uStart = uEnd
+          uOppositeStart = uOppositeEnd
         }
       }
 
       if (rowIdx !== rowsTotalCount) {
-        vStart += getTSize(processedRows, rowIdx, rowsTotalValue)
+        const row = processedRows[rowIdx]
+        const [vEnd, vOppositeEnd] = getEndValues(
+          row,
+          rowsTotalRatioValue,
+          {
+            start: vStart,
+            curveLength: curveLengths.left,
+            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
+          },
+          {
+            start: vOppositeStart,
+            curveLength: curveLengths.right,
+            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
+          }
+        )
+        vStart = vEnd
+        vOppositeStart = vOppositeEnd
       }
     }
 
     return intersections
   })
 
-  /**
-   * Retrieves the bounding curves of a cell in the grid.
-   *
-   * @param column - The column index of the cell.
-   * @param row - The row index of the cell.
-   * @param {object} [options] - Optional configuration.
-   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
-   * top and bottom bounding curves run left to right and left and right bounds
-   * run top to bottom. This option will output bounds so that the bottom bounds
-   * run right to left and the left bounds run bottom to top.
-   * @returns The bounding curves of the cell, including a meta object
-   * containing the row and column indices of that cell.
-   */
   const getCellBounds = memoize(
     (
-      column: number,
-      row: number,
+      columnIdx: number,
+      rowIdx: number,
       { makeBoundsCurvesSequential = false } = {}
     ): BoundingCurvesWithMeta => {
-      validateGetSquareArguments(column, row, columns, rows)
+      validateGetSquareArguments(columnIdx, rowIdx, columns, rows)
 
       const { xAxis, yAxis } = getLines()
 
-      // If there is a gutter, we need to skip over the gutter space
-      const gutterMultiplierX = gutter[0] > 0 ? 2 : 1
-      const gutterMultiplierY = gutter[1] > 0 ? 2 : 1
+      // If there is a gutter, we need to skip over the gutter steps
+      const gutterMultiplierX = isGutterNonZero(gutter[0]) ? 2 : 1
+      const gutterMultiplierY = isGutterNonZero(gutter[1]) ? 2 : 1
 
-      const selectedRowIdx = row * gutterMultiplierY
-      const selectedColumnIdx = column * gutterMultiplierX
+      const selectedRowIdx = rowIdx * gutterMultiplierY
+      const selectedColumnIdx = columnIdx * gutterMultiplierX
       const selectedRowTop = xAxis[selectedRowIdx]
       const selectedRowBottom = xAxis[selectedRowIdx + 1]
       const selectedRowLeft = yAxis[selectedColumnIdx]
       const selectedRowRight = yAxis[selectedColumnIdx + 1]
 
-      const top = selectedRowTop[column]
-      const bottom = selectedRowBottom[column]
-      const left = selectedRowLeft[row]
-      const right = selectedRowRight[row]
+      const top = selectedRowTop[columnIdx]
+      const bottom = selectedRowBottom[columnIdx]
+      const left = selectedRowLeft[rowIdx]
+      const right = selectedRowRight[rowIdx]
 
       return {
         meta: {
-          row,
-          column,
+          row: rowIdx,
+          column: columnIdx,
         },
         top,
-        bottom: makeBoundsCurvesSequential ? reverseCurve(bottom) : bottom,
-        left: makeBoundsCurvesSequential ? reverseCurve(left) : left,
+        bottom: makeBoundsCurvesSequential ? getCurveReversed(bottom) : bottom,
+        left: makeBoundsCurvesSequential ? getCurveReversed(left) : left,
         right,
       }
     }
   )
 
-  /**
-   * Retrieves the bounding curves for all cells in the grid, excluding gutter
-   * steps.
-   * @param {object} [options] - Optional configuration.
-   * @param {boolean} [options.makeBoundsCurvesSequential=false] - By default,
-   * top and bottom bounding curves run left to right and left and right bounds
-   * run top to bottom. This option will output bounds so that the bottom bounds
-   * run right to left and the left bounds run bottom to top.
-   * @param {boolean} [config.cellBoundsOrder=CellBoundsOrder.TTB_LTR] - This
-   * property allows you to control the order in which the cell bounds are
-   * returned. The default is top to bottom, left to right.
-   *
-   * @returns An array of bounding curves for each cell.
-   */
   const getAllCellBounds = memoize(
     ({
       makeBoundsCurvesSequential = false,
       cellBoundsOrder = CellBoundsOrder.TTB_LTR,
-    } = {}): BoundingCurvesWithMeta[] => {
+    }: GetAllCellBoundsProps = {}): BoundingCurvesWithMeta[] => {
       // We only want to run through steps that are not gutters so we filter
       // both rows and columns first
-      const rowsThatAreNotGutters = rows.filter(stepIsNotGutter)
-      const columnsThatAreNotGutters = columns.filter(stepIsNotGutter)
+      const rowsThatAreNotGutters = rows.filter(getIsStepNotGutter)
+      const columnsThatAreNotGutters = columns.filter(getIsStepNotGutter)
 
       const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
 

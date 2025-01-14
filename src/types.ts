@@ -1,137 +1,236 @@
 import type {
   BoundingCurves,
   Curve,
-  InterpolatePointOnCurve,
   Point,
+  InterpolatePointOnCurve,
 } from 'coons-patch'
 
 import { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 
 // -----------------------------------------------------------------------------
-// Interfaces
+// Public
 // -----------------------------------------------------------------------------
 
-export interface Step {
-  value: number
-  isGutter?: boolean
-}
-
-export interface Lines {
-  xAxis: StepCurves[]
-  yAxis: StepCurves[]
-}
-
-export interface GridDefinition {
-  columns: StepDefinition
-  rows: StepDefinition
-  gutter?: number | [number, number]
-  interpolationStrategy?:
-    | InterpolationStrategy
-    | InterpolatePointOnCurveFactory
-    | [InterpolatePointOnCurveFactory, InterpolatePointOnCurveFactory]
-  lineStrategy?: LineStrategy
-  precision?: number
-  bezierEasing?: BezierEasing
-}
-
-export type GridDefinitionWithDefaults = Required<GridDefinition>
-
-export interface GridModel {
-  boundingCurves: BoundingCurves
-  columns: Steps
-  rows: Steps
-}
-
-export interface GridApi {
-  getPoint: (u: number, v: number) => Point
-  getIntersections: () => Point[]
-  getLinesXAxis: () => StepCurves[]
-  getLinesYAxis: () => StepCurves[]
-  getLines: () => Lines
-  getCellBounds: (
-    columns: number,
-    rows: number,
-    {
-      cellBoundsOrder,
-    }?: {
-      cellBoundsOrder?: CellBoundsOrder
-    }
-  ) => BoundingCurves
-  getAllCellBounds: ({
-    makeBoundsCurvesSequential,
-    cellBoundsOrder,
-  }?: {
-    makeBoundsCurvesSequential?: boolean
-    cellBoundsOrder?: CellBoundsOrder
-  }) => BoundingCurves[]
-}
-
-export interface WarpGrid extends GridApi {
-  model: GridModel
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ObjectWithStringKeys = Record<string, any>
-
-// -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
-
-export type StepCurves = Curve[]
-
-export type UnprocessedStep = number | Step
-
-export type UnprocessedSteps = number | (number | Step)[]
-
-export type ExpandedSteps = (number | Step)[]
-
-export type Steps = Step[]
-
-export type StepDefinition = number | number[] | Step[]
-
+/**
+ * Defines bezier easing parameters for both axes of the grid.
+ * All parameters must be in range [0,1].
+ */
 export interface BezierEasing {
   xAxis: BezierEasingParams
   yAxis: BezierEasingParams
 }
 
+/**
+ * Control points array for a cubic Bezier curve.
+ * All values must be in range [0,1].
+ */
 export type BezierEasingParams = [number, number, number, number]
 
-export interface BoundingCurvesWithMeta extends BoundingCurves {
-  meta: {
-    row: number
-    column: number
-  }
+/**
+ * Configuration for retrieving cell bounds in the grid.
+ */
+export interface GetAllCellBoundsProps {
+  /**
+   * Returns bounds curves in sequential order when true.
+   * @default false
+   */
+  makeBoundsCurvesSequential?: boolean
+  cellBoundsOrder?: CellBoundsOrder
 }
 
-// -----------------------------------------------------------------------------
-// Types: Function signatures
-// -----------------------------------------------------------------------------
+/**
+ * Configuration for retrieving bounds of a specific cell.
+ */
+export interface GetCellBoundsConfig {
+  cellBoundsOrder?: CellBoundsOrder
+}
 
+/**
+ * Parameters for retrieving a point within the grid space.
+ * All coordinate values must be in range [0,1].
+ */
+export interface GetPointProps {
+  u: number
+  v: number
+  uOpposite?: number
+  vOpposite?: number
+}
+
+/**
+ * Methods for interacting with and retrieving geometric data from the grid.
+ */
+export interface GridApi {
+  /**
+   * Returns a point at the specified grid coordinates.
+   * @param params The grid coordinates and options.
+   * @returns The calculated grid point.
+   * @throws ValidationError When coordinates are outside valid range.
+   */
+  getPoint: (params: GetPointProps) => Point
+
+  /**
+   * Returns all points where grid lines intersect.
+   * @returns Array of intersection points.
+   */
+  getIntersections: () => Point[]
+
+  getLinesXAxis: () => Curve[][]
+  getLinesYAxis: () => Curve[][]
+  getLines: () => LinesByAxis
+
+  /**
+   * Returns the bounding curves for a specific cell.
+   * @param columnIdx Zero-based column index.
+   * @param rowIdx Zero-based row index.
+   * @param config Optional configuration.
+   * @returns The cell's bounding curves.
+   * @throws ValidationError When indices are out of bounds.
+   */
+  getCellBounds: (
+    columnIdx: number,
+    rowIdx: number,
+    config: GetCellBoundsConfig
+  ) => BoundingCurves
+
+  /**
+   * Returns bounding curves for all cells in the grid.
+   * @param params Optional configuration.
+   * @returns Array of cell bounds.
+   */
+  getAllCellBounds: (params?: GetAllCellBoundsProps) => BoundingCurves[]
+}
+
+/**
+ * Configuration object defining the grid's structure and behavior.
+ */
+export interface GridDefinition {
+  columns: StepDefinition
+  rows: StepDefinition
+
+  /**
+   * Spacing between grid cells. Accepts pixels (number) or CSS units (string).
+   * @default 0
+   */
+  gutter?: (number | string) | [number | string, number | string]
+
+  /**
+   * Strategy for interpolating points between grid lines.
+   * @default 'linear'
+   */
+  interpolationStrategy?:
+    | InterpolationStrategy
+    | InterpolatePointOnCurveFactory
+    | [InterpolatePointOnCurveFactory, InterpolatePointOnCurveFactory]
+
+  /**
+   * Method for constructing lines between points.
+   * @default 'bezier'
+   */
+  lineStrategy?: LineStrategy
+
+  /**
+   * Curve interpolation precision.
+   * @default 50
+   */
+  precision?: number
+
+  /**
+   * Easing parameters for curve calculations.
+   * @default [0.4, 0, 0.2, 1]
+   */
+  bezierEasing?: BezierEasing
+}
+
+/**
+ * Grid model containing boundary curves and layout information.
+ */
+export interface GridModel {
+  boundingCurves: BoundingCurves
+  columns: Step[]
+  rows: Step[]
+}
+
+/**
+ * Interpolates a line in the U direction between two bounding curves.
+ * @param boundingCurves The curves defining the grid space.
+ * @param params Parameters for the interpolation.
+ * @param interpolatePointOnCurveU Function to interpolate points along U axis.
+ * @param interpolatePointOnCurveV Function to interpolate points along V axis.
+ * @returns A curve representing the interpolated line.
+ */
 export type InterpolateLineU = (
   boundingCurves: BoundingCurves,
-  vStart: number,
-  vSize: number,
-  vEnd: number,
-  uStart: number,
+  { uStart, uEnd, vStart }: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
+/**
+ * Interpolates a line in the V direction between two bounding curves.
+ * @param boundingCurves The curves defining the grid space.
+ * @param params Parameters for the interpolation.
+ * @param interpolatePointOnCurveU Function to interpolate points along U axis.
+ * @param interpolatePointOnCurveV Function to interpolate points along V axis.
+ * @returns A curve representing the interpolated line.
+ */
 export type InterpolateLineV = (
   boundingCurves: BoundingCurves,
-  uStart: number,
-  uSize: number,
-  uEnd: number,
-  vStart: number,
+  { vStart, vEnd, uStart }: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
 
-// Redefine as we have additional config keys
+/**
+ * Creates a function that interpolates points along a curve based on the given
+ * configuration.
+ * @param {Object} config - The configuration object for the interpolation.
+ * @param {number} config.precision - The precision level for the interpolation
+ * calculations.
+ * @param {BezierEasingParams} config.bezierEasing - The bezier curve parameters
+ * for easing.
+ * @returns {InterpolatePointOnCurve} A function that performs point
+ * interpolation along the curve.
+ */
 export type InterpolatePointOnCurveFactory = (config: {
   precision: number
   bezierEasing: BezierEasingParams
 }) => InterpolatePointOnCurve
+
+/**
+ * Collection of curves organized by axis.
+ */
+export interface LinesByAxis {
+  xAxis: Curve[][]
+  yAxis: Curve[][]
+}
+
+/**
+ * Defines a single step in the grid's layout sequence.
+ * Value must be positive.
+ */
+export interface Step {
+  value: number | string
+
+  /**
+   * Indicates a gutter space between cells when true.
+   * @default false
+   */
+  isGutter?: boolean
+}
+
+/**
+ * Defines the size and distribution of grid steps.
+ * Accepts uniform steps (number), varied steps (number[]), or complex steps (Step[]).
+ * @throws ValueError When step values are negative.
+ */
+export type StepDefinition = number | number[] | Step[]
+
+/**
+ * Complete grid interface combining manipulation methods with model access.
+ */
+export interface WarpGrid extends GridApi {
+  model: GridModel
+}
 
 // -----------------------------------------------------------------------------
 // Re-export types we are using from coons-patch
@@ -142,5 +241,51 @@ export type {
   Curve,
   InterpolatePointOnCurve,
   Point,
-  Points,
 } from 'coons-patch'
+
+// -----------------------------------------------------------------------------
+// Internal
+// -----------------------------------------------------------------------------
+
+export type GridDefinitionWithDefaults = Required<GridDefinition>
+
+export interface CurveLengths {
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObjectWithStringKeys = Record<string, any>
+
+export type UnprocessedStep = number | Step
+
+export type UnprocessedSteps = number | (number | Step)[]
+
+export type ExpandedSteps = (number | Step)[]
+
+export interface BoundingCurvesWithMeta extends BoundingCurves {
+  meta: {
+    row: number
+    column: number
+  }
+}
+
+export interface InterpolationParamsU {
+  uStart: number
+  uEnd: number
+  vStart: number
+  uOppositeStart: number
+  uOppositeEnd: number
+  vOppositeStart: number
+}
+
+export interface InterpolationParamsV {
+  vStart: number
+  vEnd: number
+  uStart: number
+  vOppositeStart: number
+  vOppositeEnd: number
+  uOppositeStart: number
+}
