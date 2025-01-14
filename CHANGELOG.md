@@ -1,3 +1,9 @@
+## [3.0.1](https://github.com/undistraction/warp-grid/compare/v3.0.0...v3.0.1) (2025-01-14)
+
+### Bug Fixes
+
+* Clamp getIntersections params ([afab012](https://github.com/undistraction/warp-grid/commit/afab0126f544728e16ac2848426fbd449c9d632e))
+
 ## [3.0.0](https://github.com/undistraction/warp-grid/compare/v2.4.4...v3.0.0) (2025-01-14)
 
 ### ⚠ BREAKING CHANGES
