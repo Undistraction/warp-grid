@@ -1,4 +1,5 @@
 import { InterpolationStrategy, LineStrategy } from './enums'
+import { ValidationError } from './errors/ValidationError'
 import type {
   BoundingCurves,
   GridDefinitionWithDefaults,
@@ -43,19 +44,19 @@ const getPointsAreSame = (point1: Point, point2: Point): boolean => {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const validateFunction = (func: Function, name: string): void => {
   if (!isFunction(func)) {
-    throw new Error(`${name} must be a function`)
+    throw new ValidationError(`${name} must be a function`)
   }
 }
 
 export const validateT = (t: number): void => {
   if (t < 0 || t > 1) {
-    throw new Error(`t value must be between 0 and 1, but was '${t}'`)
+    throw new ValidationError(`t value must be between 0 and 1, but was '${t}'`)
   }
 }
 
 export const validateColumnNumber = (value: number): void => {
   if (value < 0) {
-    throw new Error(
+    throw new ValidationError(
       `If column is a number, it must be a positive integer, but was '${value}'`
     )
   }
@@ -68,7 +69,7 @@ const validateStep = ({ value }: Step): void => {
     const numericPortion = getPixelStringNumericComponent(value)
     validateColumnNumber(numericPortion)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `A step value must be a non-negative number or a pixel string, but it was '${value}'`
     )
   }
@@ -83,7 +84,7 @@ const validateColumn = (value: string | number | Step): void => {
   } else if (isPlainObj(value)) {
     validateStep(value)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `A column value must be a non-negative number or a pixel string, but it was '${value}'`
     )
   }
@@ -98,7 +99,7 @@ const validateRow = (value: string | number | Step): void => {
   } else if (isPlainObj(value)) {
     validateStep(value)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `A row value must be a non-negative number or a pixel string, but it was '${value}'`
     )
   }
@@ -115,7 +116,7 @@ const validateColumnsAndRows = (
       validateColumn(column)
     }, columns)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `columns must be an integer or an array, but it was '${columns}'`
     )
   }
@@ -127,7 +128,7 @@ const validateColumnsAndRows = (
       validateRow(column)
     }, columns)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `rows must be an integer or an array, but it was '${columns}'`
     )
   }
@@ -140,7 +141,7 @@ export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
       boundingCurves.left.startPoint
     )
   ) {
-    throw new Error(
+    throw new ValidationError(
       `top curve startPoint and left curve startPoint must have same coordinates`
     )
   }
@@ -151,7 +152,7 @@ export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
       boundingCurves.left.endPoint
     )
   ) {
-    throw new Error(
+    throw new ValidationError(
       `bottom curve startPoint and left curve endPoint must have the same coordinates`
     )
   }
@@ -162,7 +163,7 @@ export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
       boundingCurves.right.startPoint
     )
   ) {
-    throw new Error(
+    throw new ValidationError(
       `top curve endPoint and right curve startPoint must have the same coordinates`
     )
   }
@@ -172,7 +173,7 @@ export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
       boundingCurves.right.endPoint
     )
   ) {
-    throw new Error(
+    throw new ValidationError(
       `bottom curve endPoint and right curve endPoint must have the same coordinates`
     )
   }
@@ -182,11 +183,11 @@ export const validateBoundingCurves = (
   boundingCurves: BoundingCurves
 ): void => {
   if (isNil(boundingCurves)) {
-    throw new Error(`You must supply boundingCurves(Object)`)
+    throw new ValidationError(`You must supply boundingCurves(Object)`)
   }
 
   if (!isPlainObj(boundingCurves)) {
-    throw new Error(`boundingCurves must be an object`)
+    throw new ValidationError(`boundingCurves must be an object`)
   }
 
   validateCornerPoints(boundingCurves)
@@ -194,7 +195,9 @@ export const validateBoundingCurves = (
 
 export const validateGutterNumber = (gutter: number): void => {
   if (gutter < 0) {
-    throw new Error(`Gutter must be a positive number, but was '${gutter}'`)
+    throw new ValidationError(
+      `Gutter must be a positive number, but was '${gutter}'`
+    )
   }
 }
 
@@ -205,7 +208,7 @@ export const validateGutter = (gutter: number | string): void => {
     const numericPortion = getPixelStringNumericComponent(gutter)
     validateGutterNumber(numericPortion)
   } else {
-    throw new Error(
+    throw new ValidationError(
       `Gutter must be a number, or a pixel string, but was '${gutter}'`
     )
   }
@@ -224,21 +227,21 @@ export const validateGrid = (
   } = gridDefinition
 
   if (isNil(columns)) {
-    throw new Error(`You must supply grid.columns(Array or Int)`)
+    throw new ValidationError(`You must supply grid.columns(Array or Int)`)
   }
 
   if (!isArray(columns) && !isInt(columns)) {
-    throw new Error(
+    throw new ValidationError(
       `grid.columns must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
     )
   }
 
   if (isNil(rows)) {
-    throw new Error(`You must supply grid.rows(Array or Int)`)
+    throw new ValidationError(`You must supply grid.rows(Array or Int)`)
   }
 
   if (!isArray(rows) && !isInt(rows)) {
-    throw new Error(
+    throw new ValidationError(
       `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
     )
   }
@@ -246,14 +249,14 @@ export const validateGrid = (
   if (!isNil(gutter)) {
     if (isArray(gutter)) {
       if (gutter.length > 2) {
-        throw new Error(
+        throw new ValidationError(
           `if grid.gutters is an Array it must have a length of 1 or 2`
         )
       }
       gutter.map(validateGutter)
     } else {
       if (!isNumber(gutter) && !isPixelNumberString(gutter)) {
-        throw new Error(
+        throw new ValidationError(
           `grid.gutters must be an Int, a string, or an Array of Ints and/or pixel-strings`
         )
       }
@@ -270,7 +273,7 @@ export const validateGrid = (
     } else {
       const possibleValues = Object.values(InterpolationStrategy)
       if (!possibleValues.includes(interpolationStrategy)) {
-        throw new Error(
+        throw new ValidationError(
           `Interpolation strategy '${interpolationStrategy}' is not recognised. Must be one of '${possibleValues}'`
         )
       }
@@ -284,7 +287,7 @@ export const validateGrid = (
     } else {
       const possibleValues = Object.values(LineStrategy)
       if (!possibleValues.includes(lineStrategy)) {
-        throw new Error(
+        throw new ValidationError(
           `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
         )
       }
@@ -293,7 +296,7 @@ export const validateGrid = (
 
   if (!isUndefined(precision)) {
     if (!isInt(precision) || precision < 1) {
-      throw new Error(
+      throw new ValidationError(
         `Precision must be a positive integer greater than 0, but was '${precision}'`
       )
     }
@@ -302,11 +305,11 @@ export const validateGrid = (
 
 export const validateGetPointArguments = (u: number, v: number): void => {
   if (u < 0 || u > 1) {
-    throw new Error(`u value must be between 0 and 1, but was '${u}'`)
+    throw new ValidationError(`u value must be between 0 and 1, but was '${u}'`)
   }
 
   if (v < 0 || v > 1) {
-    throw new Error(`v value must be between 0 and 1, but was '${v}'`)
+    throw new ValidationError(`v value must be between 0 and 1, but was '${v}'`)
   }
 }
 
@@ -320,19 +323,19 @@ export const validateGetSquareArguments = (
   const rowCount = rows.length
 
   if (x < 0 || y < 0) {
-    throw new Error(
+    throw new ValidationError(
       `Coordinates must not be negative. You supplied x:'${x}' x y:'${y}'`
     )
   }
 
   if (x >= columnCount) {
-    throw new Error(
+    throw new ValidationError(
       `Grid is '${columnCount}' columns wide but coordinates are zero-based, and you passed x:'${x}'`
     )
   }
 
   if (y >= rowCount) {
-    throw new Error(
+    throw new ValidationError(
       `Grid is '${rowCount}' rows high but coordinates are zero-based, and you passed y:'${y}'`
     )
   }

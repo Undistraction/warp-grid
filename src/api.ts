@@ -1,4 +1,5 @@
 import { InterpolationStrategy, LineStrategy } from './enums'
+import { ValidationError } from './errors/ValidationError'
 import getApi from './getGridApi'
 import {
   interpolateCurveU,
@@ -94,7 +95,9 @@ const getInterpolationStrategy = ({
     )
   }
 
-  throw new Error(`Unknown interpolation strategy: '${interpolationStrategy}'`)
+  throw new ValidationError(
+    `Unknown interpolation strategy: '${interpolationStrategy}'`
+  )
 }
 
 const getLineStrategy = ({

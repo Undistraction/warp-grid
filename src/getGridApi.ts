@@ -82,6 +82,20 @@ const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
 // Exports
 // -----------------------------------------------------------------------------
 
+/**
+ * Creates an API that provides methods for working with a grid defined by bounding curves.
+ *
+ * @param {BoundingCurves} boundingCurves - The curves that define the boundaries of the grid surface
+ * @param {Step[]} columns - Array of step configurations defining the horizontal divisions of the grid
+ * @param {Step[]} rows - Array of step configurations defining the vertical divisions of the grid
+ * @param {[number | string, number | string]} gutter - A tuple of [horizontal, vertical] gutter sizes
+ * @param {GetAPiConfig} config - Configuration object containing interpolation functions
+ * @param {InterpolatePointOnCurve} config.interpolatePointOnCurveU - Function to interpolate points along horizontal curves
+ * @param {InterpolatePointOnCurve} config.interpolatePointOnCurveV - Function to interpolate points along vertical curves
+ * @param {InterpolateLineU} config.interpolateLineU - Function to interpolate horizontal grid lines
+ * @param {InterpolateLineV} config.interpolateLineV - Function to interpolate vertical grid lines
+ * @returns {GridApi} Methods for working with the grid surface
+ */
 const getApi = (
   boundingCurves: BoundingCurves,
   columns: Step[],
