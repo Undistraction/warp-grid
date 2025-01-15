@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/undistraction/warp-grid/compare/v4.0.0...v4.0.1) (2025-01-15)
+
+### Bug Fixes
+
+* Incorrect intersections ([05e3b8a](https://github.com/undistraction/warp-grid/commit/05e3b8a1318da32095f5de4e28ee9a0186879148))
+
 ## [4.0.0](https://github.com/undistraction/warp-grid/compare/v3.0.2...v4.0.0) (2025-01-15)
 
 ### ⚠ BREAKING CHANGES
