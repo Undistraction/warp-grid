@@ -1,3 +1,13 @@
+## [4.0.0](https://github.com/undistraction/warp-grid/compare/v3.0.2...v4.0.0) (2025-01-15)
+
+### ⚠ BREAKING CHANGES
+
+* Cheat to make refactor available
+
+### Bug Fixes
+
+* Tell semanitc release to publish ([75b840c](https://github.com/undistraction/warp-grid/commit/75b840c28cb32cada9d85ef83460c9a091053e12))
+
 ## [3.0.2](https://github.com/undistraction/warp-grid/compare/v3.0.1...v3.0.2) (2025-01-14)
 
 ### Bug Fixes
