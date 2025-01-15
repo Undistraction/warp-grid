@@ -2,6 +2,12 @@
 // These are very general-purpose functions, so any is appropriate here.
 
 // -----------------------------------------------------------------------------
+// Const
+// -----------------------------------------------------------------------------
+
+const VALID_GUTTER_REGEXP = /^\d+(px)$/
+
+// -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
@@ -10,6 +16,9 @@ const isType = (type: string, value: any): boolean => typeof value === type
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+export const isBoolean = (value: any): value is boolean =>
+  isType(`boolean`, value)
 
 export const isArray = (value: any): value is any[] => Array.isArray(value)
 
@@ -35,3 +44,12 @@ export const isPlainObj = (value: any): value is object =>
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const isFunction = (value: any): value is Function =>
   isType(`function`, value)
+// Number followed by 'px'
+
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
+export const isPixelNumberString = (value: unknown) => {
+  return isString(value) && VALID_GUTTER_REGEXP.test(value)
+}

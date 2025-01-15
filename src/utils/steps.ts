@@ -1,13 +1,11 @@
 import type {
   CurveLengths,
-  ExpandedSteps,
   Step,
   UnprocessedStep,
   UnprocessedSteps,
 } from '../types'
 import { times } from './functional'
-import { isInt, isNumber, isPlainObj } from './is'
-import { isPixelNumberString } from './regexp'
+import { isInt, isNumber, isPlainObj, isPixelNumberString, isNil } from './is'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -23,25 +21,24 @@ interface SideData {
 // Utils
 // -----------------------------------------------------------------------------
 
-// If the value is a string value that is just a number (without px), convert it
-// to a number. If its 0px default it to 0, otherwise return unchanged.
+// If its 0px default it to 0, otherwise return unchanged.
 const getProcessedStepValue = (step: number | string): number | string => {
-  if (isNumber(step)) {
-    return Number(step)
-  }
   if (step === `0px`) {
     return 0
   }
   return step
 }
 
-const ensureArray = (unprocessedSteps: UnprocessedSteps): ExpandedSteps =>
+const ensureArray = (unprocessedSteps: UnprocessedSteps): UnprocessedStep[] =>
   isInt(unprocessedSteps) ? times(() => 1, unprocessedSteps) : unprocessedSteps
 
-const ensureObjectsAndProcess = (steps: ExpandedSteps) =>
+const ensureObjectsAndProcess = (steps: UnprocessedStep[]) =>
   steps.map((step: UnprocessedStep): Step => {
     if (isPlainObj(step)) {
-      return step
+      return {
+        ...step,
+        value: getProcessedStepValue(step.value),
+      }
     } else {
       return {
         value: getProcessedStepValue(step),
@@ -51,13 +48,21 @@ const ensureObjectsAndProcess = (steps: ExpandedSteps) =>
 
 const insertGutters = (steps: Step[], gutter: number | string): Step[] => {
   const lastStepIndex = steps.length - 1
+  const hasGutter = isGutterNonZero(gutter)
 
   return steps.reduce((acc: Step[], step: Step, idx: number): Step[] => {
     const isLastStep = idx === lastStepIndex
+    const nextStep = steps[idx + 1]
+    const hasNextStep = !isNil(nextStep)
+    const nextStepIsGutter = hasNextStep && nextStep.isGutter
+    const shouldAddGutter =
+      hasGutter && !isLastStep && !step.isGutter && !nextStepIsGutter
+
     // Insert a gutter step if we have gutters and are not the last step
-    return isLastStep || !isGutterNonZero(gutter)
-      ? [...acc, step]
-      : [...acc, step, { value: gutter, isGutter: true }]
+
+    return shouldAddGutter
+      ? [...acc, step, { value: gutter, isGutter: true }]
+      : [...acc, step]
   }, [])
 }
 
@@ -72,7 +77,7 @@ const addStepAbsoluteValues = (steps: Step[]) =>
   steps.reduce((acc, step) => {
     const { value } = step
     return isPixelNumberString(value)
-      ? acc + getPixelStringNumericComponent(value)
+      ? acc + getPixelStringNumericComponent(value as string)
       : acc
   }, 0)
 
@@ -169,23 +174,22 @@ export const processSteps = ({
   return insertGutters(stepsArrayOfObjs, gutter)
 }
 
-export const processSteps2 = (steps: UnprocessedSteps): Step[] => {
-  const arrayOfSteps = ensureArray(steps)
-  return ensureObjectsAndProcess(arrayOfSteps)
-}
-
 export const getStepData = (
-  columns: UnprocessedSteps,
-  rows: UnprocessedSteps,
+  columns: Step[],
+  rows: Step[],
   curveLengths: CurveLengths
 ) => {
-  const [processedColumns, processedRows] = [columns, rows].map(processSteps2)
+  const processedColumns = columns
+  const processedRows = rows
 
   return {
-    ...getCounts(processedColumns, processedRows),
-    ...getTotalRatioValues(processedColumns, processedRows),
-    ...getNonAbsoluteSpaceRatios(processedColumns, processedRows, curveLengths),
+    ...getCounts(columns, rows),
+    ...getTotalRatioValues(columns, rows),
+    ...getNonAbsoluteSpaceRatios(columns, rows, curveLengths),
     processedColumns,
     processedRows,
   }
 }
+
+export const getNonGutterSteps = (steps: Step[]) =>
+  steps.filter((step: Step) => !step.isGutter)

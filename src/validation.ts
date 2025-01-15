@@ -1,10 +1,9 @@
-import { InterpolationStrategy, LineStrategy } from './enums'
+import { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 import { ValidationError } from './errors/ValidationError'
 import type {
   BoundingCurves,
   GetPointProps,
   GridDefinitionWithDefaults,
-  InterpolatePointOnCurve,
   Point,
   Step,
   UnprocessedSteps,
@@ -12,15 +11,16 @@ import type {
 import { mapObj } from './utils/functional'
 import {
   isArray,
+  isBoolean,
   isFunction,
   isInt,
   isNil,
   isNumber,
   isPlainObj,
   isUndefined,
+  isPixelNumberString,
 } from './utils/is'
 import { roundTo5 } from './utils/math'
-import { isPixelNumberString } from './utils/regexp'
 import { getPixelStringNumericComponent } from './utils/steps'
 
 // -----------------------------------------------------------------------------
@@ -55,20 +55,26 @@ export const validateT = (t: number): void => {
   }
 }
 
-export const validateColumnNumber = (value: number): void => {
+export const validateStepNumber = (value: number): void => {
   if (value < 0) {
     throw new ValidationError(
-      `If column is a number, it must be a positive integer, but was '${value}'`
+      `If step is a number, it must be a positive integer, but was '${value}'`
     )
   }
 }
 
-const validateStep = ({ value }: Step): void => {
+const validatePixelString = (value: string): void => {
+  const numericPortion = getPixelStringNumericComponent(value as string)
+  validateStepNumber(numericPortion)
+}
+
+const validateStep = (value: number | string | Step): void => {
   if (isNumber(value)) {
-    validateColumnNumber(value)
+    validateStepNumber(value)
   } else if (isPixelNumberString(value)) {
-    const numericPortion = getPixelStringNumericComponent(value)
-    validateColumnNumber(numericPortion)
+    validatePixelString(value as string)
+  } else if (isPlainObj(value)) {
+    validateStepObj(value)
   } else {
     throw new ValidationError(
       `A step value must be a non-negative number or a pixel string, but it was '${value}'`
@@ -76,34 +82,8 @@ const validateStep = ({ value }: Step): void => {
   }
 }
 
-const validateColumn = (value: string | number | Step): void => {
-  if (isNumber(value)) {
-    validateColumnNumber(value)
-  } else if (isPixelNumberString(value)) {
-    const numericPortion = getPixelStringNumericComponent(value)
-    validateColumnNumber(numericPortion)
-  } else if (isPlainObj(value)) {
-    validateStep(value)
-  } else {
-    throw new ValidationError(
-      `A column value must be a non-negative number or a pixel string, but it was '${value}'`
-    )
-  }
-}
-
-const validateRow = (value: string | number | Step): void => {
-  if (isNumber(value)) {
-    validateColumnNumber(value)
-  } else if (isPixelNumberString(value)) {
-    const numericPortion = getPixelStringNumericComponent(value)
-    validateColumnNumber(numericPortion)
-  } else if (isPlainObj(value)) {
-    validateStep(value)
-  } else {
-    throw new ValidationError(
-      `A row value must be a non-negative number or a pixel string, but it was '${value}'`
-    )
-  }
+const validateStepObj = (step: Step): void => {
+  validateStep(step.value)
 }
 
 const validateColumnsAndRows = (
@@ -111,10 +91,10 @@ const validateColumnsAndRows = (
   rows: UnprocessedSteps
 ): void => {
   if (isInt(columns)) {
-    validateColumnNumber(columns)
+    validateStepNumber(columns)
   } else if (isArray(columns)) {
     columns.map((column: string | number | Step) => {
-      validateColumn(column)
+      validateStep(column)
     }, columns)
   } else {
     throw new ValidationError(
@@ -123,11 +103,11 @@ const validateColumnsAndRows = (
   }
 
   if (isInt(rows)) {
-    validateColumnNumber(rows)
+    validateStepNumber(rows)
   } else if (isArray(rows)) {
-    rows.map((column: string | number | Step) => {
-      validateRow(column)
-    }, columns)
+    rows.map((row: string | number | Step) => {
+      validateStep(row)
+    }, rows)
   } else {
     throw new ValidationError(
       `rows must be an integer or an array, but it was '${columns}'`
@@ -215,7 +195,7 @@ export const validateGutter = (gutter: number | string): void => {
   }
 }
 
-export const validateGrid = (
+export const validateGridDefinition = (
   gridDefinition: GridDefinitionWithDefaults
 ): void => {
   const {
@@ -246,6 +226,8 @@ export const validateGrid = (
       `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
     )
   }
+
+  validateColumnsAndRows(columns, rows)
 
   if (!isNil(gutter)) {
     if (isArray(gutter)) {
@@ -302,6 +284,8 @@ export const validateGrid = (
       )
     }
   }
+
+  // TODO: validate Bezier easing
 }
 
 export const validateGetPointArguments = (params: GetPointProps): void => {
@@ -342,15 +326,17 @@ export const validateGetSquareArguments = (
   }
 }
 
-export const validateGetIntersectionsArguments = (
-  boundingCurves: BoundingCurves,
-  columns: UnprocessedSteps,
-  rows: UnprocessedSteps,
-  interpolatePointOnCurveU: InterpolatePointOnCurve,
-  interpolatePointOnCurveV: InterpolatePointOnCurve
+export const validateGetAllCellBoundsArguments = (
+  makeBoundsCurvesSequential: boolean,
+  cellBoundsOrder: CellBoundsOrder
 ): void => {
-  validateBoundingCurves(boundingCurves)
-  validateColumnsAndRows(columns, rows)
-  validateFunction(interpolatePointOnCurveU, `interpolatePointOnCurveU`)
-  validateFunction(interpolatePointOnCurveV, `interpolatePointOnCurveV`)
+  if (!isBoolean(makeBoundsCurvesSequential)) {
+    throw new ValidationError(`makeBoundsCurvesSequential must be a boolean`)
+  }
+
+  if (!Object.values(CellBoundsOrder).includes(cellBoundsOrder)) {
+    throw new ValidationError(
+      `cellBoundsOrder must be one of ${Object.values(CellBoundsOrder)}`
+    )
+  }
 }

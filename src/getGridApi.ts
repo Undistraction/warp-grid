@@ -20,9 +20,9 @@ import type {
   Step,
   InterpolationParameters,
 } from './types'
-import { getEndValues, getStepData, isGutterNonZero } from './utils/steps'
+import { getEndValues, getNonGutterSteps, getStepData } from './utils/steps'
 import {
-  validateGetIntersectionsArguments,
+  validateGetAllCellBoundsArguments,
   validateGetPointArguments,
   validateGetSquareArguments,
 } from './validation'
@@ -39,6 +39,11 @@ interface GetAPiConfig {
   interpolatePointOnCurveV: InterpolatePointOnCurve
   interpolateLineU: InterpolateLineU
   interpolateLineV: InterpolateLineV
+}
+
+interface GetStepIdxIncludingGuttersAcc {
+  isComplete?: boolean
+  value: number
 }
 
 // -----------------------------------------------------------------------------
@@ -84,6 +89,38 @@ const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
 
 const mapClampT = <T>(o: ObjectWithStringKeys) =>
   mapObj<number, ObjectWithStringKeys>(clampT, o) as T
+
+// Deal with case where there are multiple gutters in a row
+
+const isSecondGutterInSequence = (steps: Step[], stepIdx: number): boolean =>
+  !!(
+    stepIdx > 0 &&
+    steps[stepIdx - 1].isGutter &&
+    steps[stepIdx] &&
+    steps[stepIdx].isGutter
+  )
+
+// We need to account for gutters when calculating the index of the step
+const getStepIdxIncludingGutters = (stepIdx: number, steps: Step[]) =>
+  steps.reduce<GetStepIdxIncludingGuttersAcc>(
+    (acc, step, idx) => {
+      if (acc.isComplete) {
+        return acc
+      }
+
+      if (step.isGutter) {
+        return acc
+      } else {
+        if (acc.value === stepIdx) {
+          return { value: idx, isComplete: true }
+        }
+        return {
+          value: acc.value + 1,
+        }
+      }
+    },
+    { value: 0 }
+  ).value
 
 // -----------------------------------------------------------------------------
 // Exports
@@ -140,7 +177,10 @@ const getApi = (
     })
   })
 
-  const getLinesXAxis = (): Curve[][] => {
+  // Horizontal lines
+  // Outer array represents rows, inner array represents horizontal line
+  // sections for each column within that row
+  const getLinesXAxis = memoize((): Curve[][] => {
     const curves = []
     let vStart = 0
     let vOppositeStart = 0
@@ -150,11 +190,13 @@ const getApi = (
       return [[boundingCurves.top], [boundingCurves.bottom]]
     }
 
-    // Otherwise work our way through the grid
+    // Otherwise work our way through the grid building all the horizontal lines
+    // that make up a row.
     for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
       const lineSections: Curve[] = []
       let uStart = 0
       let uOppositeStart = 0
+      const row = processedRows[rowIdx]
 
       processedColumns.map((column) => {
         const [uEnd, uOppositeEnd] = getEndValues(
@@ -172,8 +214,13 @@ const getApi = (
           }
         )
 
-        // If the column is a gutter, we don't want to add a line
-        if (!column.isGutter) {
+        const isFirstRowAndRowIsGutter = rowIdx === 0 && row.isGutter
+
+        if (
+          !column.isGutter &&
+          !isFirstRowAndRowIsGutter &&
+          !isSecondGutterInSequence(rows, rowIdx)
+        ) {
           const paramsClamped: InterpolationParamsU =
             mapClampT<InterpolationParamsU>({
               uStart,
@@ -193,7 +240,6 @@ const getApi = (
 
           lineSections.push(curve)
         }
-
         // Only update after we have saved the curve
         uStart = uEnd
         uOppositeStart = uOppositeEnd
@@ -222,9 +268,11 @@ const getApi = (
       }
     }
     return curves
-  }
+  })
 
-  const getLinesYAxis = (): Curve[][] => {
+  // Vertical lines Outer array represents columns, inner array represents line
+  // sections for each row within that column
+  const getLinesYAxis = memoize((): Curve[][] => {
     const curves = []
     let uStart = 0
     let uOppositeStart = 0
@@ -234,11 +282,13 @@ const getApi = (
       return [[boundingCurves.left], [boundingCurves.right]]
     }
 
-    // Otherwise work our way through the grid
+    // Otherwise work our way through the grid building all the vertical lines
+    // that make up a column.
     for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
       const lineSections: Curve[] = []
       let vStart = 0
       let vOppositeStart = 0
+      const column = processedColumns[columnIdx]
 
       processedRows.map((row) => {
         const [vEnd, vOppositeEnd] = getEndValues(
@@ -256,8 +306,14 @@ const getApi = (
           }
         )
 
-        // If the column is a gutter, we don't want to add a line
-        if (!row.isGutter) {
+        const isFirstColumnAndColumnIsGutter =
+          columnIdx === 0 && column.isGutter
+
+        if (
+          !row.isGutter &&
+          !isFirstColumnAndColumnIsGutter &&
+          !isSecondGutterInSequence(columns, columnIdx)
+        ) {
           const paramsClamped: InterpolationParamsV =
             mapClampT<InterpolationParamsV>({
               vStart,
@@ -308,9 +364,8 @@ const getApi = (
         uOppositeStart = uOppositeEnd
       }
     }
-
     return curves
-  }
+  })
 
   const getLines = memoize((): LinesByAxis => {
     return {
@@ -320,27 +375,6 @@ const getApi = (
   })
 
   const getIntersections = memoize((): Point[] => {
-    validateGetIntersectionsArguments(
-      boundingCurves,
-      columns,
-      rows,
-      interpolatePointOnCurveU,
-      interpolatePointOnCurveV
-    )
-
-    const {
-      processedColumns,
-      processedRows,
-      columnsTotalCount,
-      rowsTotalCount,
-      columnsTotalRatioValue,
-      rowsTotalRatioValue,
-      nonAbsoluteSpaceLeftRatio,
-      nonAbsoluteSpaceRightRatio,
-      nonAbsoluteSpaceTopRatio,
-      nonAbsoluteSpaceBottomRatio,
-    } = getStepData(columns, rows, curveLengths)
-
     const intersections = []
     let vStart = 0
     let vOppositeStart = 0
@@ -415,25 +449,33 @@ const getApi = (
       rowIdx: number,
       { makeBoundsCurvesSequential = false }: GetAllCellBoundsProps = {}
     ): BoundingCurvesWithMeta => {
-      validateGetSquareArguments(columnIdx, rowIdx, columns, rows)
+      const nonGutterColumns = getNonGutterSteps(columns)
+      const nonGutterRows = getNonGutterSteps(rows)
+      validateGetSquareArguments(
+        columnIdx,
+        rowIdx,
+        nonGutterColumns,
+        nonGutterRows
+      )
+
+      // We need to account for gutters when calculating the index of the column
+      // const columnIdxAccountingForGutters = getIdx(columnIdx,
+      // processedColumns)
+      const rowIdxIncludingGutters = getStepIdxIncludingGutters(
+        rowIdx,
+        processedRows
+      )
+      const columnIdxIncludingGutters = getStepIdxIncludingGutters(
+        columnIdx,
+        processedColumns
+      )
 
       const { xAxis, yAxis } = getLines()
 
-      // If there is a gutter, we need to skip over the gutter steps
-      const gutterMultiplierX = isGutterNonZero(gutter[0]) ? 2 : 1
-      const gutterMultiplierY = isGutterNonZero(gutter[1]) ? 2 : 1
-
-      const selectedRowIdx = rowIdx * gutterMultiplierY
-      const selectedColumnIdx = columnIdx * gutterMultiplierX
-      const selectedRowTop = xAxis[selectedRowIdx]
-      const selectedRowBottom = xAxis[selectedRowIdx + 1]
-      const selectedRowLeft = yAxis[selectedColumnIdx]
-      const selectedRowRight = yAxis[selectedColumnIdx + 1]
-
-      const top = selectedRowTop[columnIdx]
-      const bottom = selectedRowBottom[columnIdx]
-      const left = selectedRowLeft[rowIdx]
-      const right = selectedRowRight[rowIdx]
+      const top = xAxis[rowIdxIncludingGutters][columnIdx]
+      const bottom = xAxis[rowIdxIncludingGutters + 1][columnIdx]
+      const left = yAxis[columnIdxIncludingGutters][rowIdx]
+      const right = yAxis[columnIdxIncludingGutters + 1][rowIdx]
 
       return {
         meta: {
@@ -453,6 +495,11 @@ const getApi = (
       makeBoundsCurvesSequential = false,
       cellBoundsOrder = CellBoundsOrder.TTB_LTR,
     }: GetAllCellBoundsProps = {}): BoundingCurvesWithMeta[] => {
+      validateGetAllCellBoundsArguments(
+        makeBoundsCurvesSequential,
+        cellBoundsOrder
+      )
+
       // We only want to run through steps that are not gutters so we filter
       // both rows and columns first
       const rowsThatAreNotGutters = rows.filter(getIsStepNotGutter)

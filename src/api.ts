@@ -23,8 +23,8 @@ import type {
   WarpGrid,
 } from './types'
 import { isArray, isFunction } from './utils/is'
-import { processSteps } from './utils/steps'
-import { validateBoundingCurves, validateGrid } from './validation'
+import { getNonGutterSteps, processSteps } from './utils/steps'
+import { validateBoundingCurves, validateGridDefinition } from './validation'
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -143,35 +143,35 @@ const mergeWithDefaults = (
  *
  * @param {BoundingCurves} boundingCurves - The curves that define the
  * boundaries of the grid.
- * @param {GridDefinition} definition - The definition of the grid, including
+ * @param {GridDefinition} gridDefinition - The definition of the grid, including
  * columns, rows, and gutter.
  * @returns {WarpGrid} The warp grid model and associated API functions.
  */
 const warpGrid = (
   boundingCurves: BoundingCurves,
-  definition: GridDefinition
+  gridDefinition: GridDefinition
 ): WarpGrid => {
   // Don't destructure arg so we can pass it around as is
-  const definitionWithDefaults = mergeWithDefaults(definition)
+  const gridDefinitionWithDefaults = mergeWithDefaults(gridDefinition)
   validateBoundingCurves(boundingCurves)
-  validateGrid(definitionWithDefaults)
+  validateGridDefinition(gridDefinitionWithDefaults)
 
-  const { gutter } = definitionWithDefaults
+  const { gutter } = gridDefinitionWithDefaults
 
   const gutterArray: [number | string, number | string] = isArray(gutter)
     ? gutter
     : [gutter, gutter]
 
   const [columns, rows] = [
-    { steps: definitionWithDefaults.columns, gutter: gutterArray[0] },
-    { steps: definitionWithDefaults.rows, gutter: gutterArray[1] },
+    { steps: gridDefinitionWithDefaults.columns, gutter: gutterArray[0] },
+    { steps: gridDefinitionWithDefaults.rows, gutter: gutterArray[1] },
   ].map(processSteps)
 
   // Get functions for interpolation based on grid config
   const [interpolatePointOnCurveU, interpolatePointOnCurveV] =
-    getInterpolationStrategy(definitionWithDefaults)
+    getInterpolationStrategy(gridDefinitionWithDefaults)
   const [interpolateLineU, interpolateLineV] = getLineStrategy(
-    definitionWithDefaults
+    gridDefinitionWithDefaults
   )
 
   const api = getApi(boundingCurves, columns, rows, gutterArray, {
@@ -186,6 +186,8 @@ const warpGrid = (
       boundingCurves,
       columns: columns,
       rows: rows,
+      columnsNonGutter: getNonGutterSteps(columns),
+      rowsNonGutter: getNonGutterSteps(rows),
     },
     ...api,
   }

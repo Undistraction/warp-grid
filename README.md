@@ -243,6 +243,8 @@ As outlined above, there is an additional way to add gutters without using the g
 }
 ```
 
+You can add multiple steps with `isGutter` set to `true`, and you can have these beside one-another if you want. If you use steps with `isGutter` set to `true` alongside the `gutter` property, the `gutter` property will act as a default, and gutters of that value will be added between any steps that do not already have at least one gutter between them. They will have no effect on steps with `isGutter` set to `true`.
+
 ### Interpolations
 
 A lot of the work done by the package involves interpolation. The grid also supports configuration params that change how it performs these interpolations.

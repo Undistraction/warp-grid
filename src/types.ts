@@ -61,7 +61,8 @@ export interface GetPointProps {
  */
 export interface GridApi {
   /**
-   * Returns a point at the specified grid coordinates.
+   * Returns a point at the specified grid coordinates. Results are memoized for
+   * performance.
    * @param params The grid coordinates and options.
    * @returns The calculated grid point.
    * @throws ValidationError When coordinates are outside valid range.
@@ -69,17 +70,38 @@ export interface GridApi {
   getPoint: (params: GetPointProps) => Point
 
   /**
-   * Returns all points where grid lines intersect.
+   * Returns all points where grid lines intersect. Results are memoized for
+   * performance.
    * @returns Array of intersection points.
    */
   getIntersections: () => Point[]
 
+  /**
+   * Returns horizontal grid lines organized in rows from top to bottom. Each
+   * array element represents a row containing Bézier curves that form the
+   * horizontal grid structure. Lines include top and bottom bounds. Results are
+   * memoized for performance.
+   */
   getLinesXAxis: () => Curve[][]
+
+  /**
+   * Returns vertical grid lines organized in rows from top to bottom. Each
+   * array element represents a column containing Bézier curves that form the
+   * vertical grid structure. Lines include left and right bounds. Results are
+   * memoized for performance.
+   */
   getLinesYAxis: () => Curve[][]
+
+  /**
+   * Returns all grid lines organized by axis. The returned object contains
+   * arrays of Bézier curves representing horizontal lines (xAxis) and vertical
+   * lines (yAxis). Results are memoized for performance.
+   */
   getLines: () => LinesByAxis
 
   /**
-   * Returns the bounding curves for a specific cell.
+   * Returns the bounding curves for a specific cell. Results are memoized for
+   * performance.
    * @param columnIdx Zero-based column index.
    * @param rowIdx Zero-based row index.
    * @param config Optional configuration.
@@ -93,7 +115,8 @@ export interface GridApi {
   ) => BoundingCurves
 
   /**
-   * Returns bounding curves for all cells in the grid.
+   * Returns bounding curves for all cells in the grid. Results are memoized for
+   * performance.
    * @param params Optional configuration.
    * @returns Array of cell bounds.
    */
@@ -148,6 +171,8 @@ export interface GridModel {
   boundingCurves: BoundingCurves
   columns: Step[]
   rows: Step[]
+  columnsNonGutter: Step[]
+  rowsNonGutter: Step[]
 }
 
 /**
@@ -262,9 +287,7 @@ export type ObjectWithStringKeys = Record<string, any>
 
 export type UnprocessedStep = number | Step
 
-export type UnprocessedSteps = number | (number | Step)[]
-
-export type ExpandedSteps = (number | Step)[]
+export type UnprocessedSteps = number | UnprocessedStep[]
 
 export interface BoundingCurvesWithMeta extends BoundingCurves {
   meta: {

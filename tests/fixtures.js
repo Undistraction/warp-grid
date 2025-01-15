@@ -30,6 +30,12 @@ export const boundingCurvesValid = {
 }
 
 // -----------------------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------------------
+
+const filterSkippedTests = ({ skipTest }) => skipTest !== true
+
+// -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
 
@@ -243,8 +249,64 @@ const allFixtures = [
       },
     },
   },
+  {
+    name: `6x6 grid with multiple sequential gutters`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: [
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: `5px`,
+            isGutter: true,
+          },
+          {
+            value: 1,
+          },
+          {
+            value: `20px`,
+          },
+          {
+            value: 1,
+          },
+        ],
+        rows: [
+          {
+            value: 1,
+          },
+          {
+            value: `5px`,
+            isGutter: true,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: `20px`,
+          },
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+          },
+        ],
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [1, 1] },
+      },
+    },
+  },
 ]
 
-const fixtures = allFixtures.filter(({ skipTest }) => skipTest !== true)
+const fixtures = allFixtures.filter(filterSkippedTests)
 
 export default fixtures
