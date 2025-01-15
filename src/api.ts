@@ -174,7 +174,7 @@ const warpGrid = (
     gridDefinitionWithDefaults
   )
 
-  const api = getApi(boundingCurves, columns, rows, gutterArray, {
+  const api = getApi(boundingCurves, columns, rows, {
     interpolatePointOnCurveU,
     interpolatePointOnCurveV,
     interpolateLineU,

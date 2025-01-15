@@ -18,7 +18,6 @@ import type {
   LinesByAxis,
   Point,
   Step,
-  InterpolationParameters,
 } from './types'
 import { getEndValues, getNonGutterSteps, getStepData } from './utils/steps'
 import {
@@ -49,8 +48,6 @@ interface GetStepIdxIncludingGuttersAcc {
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
-
-const getIsStepNotGutter = (step: Step): boolean => !step.isGutter
 
 const getCurveReversed = (curve: Curve) => {
   return {
@@ -122,6 +119,57 @@ const getStepIdxIncludingGutters = (stepIdx: number, steps: Step[]) =>
     { value: 0 }
   ).value
 
+export const getAllCellCornerPoints = (curves: Curve[][]) =>
+  curves.reduce<Point[]>((acc: Point[], items: Curve[]) => {
+    const subItems: Point[] = items.reduce<Point[]>(
+      (acc: Point[], curve: Curve) => [
+        ...acc,
+        curve.startPoint,
+        curve.endPoint,
+      ],
+      []
+    )
+    return [...acc, ...subItems]
+  }, [])
+
+const iterateOverSteps = (
+  rows: Step[],
+  columns: Step[],
+  cellBoundsOrder: CellBoundsOrder,
+  getBoundingCurves: (
+    rowIdx: number,
+    columnIdx: number
+  ) => BoundingCurvesWithMeta
+) => {
+  const nonGutterRows = getNonGutterSteps(rows)
+  const nonGutterColumns = getNonGutterSteps(columns)
+
+  const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
+
+  const outerSteps = isVerticalFirst ? nonGutterRows : nonGutterColumns
+  const innerSteps = isVerticalFirst ? nonGutterColumns : nonGutterRows
+
+  const outerStepsLength = outerSteps.length
+  const innerStepsLength = innerSteps.length
+
+  const isOuterReversed = getIsOuterReversed(cellBoundsOrder)
+  const isInnerReversed = getIsInnerReversed(cellBoundsOrder)
+
+  const items = []
+  for (let i = 0; i < outerStepsLength; i++) {
+    const outerIdxResolved = isOuterReversed ? outerStepsLength - i - 1 : i
+
+    for (let j = 0; j < innerStepsLength; j++) {
+      const innerIdxResolved = isInnerReversed ? innerStepsLength - j - 1 : j
+
+      const rowIdx = isVerticalFirst ? innerIdxResolved : outerIdxResolved
+      const columnIdx = isVerticalFirst ? outerIdxResolved : innerIdxResolved
+      items.push(getBoundingCurves(rowIdx, columnIdx))
+    }
+  }
+  return items
+}
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
@@ -140,7 +188,6 @@ const getApi = (
   boundingCurves: BoundingCurves,
   columns: Step[],
   rows: Step[],
-  gutter: [number | string, number | string],
   {
     interpolatePointOnCurveU,
     interpolatePointOnCurveV,
@@ -375,71 +422,9 @@ const getApi = (
   })
 
   const getIntersections = memoize((): Point[] => {
-    const intersections = []
-    let vStart = 0
-    let vOppositeStart = 0
+    const { xAxis } = getLines()
 
-    for (let rowIdx = 0; rowIdx <= rowsTotalCount; rowIdx++) {
-      let uStart = 0
-      let uOppositeStart = 0
-
-      for (let columnIdx = 0; columnIdx <= columnsTotalCount; columnIdx++) {
-        const paramsClamped = mapClampT<InterpolationParameters>({
-          u: uStart,
-          v: vStart,
-          uOpposite: uOppositeStart,
-          vOpposite: vOppositeStart,
-        })
-
-        const point = coonsPatch(boundingCurves, paramsClamped, {
-          interpolatePointOnCurveU,
-          interpolatePointOnCurveV,
-        })
-
-        intersections.push(point)
-
-        if (columnIdx !== columnsTotalCount) {
-          const column = processedColumns[columnIdx]
-          const [uEnd, uOppositeEnd] = getEndValues(
-            column,
-            columnsTotalRatioValue,
-            {
-              start: uStart,
-              curveLength: curveLengths.top,
-              nonAbsoluteRatio: nonAbsoluteSpaceTopRatio,
-            },
-            {
-              start: uOppositeStart,
-              curveLength: curveLengths.bottom,
-              nonAbsoluteRatio: nonAbsoluteSpaceBottomRatio,
-            }
-          )
-          uStart = uEnd
-          uOppositeStart = uOppositeEnd
-        }
-      }
-
-      if (rowIdx !== rowsTotalCount) {
-        const row = processedRows[rowIdx]
-        const [vEnd, vOppositeEnd] = getEndValues(
-          row,
-          rowsTotalRatioValue,
-          {
-            start: vStart,
-            curveLength: curveLengths.left,
-            nonAbsoluteRatio: nonAbsoluteSpaceLeftRatio,
-          },
-          {
-            start: vOppositeStart,
-            curveLength: curveLengths.right,
-            nonAbsoluteRatio: nonAbsoluteSpaceRightRatio,
-          }
-        )
-        vStart = vEnd
-        vOppositeStart = vOppositeEnd
-      }
-    }
-
+    const intersections = getAllCellCornerPoints(xAxis)
     return intersections
   })
 
@@ -500,48 +485,15 @@ const getApi = (
         cellBoundsOrder
       )
 
-      // We only want to run through steps that are not gutters so we filter
-      // both rows and columns first
-      const rowsThatAreNotGutters = rows.filter(getIsStepNotGutter)
-      const columnsThatAreNotGutters = columns.filter(getIsStepNotGutter)
-
-      const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
-
-      const outerSteps = isVerticalFirst
-        ? rowsThatAreNotGutters
-        : columnsThatAreNotGutters
-
-      const innerSteps = isVerticalFirst
-        ? columnsThatAreNotGutters
-        : rowsThatAreNotGutters
-
-      const isOuterReversed = getIsOuterReversed(cellBoundsOrder)
-      const isInnerReversed = getIsInnerReversed(cellBoundsOrder)
-      const outerStepsLength = outerSteps.length
-      const innerStepsLength = innerSteps.length
-
-      const cellsBounds = []
-
-      for (let i = 0; i < outerStepsLength; i++) {
-        const outerIdxResolved = isOuterReversed ? outerStepsLength - i - 1 : i
-
-        for (let j = 0; j < innerStepsLength; j++) {
-          const innerIdxResolved = isInnerReversed
-            ? innerStepsLength - j - 1
-            : j
-
-          const rowIdx = isVerticalFirst ? innerIdxResolved : outerIdxResolved
-          const columnIdx = isVerticalFirst
-            ? outerIdxResolved
-            : innerIdxResolved
-          cellsBounds.push(
-            getCellBounds(rowIdx, columnIdx, {
-              makeBoundsCurvesSequential,
-            })
-          )
-        }
-      }
-      return cellsBounds
+      return iterateOverSteps(
+        rows,
+        columns,
+        cellBoundsOrder,
+        (rowIdx: number, columnIdx: number) =>
+          getCellBounds(rowIdx, columnIdx, {
+            makeBoundsCurvesSequential,
+          })
+      )
     }
   )
 
