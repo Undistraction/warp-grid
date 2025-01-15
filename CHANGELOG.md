@@ -1,3 +1,9 @@
+## [4.0.2](https://github.com/undistraction/warp-grid/compare/v4.0.1...v4.0.2) (2025-01-15)
+
+### Bug Fixes
+
+* **deps:** Bump coons-patch for validation fix ([42accc9](https://github.com/undistraction/warp-grid/commit/42accc92a9bb799c96c16cf7f0df0577c75911df))
+
 ## [4.0.1](https://github.com/undistraction/warp-grid/compare/v4.0.0...v4.0.1) (2025-01-15)
 
 ### Bug Fixes
