@@ -67,7 +67,6 @@ export const interpolateCurveU = (
     interpolatePointOnCurveU,
     interpolatePointOnCurveV
   )
-
   const midPoint1 = coonsPatch(
     boundingCurves,
     {

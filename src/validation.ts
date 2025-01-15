@@ -2,6 +2,7 @@ import { CellBoundsOrder, InterpolationStrategy, LineStrategy } from './enums'
 import { ValidationError } from './errors/ValidationError'
 import type {
   BoundingCurves,
+  Curve,
   GetPointProps,
   GridDefinitionWithDefaults,
   Point,
@@ -24,6 +25,12 @@ import { roundTo5 } from './utils/math'
 import { getPixelStringNumericComponent } from './utils/steps'
 
 // -----------------------------------------------------------------------------
+// Const
+// -----------------------------------------------------------------------------
+
+const CURVE_NAMES = [`top`, `right`, `bottom`, `left`]
+
+// -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
 
@@ -38,9 +45,18 @@ const getPointsAreSame = (point1: Point, point2: Point): boolean => {
   )
 }
 
+const isValidPoint = (point: Point): point is Point =>
+  isPlainObj(point) && isNumber(point.x) && isNumber(point.y)
+
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+const validateCurve = (curve: Curve, name: string): void => {
+  if (!isPlainObj(curve)) {
+    throw new Error(`Curve '${name}' must be an object`)
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const validateFunction = (func: Function, name: string): void => {
@@ -115,6 +131,26 @@ const validateColumnsAndRows = (
   }
 }
 
+const validateStartAndEndPoints = (
+  { startPoint, endPoint }: { startPoint: Point; endPoint: Point },
+  name: string
+): void => {
+  if (!isValidPoint(startPoint)) {
+    throw new Error(`Bounding curve '${name}' startPoint must be a valid point`)
+  }
+  if (!isValidPoint(endPoint)) {
+    throw new Error(`Bounding curve '${name}' endPoint must be a valid point`)
+  }
+}
+
+export const validateCurves = (boundingCurves: BoundingCurves): void => {
+  CURVE_NAMES.map((name) => {
+    const curve = boundingCurves[name as keyof BoundingCurves]
+    validateCurve(curve, name)
+    validateStartAndEndPoints(curve, name)
+  })
+}
+
 export const validateCornerPoints = (boundingCurves: BoundingCurves): void => {
   if (
     !getPointsAreSame(
@@ -170,7 +206,7 @@ export const validateBoundingCurves = (
   if (!isPlainObj(boundingCurves)) {
     throw new ValidationError(`boundingCurves must be an object`)
   }
-
+  validateCurves(boundingCurves)
   validateCornerPoints(boundingCurves)
 }
 
@@ -298,7 +334,7 @@ export const validateGetPointArguments = (params: GetPointProps): void => {
   }, params)
 }
 
-export const validateGetSquareArguments = (
+export const validateGetGridSquareArguments = (
   x: number,
   y: number,
   columns: Step[],

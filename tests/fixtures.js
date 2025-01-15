@@ -305,6 +305,87 @@ const allFixtures = [
       },
     },
   },
+  {
+    name: `4*4 grid with gutter objects and gutters`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: [
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: `5px`,
+          },
+          {
+            value: 1,
+          },
+        ],
+        rows: [
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: `5px`,
+          },
+          {
+            value: 1,
+          },
+        ],
+        gutters: [1, 2],
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [1, 1] },
+      },
+    },
+  },
+  {
+    name: `3*3 grid with first and last rows as gutters`,
+    input: {
+      bounds: boundingCurvesValid,
+      grid: {
+        columns: [
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+        ],
+        rows: [
+          {
+            value: 1,
+            isGutter: true,
+          },
+          {
+            value: 1,
+          },
+          {
+            value: 1,
+            isGutter: true,
+          },
+        ],
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [0, 0] },
+      },
+    },
+  },
 ]
 
 const fixtures = allFixtures.filter(filterSkippedTests)

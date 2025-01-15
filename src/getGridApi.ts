@@ -23,7 +23,7 @@ import { getEndValues, getNonGutterSteps, getStepData } from './utils/steps'
 import {
   validateGetAllCellBoundsArguments,
   validateGetPointArguments,
-  validateGetSquareArguments,
+  validateGetGridSquareArguments,
 } from './validation'
 import { getBezierCurveLength } from './utils/bezier'
 import { mapObj } from './utils/functional'
@@ -277,7 +277,6 @@ const getApi = (
               uOppositeEnd,
               vOppositeStart,
             })
-
           const curve = interpolateLineU(
             boundingCurves,
             paramsClamped,
@@ -436,7 +435,7 @@ const getApi = (
     ): BoundingCurvesWithMeta => {
       const nonGutterColumns = getNonGutterSteps(columns)
       const nonGutterRows = getNonGutterSteps(rows)
-      validateGetSquareArguments(
+      validateGetGridSquareArguments(
         columnIdx,
         rowIdx,
         nonGutterColumns,
