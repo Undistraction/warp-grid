@@ -15,16 +15,21 @@ import { Bezier } from 'bezier-js'
 // Utils
 // -----------------------------------------------------------------------------
 
-const getBezierFromCurve = (curve: Curve): Bezier =>
+const getBezierFromCurve = ({
+  startPoint,
+  endPoint,
+  controlPoint1,
+  controlPoint2,
+}: Curve): Bezier =>
   new Bezier(
-    curve.startPoint.x,
-    curve.startPoint.y,
-    curve.controlPoint1.x,
-    curve.controlPoint1.y,
-    curve.controlPoint2.x,
-    curve.controlPoint2.y,
-    curve.endPoint.x,
-    curve.endPoint.y
+    startPoint.x,
+    startPoint.y,
+    controlPoint1.x,
+    controlPoint1.y,
+    controlPoint2.x,
+    controlPoint2.y,
+    endPoint.x,
+    endPoint.y
   )
 
 const pointsToCurve = (points: Point[]): Curve => ({

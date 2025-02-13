@@ -66,21 +66,31 @@ const getAreStepsVerticalFirst = (cellBoundsOrder: CellBoundsOrder): boolean =>
     CellBoundsOrder.BTT_RTL,
   ].includes(cellBoundsOrder)
 
-const getIsOuterReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
-  [
-    CellBoundsOrder.BTT_LTR,
-    CellBoundsOrder.BTT_RTL,
-    CellBoundsOrder.RTL_TTB,
-    CellBoundsOrder.RTL_BTT,
-  ].includes(cellBoundsOrder)
+const getIsOuterReversed = (
+  cellBoundsOrder: CellBoundsOrder,
+  isVerticalFirst: boolean
+): boolean => {
+  // If we are vertical first, anything starting with BTT is reversed
+  // If we are not, anything starting with RTL is reversed
+  const reversedEntries = isVerticalFirst
+    ? [CellBoundsOrder.BTT_LTR, CellBoundsOrder.BTT_RTL]
+    : [CellBoundsOrder.RTL_TTB, CellBoundsOrder.RTL_BTT]
 
-const getIsInnerReversed = (cellBoundsOrder: CellBoundsOrder): boolean =>
-  [
-    CellBoundsOrder.TTB_RTL,
-    CellBoundsOrder.BTT_RTL,
-    CellBoundsOrder.LTR_BTT,
-    CellBoundsOrder.RTL_BTT,
-  ].includes(cellBoundsOrder)
+  return reversedEntries.includes(cellBoundsOrder)
+}
+
+const getIsInnerReversed = (
+  cellBoundsOrder: CellBoundsOrder,
+  isVerticalFirst: boolean
+): boolean => {
+  // If we are vertical first, anything ending with RTL is reversed
+  // If we are not, anything ending with BTT is reversed
+  const reversedEntries = isVerticalFirst
+    ? [CellBoundsOrder.TTB_RTL, CellBoundsOrder.BTT_RTL]
+    : [CellBoundsOrder.RTL_BTT, CellBoundsOrder.LTR_BTT]
+
+  return reversedEntries.includes(cellBoundsOrder)
+}
 
 const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
 
@@ -144,6 +154,8 @@ const iterateOverSteps = (
   const nonGutterRows = getNonGutterSteps(rows)
   const nonGutterColumns = getNonGutterSteps(columns)
 
+  // If cellBoundsOrder starts with either TTB or BTT then outer steps are
+  // vertical, so we are vertical first
   const isVerticalFirst = getAreStepsVerticalFirst(cellBoundsOrder)
 
   const outerSteps = isVerticalFirst ? nonGutterRows : nonGutterColumns
@@ -152,8 +164,8 @@ const iterateOverSteps = (
   const outerStepsLength = outerSteps.length
   const innerStepsLength = innerSteps.length
 
-  const isOuterReversed = getIsOuterReversed(cellBoundsOrder)
-  const isInnerReversed = getIsInnerReversed(cellBoundsOrder)
+  const isOuterReversed = getIsOuterReversed(cellBoundsOrder, isVerticalFirst)
+  const isInnerReversed = getIsInnerReversed(cellBoundsOrder, isVerticalFirst)
 
   const items = []
   for (let i = 0; i < outerStepsLength; i++) {
