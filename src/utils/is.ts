@@ -5,7 +5,7 @@
 // Const
 // -----------------------------------------------------------------------------
 
-const VALID_GUTTER_REGEXP = /^\d+(px)$/
+const VALID_GUTTER_REGEXP = /^\d*\.?\d+px$/
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -44,11 +44,6 @@ export const isPlainObj = (value: any): value is object =>
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const isFunction = (value: any): value is Function =>
   isType(`function`, value)
-// Number followed by 'px'
-
-// -----------------------------------------------------------------------------
-// Exports
-// -----------------------------------------------------------------------------
 
 export const isPixelNumberString = (value: unknown) => {
   return isString(value) && VALID_GUTTER_REGEXP.test(value)

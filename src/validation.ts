@@ -276,7 +276,7 @@ export const validateGridDefinition = (
     } else {
       if (!isNumber(gutter) && !isPixelNumberString(gutter)) {
         throw new ValidationError(
-          `grid.gutters must be an Int, a string, or an Array of Ints and/or pixel-strings`
+          `grid.gutters must be an Int, a pixel-string, or an Array of Ints and/or pixel-strings`
         )
       }
       validateGutter(gutter)
