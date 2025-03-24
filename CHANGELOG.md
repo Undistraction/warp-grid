@@ -1,3 +1,9 @@
+## [4.0.3](https://github.com/undistraction/warp-grid/compare/v4.0.2...v4.0.3) (2025-03-24)
+
+### Bug Fixes
+
+* Allow fractional pixel values in pixel-string regexp ([46c995f](https://github.com/undistraction/warp-grid/commit/46c995f233e110c2ba1a47f37e0d8de5c22d8e10))
+
 ## [4.0.2](https://github.com/undistraction/warp-grid/compare/v4.0.1...v4.0.2) (2025-01-15)
 
 ### Bug Fixes
