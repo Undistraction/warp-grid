@@ -1,3 +1,9 @@
+## [4.0.4](https://github.com/undistraction/warp-grid/compare/v4.0.3...v4.0.4) (2025-03-24)
+
+### Bug Fixes
+
+* Prevent edge case with absolute values ([fd6d578](https://github.com/undistraction/warp-grid/commit/fd6d578878f2815623eafd6b41890943c37a4b75))
+
 ## [4.0.3](https://github.com/undistraction/warp-grid/compare/v4.0.2...v4.0.3) (2025-03-24)
 
 ### Bug Fixes
