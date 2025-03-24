@@ -53,7 +53,7 @@ describe(`getGrid`, () => {
     describe(`model`, () => {
       const { model } = grid
       it(`with original boundingCurves`, () => {
-        expect(model.boundingCurves).toEqual(boundingCurvesValid)
+        expect(model.boundingCurves).toEqual(input.bounds)
       })
 
       it(`with arrays of column and row values`, () => {

@@ -98,8 +98,7 @@ const mapClampT = <T>(o: ObjectWithStringKeys) =>
   mapObj<number, ObjectWithStringKeys>(clampT, o) as T
 
 // Deal with case where there are multiple gutters in a row
-
-const isSecondGutterInSequence = (steps: Step[], stepIdx: number): boolean =>
+const previousWasAlsoGutter = (steps: Step[], stepIdx: number): boolean =>
   !!(
     stepIdx > 0 &&
     steps[stepIdx - 1].isGutter &&
@@ -278,7 +277,7 @@ const getApi = (
         if (
           !column.isGutter &&
           !isFirstRowAndRowIsGutter &&
-          !isSecondGutterInSequence(rows, rowIdx)
+          !previousWasAlsoGutter(rows, rowIdx)
         ) {
           const paramsClamped: InterpolationParamsU =
             mapClampT<InterpolationParamsU>({
@@ -370,7 +369,7 @@ const getApi = (
         if (
           !row.isGutter &&
           !isFirstColumnAndColumnIsGutter &&
-          !isSecondGutterInSequence(columns, columnIdx)
+          !previousWasAlsoGutter(columns, columnIdx)
         ) {
           const paramsClamped: InterpolationParamsV =
             mapClampT<InterpolationParamsV>({

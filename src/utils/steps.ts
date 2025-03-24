@@ -108,11 +108,12 @@ const getNonAbsoluteSpaceRatios = (
   const totalAbsoluteRatioLeft = totalAbsoluteSizeV / curveLengths.left
   const totalAbsoluteRatioRight = totalAbsoluteSizeV / curveLengths.right
 
-  const nonAbsoluteSpaceTopRatio = 1 - totalAbsoluteRatioTop
-  const nonAbsoluteSpaceBottomRatio = 1 - totalAbsoluteRatioBottom
+  const nonAbsoluteSpaceTopRatio = Math.max(1 - totalAbsoluteRatioTop, 0)
+  const nonAbsoluteSpaceBottomRatio = Math.max(1 - totalAbsoluteRatioBottom, 0)
 
-  const nonAbsoluteSpaceLeftRatio = 1 - totalAbsoluteRatioLeft
-  const nonAbsoluteSpaceRightRatio = 1 - totalAbsoluteRatioRight
+  // Prevent this from becoming a negative number
+  const nonAbsoluteSpaceLeftRatio = Math.max(1 - totalAbsoluteRatioLeft, 0)
+  const nonAbsoluteSpaceRightRatio = Math.max(1 - totalAbsoluteRatioRight, 0)
 
   return {
     nonAbsoluteSpaceTopRatio,

@@ -29,6 +29,33 @@ export const boundingCurvesValid = {
   },
 }
 
+export const boundingCurvesNarrowEdge = {
+  top: {
+    startPoint: { x: 0, y: 0 },
+    endPoint: { x: 100, y: 0 },
+    controlPoint1: { x: 10, y: -10 },
+    controlPoint2: { x: 90, y: -10 },
+  },
+  bottom: {
+    startPoint: { x: 25, y: 100 },
+    endPoint: { x: 75, y: 100 },
+    controlPoint1: { x: 25, y: 100 },
+    controlPoint2: { x: 75, y: 100 },
+  },
+  left: {
+    startPoint: { x: 0, y: 0 },
+    endPoint: { x: 25, y: 100 },
+    controlPoint1: { x: -10, y: -10 },
+    controlPoint2: { x: 25, y: 100 },
+  },
+  right: {
+    startPoint: { x: 100, y: 0 },
+    endPoint: { x: 75, y: 100 },
+    controlPoint1: { x: 110, y: -10 },
+    controlPoint2: { x: 75, y: 100 },
+  },
+}
+
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -41,7 +68,7 @@ const filterSkippedTests = ({ skipTest }) => skipTest !== true
 
 // Define different sets of params to test
 // Save the results to JSON files to import into tests
-// Set 'skipSnapshot' falsetrue' for each item to skip the snapshot
+// Set 'skipSnapshot' false' for each item to skip the snapshot
 const allFixtures = [
   {
     name: `3x3 grid`,
@@ -383,6 +410,46 @@ const allFixtures = [
       api: {
         getPoint: { args: [{ u: 0.5, v: 0.25 }] },
         getCellBounds: { args: [0, 0] },
+      },
+    },
+  },
+  {
+    name: `Bounds where pixel values force non-absolute values to negative`,
+    input: {
+      bounds: boundingCurvesNarrowEdge,
+      grid: {
+        columns: [
+          { value: 1 },
+          { value: `25px` },
+          { value: 1 },
+          { value: `25px` },
+          { value: 1 },
+        ],
+        rows: 3,
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
+      },
+    },
+  },
+  {
+    name: `Bounds where pixel values are greater than lower edge`,
+    input: {
+      bounds: boundingCurvesNarrowEdge,
+      grid: {
+        columns: [
+          { value: 1 },
+          { value: `50px` },
+          { value: 1 },
+          { value: `50px` },
+          { value: 1 },
+        ],
+        rows: 3,
+      },
+      api: {
+        getPoint: { args: [{ u: 0.5, v: 0.25 }] },
+        getCellBounds: { args: [2, 2] },
       },
     },
   },
