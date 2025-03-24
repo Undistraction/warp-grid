@@ -159,7 +159,7 @@ export interface GridDefinition {
 
   /**
    * Easing parameters for curve calculations.
-   * @default [0.4, 0, 0.2, 1]
+   * @default [0, 0, 1, 1]
    */
   bezierEasing?: BezierEasing
 }
