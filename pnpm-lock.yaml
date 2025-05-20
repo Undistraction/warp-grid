@@ -103,9 +103,6 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
-      rollup:
-        specifier: ^4.22.4
-        version: 4.39.0
       semantic-release:
         specifier: ^24.0.0
         version: 24.2.3(typescript@5.8.3)
