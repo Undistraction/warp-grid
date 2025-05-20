@@ -7,5 +7,4 @@ pnpm exec lint-staged
 pnpm run test
 
 # Compile Typescript
-
 pnpm run tsc
