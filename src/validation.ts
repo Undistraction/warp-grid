@@ -7,7 +7,7 @@ import type {
   GridDefinitionWithDefaults,
   Point,
   Step,
-  UnprocessedSteps,
+  StepDefinition,
 } from './types'
 import { mapObj } from './utils/functional'
 import {
@@ -103,8 +103,8 @@ const validateStepObj = (step: Step): void => {
 }
 
 const validateColumnsAndRows = (
-  columns: UnprocessedSteps,
-  rows: UnprocessedSteps
+  columns: StepDefinition,
+  rows: StepDefinition
 ): void => {
   if (isInt(columns)) {
     validateStepNumber(columns)

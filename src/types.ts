@@ -243,12 +243,9 @@ export interface Step {
   isGutter?: boolean
 }
 
-/**
- * Defines the size and distribution of grid steps.
- * Accepts uniform steps (number), varied steps (number[]), or complex steps (Step[]).
- * @throws ValueError When step values are negative.
- */
-export type StepDefinition = number | (number | string | Step)[]
+export type UnprocessedStep = string | number | Step
+
+export type StepDefinition = number | UnprocessedStep[]
 
 /**
  * Complete grid interface combining manipulation methods with model access.
@@ -284,10 +281,6 @@ export interface CurveLengths {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ObjectWithStringKeys = Record<string, any>
-
-export type UnprocessedStep = number | Step
-
-export type UnprocessedSteps = number | UnprocessedStep[]
 
 export interface BoundingCurvesWithMeta extends BoundingCurves {
   meta: {

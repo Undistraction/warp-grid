@@ -2,7 +2,7 @@ import type {
   CurveLengths,
   Step,
   UnprocessedStep,
-  UnprocessedSteps,
+  StepDefinition,
 } from '../types'
 import { times } from './functional'
 import { isInt, isNumber, isPlainObj, isPixelNumberString, isNil } from './is'
@@ -29,7 +29,7 @@ const getProcessedStepValue = (step: number | string): number | string => {
   return step
 }
 
-const ensureArray = (unprocessedSteps: UnprocessedSteps): UnprocessedStep[] =>
+const ensureArray = (unprocessedSteps: StepDefinition): UnprocessedStep[] =>
   isInt(unprocessedSteps) ? times(() => 1, unprocessedSteps) : unprocessedSteps
 
 const ensureObjectsAndProcess = (steps: UnprocessedStep[]) =>
@@ -167,7 +167,7 @@ export const processSteps = ({
   steps,
   gutter,
 }: {
-  steps: UnprocessedSteps
+  steps: StepDefinition
   gutter: number | string
 }): Step[] => {
   const stepsArray = ensureArray(steps)
