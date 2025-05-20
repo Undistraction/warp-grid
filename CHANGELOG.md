@@ -1,3 +1,13 @@
+## [4.1.0](https://github.com/undistraction/warp-grid/compare/v4.0.4...v4.1.0) (2025-05-20)
+
+### Features
+
+* Switch tests to TS ([44154b3](https://github.com/undistraction/warp-grid/commit/44154b35f0b7bb2ec90a4f6e6d7450f2aa9b7c0a))
+
+### Bug Fixes
+
+* Consolodate step types ([30cd142](https://github.com/undistraction/warp-grid/commit/30cd14203079b0da580f09e58346c1d8ac54582f))
+
 ## [4.0.4](https://github.com/undistraction/warp-grid/compare/v4.0.3...v4.0.4) (2025-03-24)
 
 ### Bug Fixes
