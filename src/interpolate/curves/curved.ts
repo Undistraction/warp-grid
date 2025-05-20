@@ -7,7 +7,7 @@ import type {
 } from '../../types'
 import { fitCubicBezierToPoints } from '../../utils/bezier'
 import { interpolateStraightLineU, interpolateStraightLineV } from './straight'
-import coonsPatch from 'coons-patch'
+import { coonsPatch } from 'coons-patch'
 
 // -----------------------------------------------------------------------------
 // Const

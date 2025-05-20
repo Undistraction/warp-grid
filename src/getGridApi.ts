@@ -1,4 +1,4 @@
-import coonsPatch from 'coons-patch'
+import { coonsPatch } from 'coons-patch'
 import memoize from 'fast-memoize'
 
 import { CellBoundsOrder } from './enums'
