@@ -44,7 +44,7 @@ This package is written in TypeScript and exports its types.
 The basic workflow is that you supply bounds representing the edges of boundaries of your grid, and a grid configuration object describing the grid you'd like to map onto those bounds. In return you receive an object with information about the grid, and an API to allow you to get information about the grid. This means no expensive calculations are done up front, and calculations are only performed as and when you need them.
 
 ```typeScript
-import warpGrid from 'warp-grid'
+import { warpGrid } from 'warp-grid'
 
 // Define bounding (cubic Bézier) curves for the patch
 const boundingCurves = {
@@ -441,7 +441,7 @@ pnpm run docs-view
 
 ### Run unit tests
 
-Unit tests use vitest.
+Unit tests use vitest. Note that some of the tests are written in JS instead of TS. Those tests are related to validation of types at runtime. Any validations that validate things that cannot be caught by TS are written in TS.
 
 ```bash
 pnpm run test # Run tests once
