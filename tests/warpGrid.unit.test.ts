@@ -1,6 +1,6 @@
-import getGrid from '../src/index.ts'
-import fixtures, { boundingCurvesValid } from './fixtures.ts'
-import { CellBoundsOrder } from '../src/enums.ts'
+import { warpGrid } from '../src/index'
+import fixtures, { boundingCurvesValid } from './fixtures'
+import { CellBoundsOrder } from '../src/enums'
 
 // -----------------------------------------------------------------------------
 // Const
@@ -25,22 +25,18 @@ const cellBoundsOrderFixture = enumValues.map((key) => {
 })
 
 // -----------------------------------------------------------------------------
-// Utils
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
 
-describe(`getGrid`, () => {
+describe(`warpGrid`, () => {
   describe(`regression`, () => {
     // Coons-patch was incorrectly failing validations of bounding curves if
     // they had a meta property.
     describe(`nested grid`, () => {
       it(`Supports nested grids`, () => {
-        const outerGrid = getGrid(boundingCurvesValid, { columns: 3, rows: 3 })
+        const outerGrid = warpGrid(boundingCurvesValid, { columns: 3, rows: 3 })
         const cellBounds = outerGrid.getCellBounds(1, 1)
-        const grid = getGrid(cellBounds, { columns: 3, rows: 3 })
+        const grid = warpGrid(cellBounds, { columns: 3, rows: 3 })
         expect(grid.model.boundingCurves).toEqual(cellBounds)
         expect(() => grid.getCellBounds(1, 1)).not.toThrow()
       })
@@ -49,7 +45,7 @@ describe(`getGrid`, () => {
 
   // Loop through different types of grid
   describe.each(fixtures)(`for fixture: '$name' supplies …`, ({ input }) => {
-    const grid = getGrid(input.bounds, input.grid)
+    const grid = warpGrid(input.bounds, input.grid)
 
     describe(`model`, () => {
       const { model } = grid

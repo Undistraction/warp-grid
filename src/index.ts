@@ -39,4 +39,4 @@ export { default as interpolatePointOnCurveLinearFactory } from './interpolate/p
 // Re-export API
 // -----------------------------------------------------------------------------
 
-export { default } from './api'
+export { default as warpGrid } from './api'

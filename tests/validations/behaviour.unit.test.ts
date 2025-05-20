@@ -1,6 +1,6 @@
 import { boundingCurvesValid } from '../fixtures'
 import { clone } from '../helpers'
-import getGrid from '../../src'
+import { warpGrid } from '../../src'
 
 // -----------------------------------------------------------------------------
 // Const
@@ -18,7 +18,7 @@ describe(`validations`, () => {
       expect(() => {
         const bounds = clone(boundingCurvesValid)
         bounds.right.startPoint.x = -10
-        getGrid(bounds, validGridDefinition)
+        warpGrid(bounds, validGridDefinition)
       }).toThrow(
         `top curve endPoint and right curve startPoint must have the same coordinates`
       )
@@ -28,7 +28,7 @@ describe(`validations`, () => {
       expect(() => {
         const bounds = clone(boundingCurvesValid)
         bounds.left.endPoint.x = -10
-        getGrid(bounds, validGridDefinition)
+        warpGrid(bounds, validGridDefinition)
       }).toThrow(
         `bottom curve startPoint and left curve endPoint must have the same coordinates`
       )
@@ -38,7 +38,7 @@ describe(`validations`, () => {
       expect(() => {
         const bounds = clone(boundingCurvesValid)
         bounds.right.endPoint.x = -10
-        getGrid(bounds, validGridDefinition)
+        warpGrid(bounds, validGridDefinition)
       }).toThrow(
         `bottom curve endPoint and right curve endPoint must have the same coordinates`
       )
@@ -49,7 +49,7 @@ describe(`validations`, () => {
     describe(`precision`, () => {
       it(`throws if precision is not a positive integer`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, {
+          warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
             precision: -3,
@@ -63,7 +63,7 @@ describe(`validations`, () => {
     describe(`api`, () => {
       describe(`getPoint`, () => {
         it(`throws if x is less than 0`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -72,7 +72,7 @@ describe(`validations`, () => {
           }).toThrow(`u must be between 0 and 1, but was '-1'`)
         })
         it(`throws if u is greater than 1`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -81,7 +81,7 @@ describe(`validations`, () => {
           }).toThrow(`u must be between 0 and 1, but was '2'`)
         })
         it(`throws if v is less than 0`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -90,7 +90,7 @@ describe(`validations`, () => {
           }).toThrow(`v must be between 0 and 1, but was '-1'`)
         })
         it(`throws if v is greater than 1`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -102,7 +102,7 @@ describe(`validations`, () => {
 
       describe(`getCellBounds`, () => {
         it(`throws if gridCell x coordinate is greater than number of columns -1`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -114,7 +114,7 @@ describe(`validations`, () => {
         })
 
         it(`throws if gridCell y coordinate is greater than number of rows -1`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })
@@ -126,7 +126,7 @@ describe(`validations`, () => {
         })
 
         it(`throws if gridCell coordinates are negative`, () => {
-          const grid = getGrid(boundingCurvesValid, {
+          const grid = warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
           })

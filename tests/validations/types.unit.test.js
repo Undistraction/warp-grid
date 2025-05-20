@@ -1,6 +1,6 @@
 import { boundingCurvesValid } from '../fixtures'
 import { clone } from '../helpers'
-import getGrid from '../../src'
+import { warpGrid } from '../../src'
 
 // -----------------------------------------------------------------------------
 // Tests
@@ -10,13 +10,13 @@ describe(`validations`, () => {
   describe(`boundingCurves`, () => {
     it(`throws if no boundingCurves is supplied`, () => {
       expect(() => {
-        getGrid()
+        warpGrid()
       }).toThrow(`You must supply boundingCurves(Object)`)
     })
 
     it(`throws if boundingCurves is not an object`, () => {
       expect(() => {
-        getGrid([])
+        warpGrid([])
       }).toThrow(`boundingCurves must be an object`)
     })
 
@@ -31,7 +31,7 @@ describe(`validations`, () => {
           const bounds = clone(boundingCurvesValid)
           bounds[name] = `abc`
           expect(() => {
-            getGrid(bounds)
+            warpGrid(bounds)
           }).toThrow(`Curve '${name}' must be an object`)
         })
 
@@ -39,7 +39,7 @@ describe(`validations`, () => {
           const bounds = clone(boundingCurvesValid)
           bounds[name] = {}
           expect(() => {
-            getGrid(bounds)
+            warpGrid(bounds)
           }).toThrow(
             `Bounding curve '${name}' startPoint must be a valid point`
           )
@@ -52,19 +52,19 @@ describe(`validations`, () => {
     describe(`columns and rows`, () => {
       it(`throws if no columns are supplied`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, {})
+          warpGrid(boundingCurvesValid, {})
         }).toThrow(`You must supply grid.columns(Array or Int)`)
       })
 
       it(`throws if no rows are supplied`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, { columns: [] })
+          warpGrid(boundingCurvesValid, { columns: [] })
         }).toThrow(`You must supply grid.rows(Array or Int)`)
       })
 
       it(`throws if columns are not Array or Int`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, { columns: {} })
+          warpGrid(boundingCurvesValid, { columns: {} })
         }).toThrow(
           `grid.columns must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
         )
@@ -72,7 +72,7 @@ describe(`validations`, () => {
 
       it(`throws if rows are not Array or Int`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, { columns: [], rows: {} })
+          warpGrid(boundingCurvesValid, { columns: [], rows: {} })
         }).toThrow(
           `grid.rows must be an Int, an Array of Ints and/or pixel strings, or an Array of objects`
         )
@@ -82,7 +82,7 @@ describe(`validations`, () => {
     describe(`interpolationStrategy`, () => {
       it(`throws if interpolationStrategy name is not recognised`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, {
+          warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
             interpolationStrategy: `nope`,
@@ -96,7 +96,7 @@ describe(`validations`, () => {
     describe(`precision`, () => {
       it(`throws if precision is not an integer`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, {
+          warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
             precision: `abc`,
@@ -110,7 +110,7 @@ describe(`validations`, () => {
     describe(`lineStrategy`, () => {
       it(`throws if lineStrategy name is not recognised`, () => {
         expect(() => {
-          getGrid(boundingCurvesValid, {
+          warpGrid(boundingCurvesValid, {
             columns: 4,
             rows: 3,
             lineStrategy: `nope`,
