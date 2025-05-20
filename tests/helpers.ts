@@ -2,4 +2,4 @@
 // Exports
 // -----------------------------------------------------------------------------
 
-export const clone = (value) => JSON.parse(JSON.stringify(value))
+export const clone = (value: object) => JSON.parse(JSON.stringify(value))
