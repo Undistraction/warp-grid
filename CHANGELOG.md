@@ -1,3 +1,13 @@
+## [5.0.0](https://github.com/undistraction/warp-grid/compare/v4.2.0...v5.0.0) (2025-05-20)
+
+### ⚠ BREAKING CHANGES
+
+* API change
+
+### Miscellaneous Chores
+
+* Force major version bump ([a885d63](https://github.com/undistraction/warp-grid/commit/a885d63c38a4c9c4866e26f6db999146927e13fa))
+
 ## [4.2.0](https://github.com/undistraction/warp-grid/compare/v4.1.1...v4.2.0) (2025-05-20)
 
 ### Features
