@@ -22,6 +22,9 @@ export type {
   Point,
   Step,
   StepDefinition,
+  UnprocessedStep,
+  InterpolationParamsU,
+  InterpolationParamsV,
   WarpGrid,
 } from './types'
 

@@ -185,7 +185,7 @@ export interface GridModel {
  */
 export type InterpolateLineU = (
   boundingCurves: BoundingCurves,
-  { uStart, uEnd, vStart }: InterpolationParamsU,
+  params: InterpolationParamsU,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
@@ -200,7 +200,7 @@ export type InterpolateLineU = (
  */
 export type InterpolateLineV = (
   boundingCurves: BoundingCurves,
-  { vStart, vEnd, uStart }: InterpolationParamsV,
+  params: InterpolationParamsV,
   interpolatePointOnCurveU: InterpolatePointOnCurve,
   interpolatePointOnCurveV: InterpolatePointOnCurve
 ) => Curve
@@ -243,6 +243,10 @@ export interface Step {
   isGutter?: boolean
 }
 
+/**
+ * Represents a raw step value before processing into a standardized Step
+ * format. Can be a number, string, or an explicit Step object.
+ */
 export type UnprocessedStep = string | number | Step
 
 export type StepDefinition = number | UnprocessedStep[]
@@ -289,6 +293,9 @@ export interface BoundingCurvesWithMeta extends BoundingCurves {
   }
 }
 
+/**
+ * Parameters for interpolating a line in the U direction.
+ */
 export interface InterpolationParamsU extends ObjectWithStringKeys {
   uStart: number
   uEnd: number
@@ -298,6 +305,9 @@ export interface InterpolationParamsU extends ObjectWithStringKeys {
   vOppositeStart: number
 }
 
+/**
+ * Parameters for interpolating a line in the V direction.
+ */
 export interface InterpolationParamsV extends ObjectWithStringKeys {
   vStart: number
   vEnd: number
