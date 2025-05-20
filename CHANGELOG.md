@@ -1,3 +1,9 @@
+## [4.2.0](https://github.com/undistraction/warp-grid/compare/v4.1.1...v4.2.0) (2025-05-20)
+
+### Features
+
+* Switch to named export for warpGrid ([144e159](https://github.com/undistraction/warp-grid/commit/144e1598dfd43e281925dbb1760bf8963c06f305))
+
 ## [4.1.1](https://github.com/undistraction/warp-grid/compare/v4.1.0...v4.1.1) (2025-05-20)
 
 ## [4.1.0](https://github.com/undistraction/warp-grid/compare/v4.0.4...v4.1.0) (2025-05-20)
