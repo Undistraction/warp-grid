@@ -1,3 +1,5 @@
+## [4.1.1](https://github.com/undistraction/warp-grid/compare/v4.1.0...v4.1.1) (2025-05-20)
+
 ## [4.1.0](https://github.com/undistraction/warp-grid/compare/v4.0.4...v4.1.0) (2025-05-20)
 
 ### Features
