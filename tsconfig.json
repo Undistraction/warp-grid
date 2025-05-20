@@ -1,8 +1,7 @@
 {
-  // The files to include in the compilation
-  "include": ["src/**/*"],
   // Files to exclude from the compilation
   "exclude": ["node_modules/**/*"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   // Compiler options
   "compilerOptions": {
     "types": ["vitest/globals"],
