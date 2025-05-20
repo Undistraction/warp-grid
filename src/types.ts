@@ -248,7 +248,7 @@ export interface Step {
  * Accepts uniform steps (number), varied steps (number[]), or complex steps (Step[]).
  * @throws ValueError When step values are negative.
  */
-export type StepDefinition = number | number[] | Step[]
+export type StepDefinition = number | (number | string | Step)[]
 
 /**
  * Complete grid interface combining manipulation methods with model access.
