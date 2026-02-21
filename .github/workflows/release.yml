@@ -5,6 +5,7 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  id-token: write
 
 jobs:
   security:
@@ -56,6 +57,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - uses: pnpm/action-setup@v4
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@^11.5.1
       - run: pnpm install
       - name: Build
         run: pnpm run build
@@ -64,5 +67,5 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         run: npx semantic-release
