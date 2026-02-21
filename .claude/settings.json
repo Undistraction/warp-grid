@@ -8,7 +8,30 @@
       "Read(//tmp/**)",
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:mljs.github.io)"
+      "WebFetch(domain:mljs.github.io)",
+      "Bash(pnpm run audit-npm-packages:*)",
+      "Bash(pnpm run lint:*)",
+      "Bash(pnpm run tsc:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm run docs:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm run test:*)",
+      "Bash(pnpm run test-watch:*)",
+      "Bash(pnpm run test-coverage:*)",
+      "Bash(pnpm run test-snapshot:*)",
+      "Bash(pnpm run bench)",
+      "Bash(pnpm run bench:*)",
+      "Bash(pnpm run test:run:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm view:*)",
+      "Bash(npx tsx:*)",
+      "Bash(python3:*)",
+      "Bash(git stash:*)",
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
