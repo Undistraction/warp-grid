@@ -208,6 +208,37 @@ describe(`getAllCellBounds`, () => {
   })
 })
 
+describe(`nested grids - 2k cells with 7-cell nested grids`, () => {
+  const OUTER_GRID = { columns: 50, rows: 40 }
+  const NESTED_GRID = { columns: 7, rows: 1 }
+
+  bench(`even interpolation`, () => {
+    const outer = warpGrid(boundingCurvesValid, OUTER_GRID)
+    const cellBounds = outer.getAllCellBounds()
+    for (const bounds of cellBounds) {
+      const nested = warpGrid(bounds, NESTED_GRID)
+      nested.getAllCellBounds()
+    }
+  })
+
+  bench(`linear interpolation`, () => {
+    const outerDef = {
+      ...OUTER_GRID,
+      interpolationStrategy: InterpolationStrategy.LINEAR,
+    }
+    const nestedDef = {
+      ...NESTED_GRID,
+      interpolationStrategy: InterpolationStrategy.LINEAR,
+    }
+    const outer = warpGrid(boundingCurvesValid, outerDef)
+    const cellBounds = outer.getAllCellBounds()
+    for (const bounds of cellBounds) {
+      const nested = warpGrid(bounds, nestedDef)
+      nested.getAllCellBounds()
+    }
+  })
+})
+
 describe(`interpolatePointOnCurve`, () => {
   const curve = boundingCurvesValid.top
 
