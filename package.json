@@ -32,6 +32,7 @@
   "scripts": {
     "prepare": "husky",
     "test": "vitest run",
+    "bench": "vitest bench",
     "test-watch": "vitest",
     "test-coverage": "vitest run --coverage",
     "test-snapshot": "vitest run -u",
