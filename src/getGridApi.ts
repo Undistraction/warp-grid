@@ -220,6 +220,9 @@ const getApi = (
     nonAbsoluteSpaceBottomRatio,
   } = getStepData(columns, rows, curveLengths)
 
+  const nonGutterColumns = getNonGutterSteps(columns)
+  const nonGutterRows = getNonGutterSteps(rows)
+
   const getPoint = memoize((params: GetPointProps): Point => {
     validateGetPointArguments(params)
     return coonsPatch(boundingCurves, params, {
@@ -439,8 +442,6 @@ const getApi = (
       rowIdx: number,
       { makeBoundsCurvesSequential = false }: GetAllCellBoundsProps = {}
     ): BoundingCurvesWithMeta => {
-      const nonGutterColumns = getNonGutterSteps(columns)
-      const nonGutterRows = getNonGutterSteps(rows)
       validateGetGridSquareArguments(
         columnIdx,
         rowIdx,
