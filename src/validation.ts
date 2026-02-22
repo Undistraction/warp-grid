@@ -300,16 +300,11 @@ export const validateGridDefinition = (
   }
 
   if (!isUndefined(lineStrategy)) {
-    if (isArray(lineStrategy)) {
-      validateFunction(lineStrategy[0], `lineStrategyU`)
-      validateFunction(lineStrategy[1], `lineStrategyV`)
-    } else {
-      const possibleValues = Object.values(LineStrategy)
-      if (!possibleValues.includes(lineStrategy)) {
-        throw new ValidationError(
-          `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
-        )
-      }
+    const possibleValues = Object.values(LineStrategy)
+    if (!possibleValues.includes(lineStrategy)) {
+      throw new ValidationError(
+        `Line strategy '${lineStrategy}' is not recognised. Must be one of '${possibleValues}'`
+      )
     }
   }
 

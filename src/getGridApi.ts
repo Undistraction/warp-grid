@@ -240,6 +240,8 @@ const getApi = (
       const lineSections: Curve[] = []
       let uStart = 0
       let uOppositeStart = 0
+      // Row will be undefined on the final iteration (boundary line), but only
+      // accessed in conditions that short-circuit before reaching .isGutter.
       const row = processedRows[rowIdx]
 
       processedColumns.map((column) => {
@@ -332,6 +334,8 @@ const getApi = (
       const lineSections: Curve[] = []
       let vStart = 0
       let vOppositeStart = 0
+      // Undefined on the final iteration (boundary line), but only accessed
+      // in conditions that short-circuit before reaching .isGutter.
       const column = processedColumns[columnIdx]
 
       processedRows.map((row) => {
