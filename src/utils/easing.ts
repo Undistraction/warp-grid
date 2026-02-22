@@ -15,15 +15,16 @@ const wrapInterpolatePointOnCurveWithEasing =
     interpolatePointOnCurve: InterpolatePointOnCurveFactory
   ): InterpolatePointOnCurveFactory =>
   (config: { bezierEasing: BezierEasingParams; precision: number }) => {
+    // Do these outside the returned function so they only happen once.
+    const ease = BezierEasing(...config.bezierEasing)
+    const interpolatePointOnCurveWithConfig = interpolatePointOnCurve(config)
     // Use a named const for better debugging
     const interpolatePointOnCurveWrappedWithEasing = (
       t: number,
       curve: Curve
     ) => {
-      // Create an easing function
-      const ease = BezierEasing(...config.bezierEasing)
       const tEased = ease(t)
-      return interpolatePointOnCurve(config)(tEased, curve)
+      return interpolatePointOnCurveWithConfig(tEased, curve)
     }
     return interpolatePointOnCurveWrappedWithEasing
   }
