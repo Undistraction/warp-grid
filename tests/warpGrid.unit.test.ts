@@ -14,7 +14,7 @@ const enumValues = [
   CellBoundsOrder.LTR_TTB,
   CellBoundsOrder.LTR_BTT,
   CellBoundsOrder.RTL_TTB,
-  CellBoundsOrder.RTL_TTB,
+  CellBoundsOrder.RTL_BTT,
 ]
 
 const cellBoundsOrderFixture = enumValues.map((key) => {
