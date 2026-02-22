@@ -54,7 +54,7 @@ const isValidPoint = (point: Point): point is Point =>
 
 const validateCurve = (curve: Curve, name: string): void => {
   if (!isPlainObj(curve)) {
-    throw new Error(`Curve '${name}' must be an object`)
+    throw new ValidationError(`Curve '${name}' must be an object`)
   }
 }
 
@@ -136,10 +136,10 @@ const validateStartAndEndPoints = (
   name: string
 ): void => {
   if (!isValidPoint(startPoint)) {
-    throw new Error(`Bounding curve '${name}' startPoint must be a valid point`)
+    throw new ValidationError(`Bounding curve '${name}' startPoint must be a valid point`)
   }
   if (!isValidPoint(endPoint)) {
-    throw new Error(`Bounding curve '${name}' endPoint must be a valid point`)
+    throw new ValidationError(`Bounding curve '${name}' endPoint must be a valid point`)
   }
 }
 
