@@ -38,11 +38,6 @@ interface GetAPiConfig {
   interpolateLineV: InterpolateLineV
 }
 
-interface GetStepIdxIncludingGuttersAcc {
-  isComplete?: boolean
-  value: number
-}
-
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -102,26 +97,20 @@ const previousWasAlsoGutter = (steps: Step[], stepIdx: number): boolean =>
   )
 
 // We need to account for gutters when calculating the index of the step
-const getStepIdxIncludingGutters = (stepIdx: number, steps: Step[]) =>
-  steps.reduce<GetStepIdxIncludingGuttersAcc>(
-    (acc, step, idx) => {
-      if (acc.isComplete) {
-        return acc
+const getStepIdxIncludingGutters = (stepIdx: number, steps: Step[]): number => {
+  // Don't use reduce as we can't exit early. Here we can exit as soon as we
+  // have what we need.
+  let nonGutterCount = 0
+  for (let i = 0; i < steps.length; i++) {
+    if (!steps[i].isGutter) {
+      if (nonGutterCount === stepIdx) {
+        return i
       }
-
-      if (step.isGutter) {
-        return acc
-      } else {
-        if (acc.value === stepIdx) {
-          return { value: idx, isComplete: true }
-        }
-        return {
-          value: acc.value + 1,
-        }
-      }
-    },
-    { value: 0 }
-  ).value
+      nonGutterCount++
+    }
+  }
+  return 0
+}
 
 export const getAllCellCornerPoints = (curves: Curve[][]): Point[] => {
   // Mutate points instead of reducing as this is more performant.
