@@ -89,10 +89,7 @@ export const interpolateCurveU = (
     { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  return fitCubicBezierToPoints(
-    [startPoint, midPoint1, midPoint2, endPoint],
-    [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
-  )
+  return fitCubicBezierToPoints([startPoint, midPoint1, midPoint2, endPoint])
 }
 
 /**
@@ -165,8 +162,5 @@ export const interpolateCurveV = (
     { interpolatePointOnCurveU, interpolatePointOnCurveV }
   )
 
-  return fitCubicBezierToPoints(
-    [startPoint, midPoint1, midPoint2, endPoint],
-    [0, T_MIDPOINT_1, T_MIDPOINT_2, 1]
-  )
+  return fitCubicBezierToPoints([startPoint, midPoint1, midPoint2, endPoint])
 }
