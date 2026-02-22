@@ -7,6 +7,7 @@ import type {
   BoundingCurvesWithMeta,
   Curve,
   GetAllCellBoundsProps,
+  GetCellBoundsConfig,
   GetPointProps,
   GridApi,
   InterpolateLineU,
@@ -429,7 +430,7 @@ const getApi = (
     (
       columnIdx: number,
       rowIdx: number,
-      { makeBoundsCurvesSequential = false }: GetAllCellBoundsProps = {}
+      { makeBoundsCurvesSequential = false }: GetCellBoundsConfig = {}
     ): BoundingCurvesWithMeta => {
       validateGetGridSquareArguments(
         columnIdx,

@@ -42,7 +42,11 @@ export interface GetAllCellBoundsProps {
  * Configuration for retrieving bounds of a specific cell.
  */
 export interface GetCellBoundsConfig {
-  cellBoundsOrder?: CellBoundsOrder
+  /**
+   * Returns bounds curves in sequential order when true.
+   * @default false
+   */
+  makeBoundsCurvesSequential?: boolean
 }
 
 /**

@@ -103,21 +103,6 @@ describe(`warpGrid`, () => {
           )
           expect(gridSquareBounds).toMatchSnapshot()
         })
-
-        describe.each(cellBoundsOrderFixture)(
-          `For cellBoundsOrder with key of $name`,
-          (cellBoundsOrderFixture) => {
-            it(`provides bounds for the grid square at the supplied coordinates in the correct order`, () => {
-              const allGridCellBounds = grid.getCellBounds(
-                ...input.api.getCellBounds.args,
-                {
-                  cellBoundsOrder: cellBoundsOrderFixture.input,
-                }
-              )
-              expect(allGridCellBounds).toMatchSnapshot()
-            })
-          }
-        )
       })
 
       describe(`getAllCellBounds`, () => {
