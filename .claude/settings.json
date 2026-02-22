@@ -32,7 +32,8 @@
       "Bash(wc:*)",
       "Bash(ls:*)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
