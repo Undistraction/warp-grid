@@ -123,18 +123,16 @@ const getStepIdxIncludingGutters = (stepIdx: number, steps: Step[]) =>
     { value: 0 }
   ).value
 
-export const getAllCellCornerPoints = (curves: Curve[][]) =>
-  curves.reduce<Point[]>((acc: Point[], items: Curve[]) => {
-    const subItems: Point[] = items.reduce<Point[]>(
-      (acc: Point[], curve: Curve) => [
-        ...acc,
-        curve.startPoint,
-        curve.endPoint,
-      ],
-      []
-    )
-    return [...acc, ...subItems]
-  }, [])
+export const getAllCellCornerPoints = (curves: Curve[][]): Point[] => {
+  // Mutate points instead of reducing as this is more performant.
+  const points: Point[] = []
+  for (const items of curves) {
+    for (const curve of items) {
+      points.push(curve.startPoint, curve.endPoint)
+    }
+  }
+  return points
+}
 
 const iterateOverSteps = (
   rows: Step[],
