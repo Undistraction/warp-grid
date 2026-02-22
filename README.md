@@ -13,7 +13,7 @@
 
 </p>
 
-This package allows you to create a complex grid and distort it, taking the concept of a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) and applying it to a grid system, meaning the grid is not bounded by four straight lines, but by four cubic Bézier curves. This allows you to create some very strange an interesting grids that would be very difficult to generate with traditional graphics software.
+This package allows you to create a complex grid and distort it, taking the concept of a [Coons patch](https://en.wikipedia.org/wiki/Coons_patch) and applying it to a grid system, meaning the grid is not bounded by four straight lines, but by four cubic Bézier curves. This allows you to create some very strange and interesting grids that would be very difficult to generate with traditional graphics software.
 
 There is an [editor](https://warp-grid.undistraction.com) which allows you to generate and manipulate a grid, giving access to all the configuration available.
 
@@ -76,9 +76,9 @@ const boundingCurves = {
 
 // Define a 10 x 5 grid with gutters
 const gridDefinition = {
-  columns: 10
+  columns: 10,
   rows: 5,
-  gutters: 2
+  gutter: 2
 }
 
 const grid = warpGrid(
@@ -87,25 +87,25 @@ const grid = warpGrid(
 )
 
 // Get a point on the patch at the provided horizontal and vertical ratios (0–1 inclusive)
-const point = warpGrid.getPoint(0.5, 0.75)
+const point = grid.getPoint({ u: 0.5, v: 0.75 })
 
 // Get an Array containing all the curves along the x-axis.
-const curvesXAxis = warpGrid.getLinesXAxis()
+const curvesXAxis = grid.getLinesXAxis()
 
 // Get an Array containing all the curves along the y-axis.
-const curvesXAxis = warpGrid.getLinesYAxis()
+const curvesYAxis = grid.getLinesYAxis()
 
 // Get an Array containing all the curves along the both the x- and y-axis.
-const curves = warpGrid.getLines()
+const curves = grid.getLines()
 
 // Get an array of points representing every point on the grid where lines intersect.
-const intersections = warpGrid.getIntersections()
+const intersections = grid.getIntersections()
 
-// Get the bounds for the grid-square at the supplied coordinates
-const bounds = warpGrid.getCellBounds(3, 8)
+// Get the bounds for the grid-square at the supplied coordinates (columnIdx, rowIdx)
+const bounds = grid.getCellBounds(3, 2)
 
 // Get an array containing the bounds for every grid-square
-const allBounds = getAllCellBounds()
+const allBounds = grid.getAllCellBounds()
 ```
 
 ## Usage
@@ -231,7 +231,7 @@ These fields can be one of the following:
 
 `gutter` describes the width of horizontal gutters and the height of vertical gutters. Gutters are the spaces between the grid cells. If `gutter` is a number, it describes both horizontal and vertical gutters. If it is an array of two numbers, the first number describes the horizontal gutter and the second number describes the vertical gutter. Like columns and rows, gutters can either be relative or absolute pixel-numbers, for example: `3`, or `3px`.
 
-As outlined above, there is an additional way to add gutters without using the gutters property. You can add them to the `rows` or `columns` arrays, using an object with a `value` property, but also adding an `isGutter` property set to `true`: (`{ value: 2. isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
+As outlined above, there is an additional way to add gutters without using the gutters property. You can add them to the `rows` or `columns` arrays, using an object with a `value` property, but also adding an `isGutter` property set to `true`: (`{ value: 2, isGutter: true}`). This allows you to define gutters of different widths/heights in the same way you can define columns or rows of different widths/heights.
 
 ```typeScript
 {
@@ -259,7 +259,7 @@ Alternatively a single factory function, or a tuple of two factory functions (on
 
 ```typeScript
 {
-  lineStrategy: `even`,
+  interpolationStrategy: `even`,
   …
 }
 ```
@@ -288,7 +288,7 @@ If you use your own interpolation factory function it should have the following 
 
 #### lineStrategy
 
-`lineStrategy` controls how the grid lines are interpolated and can either be `straightLines` or `curves`. The lines returned from `getCurves`, `getCurvesXAxis` and `getCurvesYAxis`, and the bounds returned from `getCellBounds` and `getAllCellBounds` are always represented by cubic Bézier curves, however if the `lineStrategy` is `straightLines` (the default), the calculations are significantly simplified and all lines will be straight (`controlPoint1` will be the same as the `startPoint`, and `controlPoint2` will be the same as `endPoint`) For more accurate calculations choose `curves` which will draw curved cubic Bézier curves at the expense of performance.
+`lineStrategy` controls how the grid lines are interpolated and can either be `straightLines` or `curves`. The lines returned from `getLines`, `getLinesXAxis` and `getLinesYAxis`, and the bounds returned from `getCellBounds` and `getAllCellBounds` are always represented by cubic Bézier curves, however if the `lineStrategy` is `straightLines` (the default), the calculations are significantly simplified and all lines will be straight (`controlPoint1` will be the same as the `startPoint`, and `controlPoint2` will be the same as `endPoint`) For more accurate calculations choose `curves` which will draw curved cubic Bézier curves at the expense of performance.
 
 ```typeScript
 {
@@ -300,7 +300,7 @@ If you use your own interpolation factory function it should have the following 
 
 #### precision
 
-If you choose to use a line strategy of `even`, this parameter controls how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`. With `linear` this will have no effect.
+If you choose to use an interpolation strategy of `even`, this parameter controls how precise the interpolation is. Higher values are more memory-intensive but more accurate. The default value is `20`. With `linear` this will have no effect.
 
 ```typeScript
 {
@@ -316,8 +316,8 @@ The grid provides a very powerful way of controlling the distribution of lines a
 ```typeScript
 {
   bezierEasing: {
-    u: [0, 0, 1, 1]
-    v: [0, 0, 1, 1]
+    xAxis: [0, 0, 1, 1],
+    yAxis: [0, 0, 1, 1],
   }
   …
 }
@@ -332,13 +332,13 @@ Here is a full example of a grid definition:
 {
   columns: 8,
   rows: [10, 5, 20, 5, 10],
-  gutters: [5, 3],
+  gutter: [5, 3],
   interpolationStrategy: `even`,
   lineStrategy: 'curves',
   precision: 30,
   bezierEasing: {
-    u: [0, 0.5, 1, 1]
-    v: [0, 0, 0.3, 1]
+    xAxis: [0, 0.5, 1, 1],
+    yAxis: [0, 0, 0.3, 1],
   }
 }
 ```
@@ -352,6 +352,8 @@ The return value is a `warp grid` object representing the grid and providing an 
   model: {
     columns,
     rows,
+    columnsNonGutter,
+    rowsNonGutter,
     boundingCurves
   },
   getPoint,
@@ -359,7 +361,6 @@ The return value is a `warp grid` object representing the grid and providing an 
   getLinesYAxis,
   getLines,
   getIntersections,
-  getCurves,
   getCellBounds,
   getAllCellBounds,
 }
@@ -379,7 +380,7 @@ The return value is a `warp grid` object representing the grid and providing an 
 
 One of the powerful features of this package is that a grid cell can itself be used as bounds for another grid. To achieve this, the bounding curves returned from `getCellBounds` and `getAllCellBounds` follow the same pattern as the bounding curves used to define the grid, meaning the top and bottom curves run left-to-right and the left and right curves run top-to-bottom.
 
-- `getPoint(u, v)` returns the point on the grid at the supplied `u` and `v` ratios.Both `u` and `v` should be a number from `0–1` inclusive. For example, a `u` of `0` and a `v` of `0` would return a point in the top left corner. An `u` of `1`and a `v` of `1` would return a point in the bottom right corner (remember that the top and bottom boundary curves run from left-to-right and the left and right boundary curves run from top to bottom).
+- `getPoint({ u, v })` returns the point on the grid at the supplied `u` and `v` ratios. Both `u` and `v` should be a number from `0–1` inclusive. For example, a `u` of `0` and a `v` of `0` would return a point in the top left corner. A `u` of `1` and a `v` of `1` would return a point in the bottom right corner (remember that the top and bottom boundary curves run from left-to-right and the left and right boundary curves run from top to bottom).
 
 - `getLinesXAxis()` returns an array representing all the curves for each step along the x-axis. This includes curves for all left and right edges.
 
@@ -389,15 +390,16 @@ One of the powerful features of this package is that a grid cell can itself be u
 
 - `getIntersections()` returns an array of points, one for every point at which an x-axis line intersects with a y-axis line.
 
-- `getCellBounds(rowIdx, columnIdx)` returns a set of bounding curves for the cell at the supplied row and column. Row and column are zero-based. You can pass an optional config object as the third argument. See the docs for more information.
+- `getCellBounds(columnIdx, rowIdx)` returns a set of bounding curves for the cell at the supplied column and row. Column and row are zero-based. You can pass an optional config object as the third argument. See the docs for more information.
 
 - `getAllCellBounds()` returns an array of bounding curves for all the cells in the grid. See the docs for additional config parameters. You can pass an optional config object as the third argument. See the docs for more information.
 
 ## Dependencies
 
-This project has four dependencies:
+This project has five dependencies:
 
 - [coons-patch](https://www.npmjs.com/package/coons-patch) to calculate points on a surface defined by Bézier curves.
+- [bezier-js](https://www.npmjs.com/package/bezier-js) for Bézier curve math.
 - [fast-memoize](https://www.npmjs.com/package/fast-memoize) for memoization.
 - [bezier-easing](https://www.npmjs.com/package/bezier-easing) for creating Bézier-easing functions.
 - [matrix-js](https://www.npmjs.com/package/matrix-js) for matrix math
