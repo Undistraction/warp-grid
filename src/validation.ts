@@ -126,7 +126,7 @@ const validateColumnsAndRows = (
     }, rows)
   } else {
     throw new ValidationError(
-      `rows must be an integer or an array, but it was '${columns}'`
+      `rows must be an integer or an array, but it was '${rows}'`
     )
   }
 }
