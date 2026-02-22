@@ -14,7 +14,6 @@ import type {
   InterpolatePointOnCurve,
   InterpolationParamsU,
   InterpolationParamsV,
-  ObjectWithStringKeys,
   LinesByAxis,
   Point,
   Step,
@@ -26,7 +25,6 @@ import {
   validateGetGridSquareArguments,
 } from './validation'
 import { getBezierCurveLength } from './utils/bezier'
-import { mapObj } from './utils/functional'
 
 // -----------------------------------------------------------------------------
 // Types
@@ -93,9 +91,6 @@ const getIsInnerReversed = (
 }
 
 const clampT = (t: number): number => Math.min(Math.max(t, 0), 1)
-
-const mapClampT = <T>(o: ObjectWithStringKeys) =>
-  mapObj<number, ObjectWithStringKeys>(clampT, o) as T
 
 // Deal with case where there are multiple gutters in a row
 const previousWasAlsoGutter = (steps: Step[], stepIdx: number): boolean =>
@@ -279,15 +274,16 @@ const getApi = (
           !isFirstRowAndRowIsGutter &&
           !previousWasAlsoGutter(rows, rowIdx)
         ) {
-          const paramsClamped: InterpolationParamsU =
-            mapClampT<InterpolationParamsU>({
-              uStart,
-              uEnd,
-              vStart,
-              uOppositeStart,
-              uOppositeEnd,
-              vOppositeStart,
-            })
+          // Note that the repeated clampT calls are more performant that
+          // mapping over the object's values.
+          const paramsClamped: InterpolationParamsU = {
+            uStart: clampT(uStart),
+            uEnd: clampT(uEnd),
+            vStart: clampT(vStart),
+            uOppositeStart: clampT(uOppositeStart),
+            uOppositeEnd: clampT(uOppositeEnd),
+            vOppositeStart: clampT(vOppositeStart),
+          }
           const curve = interpolateLineU(
             boundingCurves,
             paramsClamped,
@@ -371,15 +367,16 @@ const getApi = (
           !isFirstColumnAndColumnIsGutter &&
           !previousWasAlsoGutter(columns, columnIdx)
         ) {
-          const paramsClamped: InterpolationParamsV =
-            mapClampT<InterpolationParamsV>({
-              vStart,
-              vEnd,
-              uStart,
-              vOppositeStart,
-              vOppositeEnd,
-              uOppositeStart,
-            })
+          // Note that the repeated clampT calls are more performant that
+          // mapping over the object's values.
+          const paramsClamped: InterpolationParamsV = {
+            vStart: clampT(vStart),
+            vEnd: clampT(vEnd),
+            uStart: clampT(uStart),
+            vOppositeStart: clampT(vOppositeStart),
+            vOppositeEnd: clampT(vOppositeEnd),
+            uOppositeStart: clampT(uOppositeStart),
+          }
 
           const curve = interpolateLineV(
             boundingCurves,
