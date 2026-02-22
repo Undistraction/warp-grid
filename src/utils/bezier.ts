@@ -5,11 +5,10 @@
  * That work can be found here: https://pomax.github.io/bezierinfo/#curvefitting
  * ---------------------------------------------------------------------------*/
 
-import matrix from 'matrix-js'
-
+import { Bezier } from 'bezier-js'
+import { inverse, Matrix } from 'ml-matrix'
 import type { Curve, Point } from '../types'
 import { getBasisMatrix, getRatioMatrix } from './matrix'
-import { Bezier } from 'bezier-js'
 
 // -----------------------------------------------------------------------------
 // Utils
@@ -50,16 +49,19 @@ export const fitCubicBezierToPoints = (
   const numberOfPoints = points.length
   const { tMatrix, tMatrixTransposed } = getRatioMatrix(ratios)
   const basisMatrix = getBasisMatrix(numberOfPoints)
-  const basisMatrixInverted = matrix(basisMatrix.inv())
-  const ratioMultipliedMatrix = matrix(tMatrix.prod(tMatrixTransposed))
-  const invertedRatioMultipliedMatrix = matrix(ratioMultipliedMatrix.inv())
-  const step1 = matrix(invertedRatioMultipliedMatrix.prod(tMatrix))
-  const step2 = matrix(basisMatrixInverted.prod(step1))
-  const X = matrix(points.map((v: Point) => [v.x]))
-  const x = step2.prod(X)
-  const Y = matrix(points.map((v: Point) => [v.y]))
-  const y = step2.prod(Y)
-  const result = x.map((r: number[], i: number) => ({ x: r[0], y: y[i][0] }))
+  const basisMatrixInverted = inverse(basisMatrix)
+  const ratioMultipliedMatrix = tMatrix.mmul(tMatrixTransposed)
+  const invertedRatioMultipliedMatrix = inverse(ratioMultipliedMatrix)
+  const step1 = invertedRatioMultipliedMatrix.mmul(tMatrix)
+  const step2 = basisMatrixInverted.mmul(step1)
+  const X = new Matrix(points.map((v: Point) => [v.x]))
+  const x = step2.mmul(X)
+  const Y = new Matrix(points.map((v: Point) => [v.y]))
+  const y = step2.mmul(Y)
+  const result = Array.from({ length: x.rows }, (_, i) => ({
+    x: x.get(i, 0),
+    y: y.get(i, 0),
+  }))
   return pointsToCurve(result)
 }
 

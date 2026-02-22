@@ -402,7 +402,7 @@ This project has five dependencies:
 - [bezier-js](https://www.npmjs.com/package/bezier-js) for Bézier curve math.
 - [fast-memoize](https://www.npmjs.com/package/fast-memoize) for memoization.
 - [bezier-easing](https://www.npmjs.com/package/bezier-easing) for creating Bézier-easing functions.
-- [matrix-js](https://www.npmjs.com/package/matrix-js) for matrix math
+- [ml-matrix](https://www.npmjs.com/package/ml-matrix) for matrix math
 
 ## Thanks
 

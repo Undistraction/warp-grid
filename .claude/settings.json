@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(git stash:*)",
+      "Bash(pnpm ls:*)",
+      "Bash(git stash pop:*)",
+      "Read(//tmp/**)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:mljs.github.io)"
+    ]
+  }
+}

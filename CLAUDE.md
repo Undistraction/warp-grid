@@ -53,8 +53,6 @@ src/
 │   ├── math.ts               # Math utilities
 │   ├── matrix.ts             # Matrix operations
 │   └── steps.ts              # Step/gutter processing
-└── @types/
-    └── matrix-js.d.ts        # Type declarations for matrix-js
 
 tests/
 ├── warpGrid.unit.test.ts     # Main integration tests
@@ -69,6 +67,7 @@ tests/
 ## Code Conventions
 
 ### Formatting (Prettier)
+
 - **No semicolons**
 - **Single quotes** (but ESLint enforces **backtick quotes** — template literals preferred everywhere)
 - **2-space indentation**, 80-char print width
@@ -76,6 +75,7 @@ tests/
 - **Single attribute per line**
 
 ### TypeScript
+
 - Strict mode enabled
 - Types defined in `src/types.ts`, re-exported from `src/index.ts`
 - Use `type` imports for type-only imports
@@ -83,12 +83,14 @@ tests/
 - Memoization via `fast-memoize` for expensive calculations
 
 ### ESLint
+
 - Flat config in `eslint.config.mjs`
 - `simple-import-sort` plugin enforces import ordering
 - `unused-imports` plugin auto-removes unused imports
 - Unused variables must be prefixed with `_`
 
 ### Testing
+
 - **Use `it()` not `test()`** (enforced by vitest ESLint plugin)
 - Test files must match `*.unit.test.{ts,js}` pattern
 - Prefer comparison/equality matchers
@@ -96,10 +98,12 @@ tests/
 - Vitest globals enabled (no imports needed for `describe`, `it`, `expect`)
 
 ### Git Hooks (Husky)
+
 - **pre-commit:** lint-staged (prettier + eslint) → tests → tsc
 - **commit-msg:** commitlint (conventional commits)
 
 ### Commit Message Format
+
 Conventional commits required. Allowed types:
 `build`, `ci`, `chore`, `content`, `debug`, `deps`, `docs`, `feat`, `fix`, `hotfix`, `merge`, `perf`, `refactor`, `revert`, `style`, `test`
 
@@ -108,18 +112,21 @@ Subject must be **sentence-case**. Example: `feat: Add support for nested grids`
 ## Architecture Notes
 
 ### Core Flow
+
 1. `warpGrid(boundingCurves, gridDefinition)` → validates inputs → merges defaults → processes steps → creates API
 2. The API object exposes memoized methods: `getPoint()`, `getIntersections()`, `getLines()`, `getCellBounds()`, `getAllCellBounds()`
 3. All expensive computations are lazy (computed on first call, then cached via `fast-memoize`)
 
 ### Key Dependencies
+
 - **coons-patch** (4.0.0): Core surface interpolation — provides `BoundingCurves`, `Curve`, `Point` types
 - **bezier-js**: Bezier curve math
 - **bezier-easing**: Easing functions for point distribution along curves
-- **matrix-js**: Matrix operations for interpolation
+- **ml-matrix**: Matrix operations for interpolation
 - **fast-memoize**: Performance caching
 
 ### Strategies
+
 - **InterpolationStrategy**: `even` (default, uniform spacing) or `linear` (faster, follows curve curvature). Custom factory functions also accepted.
 - **LineStrategy**: `straightLines` (default) or `curves` (accurate but slower)
 
