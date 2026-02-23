@@ -1,3 +1,24 @@
+## [5.0.1](https://github.com/Undistraction/warp-grid/compare/v5.0.0...v5.0.1) (2026-02-23)
+
+### Bug Fixes
+
+* Incorrect type ([e0f9d85](https://github.com/Undistraction/warp-grid/commit/e0f9d85bf813bc19ee547ea2c724d64012bdf0f6))
+* Incorrect value in validation error message ([bedc338](https://github.com/Undistraction/warp-grid/commit/bedc3380e98369ff9d2fa23594aaa74fb28ec169))
+* Set ValidationError name ([0a1d9ef](https://github.com/Undistraction/warp-grid/commit/0a1d9efc4ed77d81187fcee05543c761f1c16517))
+* Use correct error type in validations ([8866318](https://github.com/Undistraction/warp-grid/commit/8866318e4d522a75a7356bbd9e532676f64a6071))
+
+### Performance Improvements
+
+* Add basic benchmarks ([232ec91](https://github.com/Undistraction/warp-grid/commit/232ec9199a41fb974216066ba53fc6712e457cee))
+* Add bench for nested grid ([74c53d0](https://github.com/Undistraction/warp-grid/commit/74c53d01508c6747975c991d3b52b3db17ec0830))
+* Calcualate non-gutter steps in outer function ([241622f](https://github.com/Undistraction/warp-grid/commit/241622f4eec9ac7b81cb0c104334b7bd4f39ca77))
+* Ensure expensive functions are only executed once ([bf2db3d](https://github.com/Undistraction/warp-grid/commit/bf2db3d55a4a839f96a00006530a37b419fb2fed))
+* Mutate array instead of reducing ([9c20bba](https://github.com/Undistraction/warp-grid/commit/9c20bbab09f5df0d389cac8ce8c5535a0ee61eda))
+* Precompute transformation matrix ([56485ae](https://github.com/Undistraction/warp-grid/commit/56485ae5127bf862c742da75f175ddb8b4a96adf))
+* Remove stale validation check ([59a2690](https://github.com/Undistraction/warp-grid/commit/59a2690c22b5e563c4aae9a016a429677eb6c8fe))
+* Use for loop to allow early return ([eb98cc5](https://github.com/Undistraction/warp-grid/commit/eb98cc582950f0158987f58f6817f0953232487e))
+* Use separate calls to clampT instead of mapping over obj ([83f8c1a](https://github.com/Undistraction/warp-grid/commit/83f8c1a0a969caa3118111d86194f9a18d2ad2f6))
+
 ## [5.0.0](https://github.com/undistraction/warp-grid/compare/v4.2.0...v5.0.0) (2025-05-20)
 
 ### ⚠ BREAKING CHANGES
