@@ -136,10 +136,14 @@ const validateStartAndEndPoints = (
   name: string
 ): void => {
   if (!isValidPoint(startPoint)) {
-    throw new ValidationError(`Bounding curve '${name}' startPoint must be a valid point`)
+    throw new ValidationError(
+      `Bounding curve '${name}' startPoint must be a valid point`
+    )
   }
   if (!isValidPoint(endPoint)) {
-    throw new ValidationError(`Bounding curve '${name}' endPoint must be a valid point`)
+    throw new ValidationError(
+      `Bounding curve '${name}' endPoint must be a valid point`
+    )
   }
 }
 
